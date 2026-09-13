@@ -404,6 +404,66 @@
   .entry-gate .cond.bad { border-color: #fca5a5; }
   .entry-gate .cond .lab { color: #64748b; font-weight: 600; }
   .entry-gate .cond .val { font-weight: 800; margin-top: 2px; }
+
+  .buy-point-banner {
+    margin: 16px 0 20px; padding: 16px 18px 14px; border-radius: 16px;
+    border: 3px solid #cbd5e1; background: #f8fafc;
+  }
+  .buy-point-banner.urgent {
+    border-color: #d97706;
+    background: linear-gradient(180deg, #fffbeb 0%, #fde68a 55%, #fbbf24 160%);
+    box-shadow: 0 0 0 5px rgba(245,158,11,.28), 0 12px 28px rgba(180,83,9,.18);
+  }
+  .buy-point-banner.quiet {
+    border-color: #cbd5e1; background: #f8fafc;
+    box-shadow: none;
+  }
+  .buy-point-banner h2 {
+    margin: 0; font-size: 1.45rem; letter-spacing: .03em; color: #7c2d12;
+  }
+  .buy-point-banner.quiet h2 { color: #334155; font-size: 1.2rem; }
+  .buy-point-banner.compact h2 { font-size: 1.15rem; }
+  .buy-point-head {
+    display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:8px 16px;
+  }
+  .buy-point-asof { font-weight:800; color:#92400e; font-size:.92rem; }
+  .buy-point-banner.quiet .buy-point-asof { color:#64748b; font-weight:700; }
+  .buy-point-state {
+    margin: 8px 0 12px; font-size: 1.08rem; font-weight: 800; color:#b45309;
+  }
+  .buy-point-banner.quiet .buy-point-state { color:#64748b; font-size:1rem; }
+  .buy-point-grid {
+    display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px;
+  }
+  .buy-point-card {
+    background:#fffbeb; border:1px solid #f59e0b; border-radius:12px; padding:10px 12px;
+  }
+  .buy-point-quote {
+    display:flex; flex-wrap:wrap; align-items:baseline; gap:8px;
+    font-size:1.08rem; font-weight:800; color:#7c2d12;
+  }
+  .buy-point-pct { color:#b45309; }
+  .buy-point-why { margin:6px 0 0; font-size:.86rem; font-weight:600; color:#92400e; }
+  .buy-point-watch-head {
+    margin:14px 0 6px; font-weight:800; color:#475569; font-size:.92rem;
+  }
+  .buy-point-watch-grid {
+    display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px;
+  }
+  .buy-point-watch-card {
+    background:#fff; border:1px dashed #94a3b8; border-radius:10px;
+    padding:8px 10px; font-size:.86rem; color:#334155;
+  }
+  .buy-point-watch-card .buy-point-why { color:#475569; font-weight:600; }
+  .buy-point-foot {
+    margin:12px 0 0; font-weight:800; font-size:.92rem; color:#9a3412;
+  }
+  .buy-point-banner.quiet .buy-point-foot { color:#64748b; font-weight:700; }
+  @media (max-width:700px) {
+    .buy-point-grid, .buy-point-watch-grid { grid-template-columns:1fr; }
+    .buy-point-banner h2 { font-size:1.2rem; }
+  }
+
   @media (max-width:700px) {
     .entry-gate .conds { grid-template-columns: 1fr; }
   }
@@ -448,11 +508,13 @@
   <p><span class="pill"><span class="zh">绿灯 · 可做动量</span><span class="en">Green · momentum OK</span></span>
      <span class="muted"><span class="zh">短线动量 / 突破偏友好</span><span class="en">short-term momentum / breakouts favored</span></span></p>
   <p class="muted"><span class="zh">仅供参考分析，非投资建议，不会替你下单。数据来自 Yahoo Finance（可能延迟）。过滤规则是启发式，不是已验证实盘优势。风险自负。</span><span class="en">Reference analysis only. Not investment advice. No orders placed. Data via Yahoo Finance (may be delayed). Filters are rule-based heuristics, not a proven live edge. You execute at your own risk.</span></p>
-  <div class="entry-gate allow" id="entry-gate" data-allow="1"><h3><span class="zh">新开仓总闸：允许新开仓（绿灯可做动量）</span><span class="en">New-entry gate: New entries allowed (green — momentum OK)</span></h3><p class="muted" style="margin:0"><span class="zh">大盘前置过滤：三条全过才允许新开个股；已有持仓不受限，止盈止损照常。</span><span class="en">Market gate: all 3 must pass for NEW entries; open positions keep stops/TPs.</span></p><div class="conds"><div class="cond ok"><div class="lab"><span class="zh">① SPX > 50日均线</span><span class="en">① SPX > SMA50</span> · ✓</div><div class="val">SPX 7656.98 / SMA50 7607.34</div></div><div class="cond ok"><div class="lab"><span class="zh">② VIX < 25</span><span class="en">② VIX < 25</span> · ✓</div><div class="val">VIX 15.85 (max 25.0)</div></div><div class="cond ok"><div class="lab"><span class="zh">③ SPX近20日回撤 ≤8%</span><span class="en">③ SPX 20d DD ≤8%</span> · ✓</div><div class="val">2.49% / max 8.0%</div></div></div></div><p class="entry-gate-tip"><span class="zh">仅限制新开仓，已有持仓止盈止损正常运行。</span><span class="en">Only new entries are blocked; open-position stops/TPs still apply.</span></p><script>window.USM_ENTRY_GATE = {"allow": true, "fail_zh": [], "fail_en": [], "block_zh": "当前大盘条件不满足，禁止新建仓位，已有持仓不受影响。", "block_en": "Market gate failed — no new positions. Open holdings are unaffected."};</script>
+  <div class="entry-gate allow" id="entry-gate" data-allow="1"><h3><span class="zh">新开仓总闸：允许新开仓（绿灯可做动量）</span><span class="en">New-entry gate: New entries allowed (green — momentum OK)</span></h3><p class="muted" style="margin:0"><span class="zh">大盘前置过滤：三条全过才允许新开个股；已有持仓不受限，止盈止损照常。</span><span class="en">Market gate: all 3 must pass for NEW entries; open positions keep stops/TPs.</span></p><div class="conds"><div class="cond ok"><div class="lab"><span class="zh">① SPX > 50日均线</span><span class="en">① SPX > SMA50</span> · ✓</div><div class="val">SPX 7656.98 / SMA50 7607.34</div></div><div class="cond ok"><div class="lab"><span class="zh">② VIX < 25</span><span class="en">② VIX < 25</span> · ✓</div><div class="val">VIX 15.84 (max 25.0)</div></div><div class="cond ok"><div class="lab"><span class="zh">③ SPX近20日回撤 ≤8%</span><span class="en">③ SPX 20d DD ≤8%</span> · ✓</div><div class="val">2.49% / max 8.0%</div></div></div></div><p class="entry-gate-tip"><span class="zh">仅限制新开仓，已有持仓止盈止损正常运行。</span><span class="en">Only new entries are blocked; open-position stops/TPs still apply.</span></p><script>window.USM_ENTRY_GATE = {"allow": true, "fail_zh": [], "fail_en": [], "block_zh": "当前大盘条件不满足，禁止新建仓位，已有持仓不受影响。", "block_en": "Market gate failed — no new positions. Open holdings are unaffected."};</script>
   <p class="muted">
-    <span class="zh">数据更新（UTC）：2026-09-11 20:26 UTC · 页面生成：2026-09-11 20:27 UTC</span>
-    <span class="en">Data as of (UTC): 2026-09-11 20:26 UTC · Page built: 2026-09-11 20:27 UTC</span>
+    <span class="zh">数据更新（UTC）：2026-09-11 20:26 UTC · 页面生成：2026-09-13 06:45 UTC</span>
+    <span class="en">Data as of (UTC): 2026-09-11 20:26 UTC · Page built: 2026-09-13 06:45 UTC</span>
   </p>
+
+  <section class="buy-point-banner urgent" id="buy-point-confirm"><div class="buy-point-head"><h2><span class="zh">买点确认</span><span class="en">Buy-point confirm</span></h2><span class="buy-point-asof"><span class="zh">截至</span><span class="en">As of</span> 2026-09-11 13:26 PT</span></div><div class="buy-point-state"><span class="zh">本轮新确认</span><span class="en">Fresh confirmations this round</span></div><div class="buy-point-grid"><article class="buy-point-card"><div class="buy-point-quote"><b>MFG</b><span>$11.45</span><span class="buy-point-pct">+3.53%</span></div><div class="buy-point-tags"><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span> <span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></div><p class="buy-point-why"><span class="zh">近突破已确认（突破10日高）；近突破已确认（温和放量抬升）；温和放量抬升本轮新触发。确认，不是追高指令。</span><span class="en">Near-breakout confirmed by 10-day high; Near-breakout confirmed by volume+price lift; Fresh volume+price lift. Confirmation, not a FOMO instruction.</span></p></article><article class="buy-point-card"><div class="buy-point-quote"><b>DELL</b><span>$567.12</span><span class="buy-point-pct">+11.94%</span></div><div class="buy-point-tags"><span class="tag"><span class="zh">不追</span><span class="en">No chase</span></span> <span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></div><p class="buy-point-why"><span class="zh">温和放量抬升本轮新触发。当日已涨约10%以上，标签确认但位置过热，不追。</span><span class="en">Fresh volume+price lift. Up ~10%+ today — tag confirmed but extended; do not chase.</span></p></article><article class="buy-point-card"><div class="buy-point-quote"><b>HPE</b><span>$62.09</span><span class="buy-point-pct">+12.44%</span></div><div class="buy-point-tags"><span class="tag"><span class="zh">不追</span><span class="en">No chase</span></span> <span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></div><p class="buy-point-why"><span class="zh">温和放量抬升本轮新触发。当日已涨约10%以上，标签确认但位置过热，不追。</span><span class="en">Fresh volume+price lift. Up ~10%+ today — tag confirmed but extended; do not chase.</span></p></article><article class="buy-point-card"><div class="buy-point-quote"><b>MRNA</b><span>$143.97</span><span class="buy-point-pct">+5.38%</span></div><div class="buy-point-tags"><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></div><p class="buy-point-why"><span class="zh">温和放量抬升本轮新触发。确认，不是追高指令。</span><span class="en">Fresh volume+price lift. Confirmation, not a FOMO instruction.</span></p></article><article class="buy-point-card"><div class="buy-point-quote"><b>FIX</b><span>$1,690.82</span><span class="buy-point-pct">+6.29%</span></div><div class="buy-point-tags"><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></div><p class="buy-point-why"><span class="zh">温和放量抬升本轮新触发。确认，不是追高指令。</span><span class="en">Fresh volume+price lift. Confirmation, not a FOMO instruction.</span></p></article><article class="buy-point-card"><div class="buy-point-quote"><b>ANET</b><span>$199.59</span><span class="buy-point-pct">+5.61%</span></div><div class="buy-point-tags"><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></div><p class="buy-point-why"><span class="zh">温和放量抬升本轮新触发。确认，不是追高指令。</span><span class="en">Fresh volume+price lift. Confirmation, not a FOMO instruction.</span></p></article><article class="buy-point-card"><div class="buy-point-quote"><b>CSCO</b><span>$112.13</span><span class="buy-point-pct">+4.37%</span></div><div class="buy-point-tags"><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></div><p class="buy-point-why"><span class="zh">温和放量抬升本轮新触发。确认，不是追高指令。</span><span class="en">Fresh volume+price lift. Confirmation, not a FOMO instruction.</span></p></article><article class="buy-point-card"><div class="buy-point-quote"><b>ADI</b><span>$378.78</span><span class="buy-point-pct">+4.85%</span></div><div class="buy-point-tags"><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></div><p class="buy-point-why"><span class="zh">温和放量抬升本轮新触发。确认，不是追高指令。</span><span class="en">Fresh volume+price lift. Confirmation, not a FOMO instruction.</span></p></article></div><div class="buy-point-watch-head"><span class="zh">观察 · 不是确认</span><span class="en">Watch · not confirmed</span></div><div class="buy-point-watch-grid"><article class="buy-point-watch-card"><div><b>NOK</b> · $11.13 · +4.80%</div><div class="buy-point-tags"><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span> <span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于2 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 2 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>BE</b> · $275.75 · +6.68%</div><div class="buy-point-tags"><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于3 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 3 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>EQNR</b> · $44.80 · -0.69%</div><div class="buy-point-tags"><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于2 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 2 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>QCOM</b> · $181.97 · +2.88%</div><div class="buy-point-tags"><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于2 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 2 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>AMD</b> · $516.13 · +2.49%</div><div class="buy-point-tags"><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于3 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 3 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>HCA</b> · $426.94 · +1.36%</div><div class="buy-point-tags"><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于2 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 2 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>META</b> · $648.03 · +0.57%</div><div class="buy-point-tags"><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于2 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 2 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>IBM</b> · $243.29 · +3.96%</div><div class="buy-point-tags"><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于2 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 2 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article></div><p class="buy-point-foot"><span class="zh">网页无铃声，以本条为准；仅分析不下单。</span><span class="en">No web alert sound; use this banner as the source of truth. Analysis only; no orders.</span></p></section>
 
   
   <div class="pm-finviz-split" id="pm-finviz-split">
