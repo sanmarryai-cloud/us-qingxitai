@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-lang="zh">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>美股短线清洗台 · US Short Scrub Desk</title>
+<style>
+  :root { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  body { margin: 0; background: #f1f5f9; color: #0f172a; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; }
+  .topbar { display:flex; justify-content:flex-end; gap:8px; margin-bottom:12px; }
+  .lang-btn {
+    border:1px solid #cbd5e1; background:#fff; color:#0f172a; border-radius:999px;
+    padding:8px 14px; font-weight:700; font-size:.9rem; cursor:pointer;
+  }
+  .lang-btn.active { background:#0f172a; color:#fff; border-color:#0f172a; }
+  .hero { background: linear-gradient(135deg,#0f172a,#1e293b 55%,#0ea5e9);
+           color:#f8fafc; border-radius:16px; padding:20px 22px; }
+  .hero-row { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .hero-text { flex:1; min-width:200px; }
+  .hero h1 { margin:0; font-size:1.6rem; }
+  .hero p { margin:8px 0 0; opacity:.9; }
+  .hero-cta {
+    display:inline-block; align-self:flex-start; white-space:nowrap;
+    border:2px solid #f8fafc; color:#f8fafc; background:rgba(255,255,255,.12);
+    border-radius:999px; padding:10px 16px; font-weight:800; font-size:.92rem;
+    text-decoration:none; box-shadow:0 0 0 1px rgba(14,165,233,.35);
+  }
+  .hero-cta:hover { background:rgba(255,255,255,.22); }
+
+  .hero-right {
+    display:flex; flex-direction:column; align-items:flex-end; gap:10px; text-align:right;
+  }
+  .hero-credit {
+    display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 14px;
+    margin-top:12px; padding-top:10px; border-top:1px solid rgba(248,250,252,.22);
+    font-size:.68rem; line-height:1.35; font-weight:500; opacity:.78;
+    letter-spacing:.01em;
+  }
+  .hero-credit .who { font-weight:700; opacity:.95; }
+  .metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:16px 0; }
+  .metric { background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:14px; }
+  .metric .k { color:#64748b; font-size:.8rem; }
+  .metric .v { font-size:1.4rem; font-weight:700; margin-top:4px; }
+  .pill { display:inline-block; padding:4px 10px; border-radius:999px; font-weight:700; font-size:.85rem;
+           background:#dcfce7; color:#166534; }
+  .muted { color:#64748b; font-size:.9rem; }
+  .tag { display:inline-block; margin:2px 4px 2px 0; padding:2px 8px; border-radius:6px;
+          font-size:.72rem; font-weight:600; background:#e0f2fe; color:#075985; }
+  table { width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden;
+           border:1px solid #e2e8f0; margin:8px 0 20px; }
+  th, td { padding:10px 12px; text-align:left; border-bottom:1px solid #f1f5f9; font-size:.92rem; }
+  th { background:#f8fafc; color:#475569; font-weight:600; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .card { background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:14px; }
+  h2 { margin:24px 0 8px; font-size:1.15rem; }
+  a { color:#0284c7; }
+  ul { background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:14px 14px 14px 36px; }
+  .table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; margin:8px 0 20px; }
+  .sector-board {
+    background:#fff; border:1px solid #e2e8f0; border-radius:14px;
+    padding:10px 14px; margin:10px 0 14px;
+  }
+  .sector-board > summary {
+    cursor:pointer; font-weight:700; font-size:1.02rem; color:#0f172a;
+    list-style:none; padding:4px 0;
+  }
+  .sector-board > summary::-webkit-details-marker { display:none; }
+  .sector-board > summary::before {
+    content:"▾ "; color:#64748b; font-weight:700;
+  }
+  .sector-board:not([open]) > summary::before { content:"▸ "; }
+  .sector-board .table-wrap { margin-top:8px; margin-bottom:4px; }
+  .table-wrap table { margin:0; }
+  html[data-lang="zh"] .en { display:none !important; }
+  html[data-lang="en"] .zh { display:none !important; }
+  @media (max-width:800px) { .metrics,.grid { grid-template-columns:1fr 1fr; } }
+  @media (max-width:520px) {
+    .metrics,.grid { grid-template-columns:1fr; }
+    .hero h1 { font-size:1.25rem; }
+    th, td { font-size:.8rem; padding:8px; white-space:nowrap; }
+  }
+
+  .pm-capital-bar {
+    display:flex; flex-wrap:wrap; align-items:center; gap:6px 10px;
+    background:#fff; border:1px solid #e2e8f0; border-radius:10px;
+    padding:6px 10px; margin:0 0 6px;
+  }
+  .pm-cap-label { font-weight:700; color:#0f172a; min-width:4rem; font-size:.88rem; }
+  .pm-cap-ctrl { display:flex; align-items:center; gap:4px; }
+  .pm-cap-prefix { font-weight:700; color:#64748b; }
+  .pm-cap-ctrl input {
+    width:110px; border:1px solid #cbd5e1; border-radius:8px;
+    padding:5px 8px; font-size:.92rem; font-weight:700; color:#0f172a;
+  }
+  .pm-cap-hint { font-size:.72rem; }
+  .pm-finviz-left > h2 { margin:0 0 2px; font-size:1.05rem; }
+  .pm-finviz-left > p.muted { margin:0 0 6px; font-size:.75rem; line-height:1.35; }
+  .pm-finviz-split {
+    display:flex;
+    flex-wrap:nowrap;
+    gap:16px;
+    align-items:flex-start;
+    margin: 8px 0 18px;
+    width:100%;
+  }
+  .pm-finviz-left {
+    flex:0 0 340px;
+    width:340px;
+    max-width:36%;
+    display:flex;
+    flex-direction:column;
+  }
+  .pm-finviz-left .pm-ticket-card {
+    max-width:100%;
+  }
+  .pm-finviz-right {
+    flex:1 1 0;
+    min-width:0;
+    padding:10px 12px 12px;
+    display:flex;
+    flex-direction:column;
+    box-sizing:border-box;
+    background:#fff;
+    border:1px solid #e2e8f0;
+    border-radius:12px;
+    color:#0f172a;
+    overflow:hidden;
+    box-shadow:0 1px 2px rgba(15,23,42,.04);
+  }
+  .pm-finviz-right .muted { color:#64748b; }
+  .pm-finviz-right h2 { color:#0f172a; }
+  .pm-finviz-right .pm-finviz-link { color:#2563eb; }
+  .pm-finviz-head {
+    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+  }
+  .pm-finviz-link {
+    font-size:.85rem; font-weight:700; color:#2563eb; text-decoration:none;
+  }
+  .pm-finviz-link:hover { text-decoration:underline; }
+  .pm-finviz-frame-wrap {
+    flex:1 1 auto; min-height:0; border:1px solid #1e293b; border-radius:10px; overflow:hidden;
+    background:#0b1220;
+  }
+  .pm-finviz-links { display:flex; gap:12px; align-items:center; }
+  .pm-tv-wrap, .pm-tv-frame .tradingview-widget-container {
+    width:100%; height:100%; min-height:0; flex:1;
+  }
+  .pm-tv-wrap .tradingview-widget-copyright { display:none !important; }
+  .pm-tv-frame { background:#0b1220; }
+  .pm-finviz-img-link { display:none; } /* replaced by TradingView live embed */
+
+  .pm-finviz-img {
+    width:100%; height:auto; max-height:min(62vh, 560px); object-fit:contain; display:block; background:#0b1220;
+  }
+  .pm-finviz-frame {
+    display:none; /* Finviz often blocks iframe; local snapshot is the reliable fill */
+    width:100%; height:min(62vh, 560px); min-height:380px; border:0; background:#fff;
+  }
+  @media (max-width:900px) {
+    .pm-finviz-split { flex-wrap:wrap; }
+    .pm-finviz-left { flex:1 1 100%; width:100%; max-width:100%; }
+    .pm-finviz-right { width:100% !important; max-width:100%; height:auto !important; max-height:none !important; flex:1 1 100% !important; }
+    .pm-tv-wrap { height:360px !important; }
+  }
+    .pm-ticket-card {
+    background:#fff; border:1px solid #e5e7eb; border-radius:10px;
+    padding:2px 8px 8px; box-shadow:0 1px 2px rgba(15,23,42,.04);
+    max-width:420px; width:100%;
+  }
+  @media (max-width:480px) {
+    .pm-ticket-card { max-width:100%; padding:6px 8px 10px; border-radius:10px; }
+    .pm-row { grid-template-columns:56px 1fr; }
+    .pm-frac-btn { min-height:36px; }
+    .pm-step-btn { min-width:36px; min-height:36px; }
+    .pm-pill-btn { padding:8px 0; }
+  }
+  @media (min-width:481px) {
+    .pm-ticket-card { max-width:400px; }
+    .pm-finviz-left .pm-ticket-card { max-width:100%; }
+    .pm-row { padding:2px 0; }
+    .pm-stepper input { padding:5px 2px; font-size:0.92rem; }
+    .pm-frac-btn { padding:5px 2px; font-size:0.82rem; }
+  }
+  .pm-row {
+    display:grid; grid-template-columns:56px 1fr; gap:4px; align-items:center;
+    padding:2px 0; border-bottom:1px solid #f1f5f9;
+  }
+  .pm-row:last-of-type { border-bottom:none; }
+  .pm-row-toggle { border-bottom:none; padding-bottom:0; padding-top:1px; }
+  .pm-lab { font-size:.82rem; color:#334155; font-weight:600; }
+  .pm-ctl { min-width:0; }
+  .pm-fixed, .pm-ctl select, .pm-stepper, .pm-amount-big, .pm-amount-edit-wrap, .pm-tpsl {
+    width:100%; box-sizing:border-box;
+  }
+  .pm-fixed {
+    border:1px solid #e2e8f0; border-radius:8px; background:#f8fafc;
+    padding:5px 8px; font-weight:600; color:#0f172a; font-size:.84rem;
+  }
+  .pm-combo {
+    position:relative; display:grid; grid-template-columns:1fr 34px; align-items:stretch;
+    width:100%;
+  }
+  .pm-ticker-select {
+    width:100%; border:1px solid #3b82f6; border-right:none; border-radius:8px 0 0 8px;
+    padding:6px 8px; font-size:.92rem; font-weight:800; color:#0f172a;
+    background:#fff; letter-spacing:.01em; outline:none;
+  }
+  .pm-ticker-select:focus { box-shadow:0 0 0 2px rgba(59,130,246,.25); }
+  .pm-combo-caret {
+    border:1px solid #3b82f6; border-radius:0 8px 8px 0; background:#eff6ff;
+    color:#1d4ed8; font-size:.85rem; font-weight:800; cursor:pointer;
+  }
+  .pm-combo-caret:hover { background:#dbeafe; }
+  .pm-combo-menu {
+    position:absolute; left:0; right:0; top:calc(100% + 4px); z-index:40;
+    max-height:220px; overflow:auto; margin:0; padding:4px;
+    list-style:none; background:#fff; border:1px solid #cbd5e1; border-radius:10px;
+    box-shadow:0 8px 24px rgba(15,23,42,.12);
+  }
+  .pm-combo-menu li {
+    padding:8px 10px; border-radius:8px; cursor:pointer;
+    font-size:.86rem; font-weight:700; color:#0f172a;
+  }
+  .pm-combo-menu li:hover, .pm-combo-menu li.active { background:#eff6ff; color:#1d4ed8; }
+  .pm-combo-menu li.muted { color:#94a3b8; font-weight:600; cursor:default; }
+
+  .pm-stepper {
+    display:grid; grid-template-columns:32px 1fr 32px; align-items:stretch;
+    border:1px solid #cbd5e1; border-radius:8px; overflow:hidden; background:#fff;
+  }
+  .pm-step-mid { min-width:0; }
+  .pm-step-mid input { width:100%; }
+  .pm-stepper input {
+    border:none; text-align:center; font-size:.95rem; font-weight:700;
+    color:#0f172a; padding:5px 2px; min-width:0; background:#fff;
+  }
+  .pm-step-btn {
+    border:none; background:#f8fafc; color:#334155; font-size:1.05rem;
+    font-weight:700; cursor:pointer; border-right:1px solid #e2e8f0;
+  }
+  .pm-step-btn:last-child { border-right:none; border-left:1px solid #e2e8f0; }
+  .pm-step-btn:hover { background:#e2e8f0; }
+  .pm-pill {
+    display:inline-flex; background:#eef2f7; border-radius:999px; padding:2px;
+    gap:2px; width:100%; max-width:200px;
+  }
+  .pm-pill-btn {
+    flex:1; border:none; background:transparent; border-radius:999px;
+    padding:5px 0; font-weight:700; color:#64748b; cursor:pointer; font-size:.82rem;
+  }
+  .pm-pill-btn.active { background:#fff; color:#0f172a; box-shadow:0 1px 2px rgba(0,0,0,.08); }
+  .pm-more-frac {
+    margin-top:2px; font-size:.72rem; color:#64748b;
+  }
+  .pm-more-frac > summary {
+    cursor:pointer; list-style:none; padding:2px 0; font-weight:600;
+  }
+  .pm-more-frac > summary::-webkit-details-marker { display:none; }
+  .pm-more-frac[open] > summary { margin-bottom:4px; color:#334155; }
+  .pm-frac-block { margin:4px 0 2px; }
+  .pm-frac-head, .pm-frac-row {
+    display:grid; grid-template-columns:72px repeat(4, 1fr); gap:4px; align-items:center;
+    margin-bottom:3px;
+  }
+  .pm-frac-head { font-size:.68rem; color:#94a3b8; text-align:center; font-weight:600; }
+  .pm-frac-head span:first-child { text-align:left; }
+  .pm-frac-lab { font-size:.72rem; font-weight:700; line-height:1.15; }
+  .pm-frac-sub { font-size:.62rem; font-weight:500; margin-top:1px; }
+  .pm-frac-row.cash .pm-frac-lab { color:#15803d; }
+  .pm-frac-row.suggest .pm-frac-lab { color:#0f766e; }
+  .pm-frac-row.sell .pm-frac-lab { color:#be123c; }
+  .pm-frac-btn {
+    border:none; border-radius:6px; padding:5px 2px; font-weight:700;
+    font-size:.85rem; cursor:pointer; text-align:center;
+  }
+  .pm-frac-btn.cash { background:#dcfce7; color:#166534; }
+  .pm-frac-btn.cash:hover, .pm-frac-btn.cash.active { outline:2px solid #16a34a; background:#bbf7d0; }
+  .pm-frac-btn.suggest { background:#ccfbf1; color:#0f766e; }
+  .pm-frac-btn.suggest:hover, .pm-frac-btn.suggest.active { outline:2px solid #0d9488; background:#99f6e4; }
+  .pm-frac-btn.sell { background:#ffe4e6; color:#9f1239; cursor:default; opacity:.85; }
+  .pm-hidden { display:none !important; }
+  .pm-amount-edit-wrap {
+    display:grid; grid-template-columns:1fr auto; align-items:center; gap:6px;
+    border:1px solid #cbd5e1; border-radius:8px; background:#fff; padding:2px 8px;
+  }
+  .pm-amount-big-input {
+    width:100%; border:none; outline:none; background:transparent;
+    font-size:1.05rem; font-weight:800; color:#0f172a; padding:5px 0; letter-spacing:.01em;
+  }
+  .pm-amount-ccy { font-weight:700; color:#64748b; font-size:.85rem; }
+  .pm-amount-hint { font-size:.68rem; margin-top:2px; }
+  .pm-amount-big {
+    font-size:1.05rem; font-weight:800; color:#334155; padding:2px 0; letter-spacing:.01em;
+  }
+  .pm-tpsl {
+    border:1px solid #e2e8f0; border-radius:8px; background:#fff;
+    padding:5px 8px; font-size:.78rem; color:#0f172a; line-height:1.3;
+    display:flex; flex-wrap:wrap; gap:2px 4px; align-items:center;
+  }
+  .pm-tpsl-item b { color:#475569; font-weight:600; margin-right:2px; }
+  .pm-tpsl-sep { color:#cbd5e1; }
+  .pm-ladder-details {
+    margin:4px 0 6px; background:#f8fafc; border:1px solid #e2e8f0;
+    border-radius:8px; padding:4px 8px;
+  }
+  .pm-ladder-details summary { cursor:pointer; font-weight:600; color:#475569; font-size:.78rem; }
+  .pm-buy-btn {
+    display:block; width:100%; margin-top:2px; border:none; border-radius:10px;
+    background:#16a34a; color:#fff; font-size:1.02rem; font-weight:800;
+    padding:10px 12px; cursor:pointer; letter-spacing:.05em;
+  }
+  .pm-buy-btn:hover { background:#15803d; }
+  .pm-toast {
+    background:#0f172a; color:#fff; border-radius:10px; padding:10px 12px;
+    margin:0 0 10px; font-weight:700; font-size:.92rem;
+  }
+  .pm-msg { background:#fef3c7; color:#92400e; border-radius:10px; padding:10px 12px; margin:8px 0; font-weight:600; }
+  .pm-warn { background:#fee2e2; color:#991b1b; border-radius:10px; padding:10px 12px; margin:8px 0; }
+  .pm-below {
+    margin-top:12px; width:100%; max-width:none; box-sizing:border-box;
+    background:#fff; border:1px solid #e2e8f0;
+    border-radius:12px; padding:12px 14px 10px;
+  }
+  .pm-check-title { font-weight:800; margin-bottom:10px; color:#0f172a; font-size:1rem; }
+  .pm-checklist {
+    list-style:none; margin:0; padding:0;
+    display:grid;
+    grid-template-columns:repeat(7, minmax(0, 1fr));
+    gap:8px;
+    color:#334155;
+  }
+  .pm-checklist > li {
+    display:flex; flex-direction:column; gap:4px;
+    background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px;
+    padding:10px 10px 12px; min-height:0; box-sizing:border-box;
+  }
+  .pm-check-num {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:22px; height:22px; border-radius:999px;
+    background:#16a34a; color:#fff; font-size:.75rem; font-weight:800;
+  }
+  .pm-check-txt { font-size:.82rem; line-height:1.35; font-weight:600; color:#0f172a; }
+  .pm-check-notes {
+    margin-top:10px; display:grid; grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:4px 16px;
+  }
+  .pm-check-notes > p { margin:0; font-size:.75rem; line-height:1.4; }
+  .pm-check-flash {
+    outline:3px solid #f59e0b; box-shadow:0 0 0 6px rgba(245,158,11,.25);
+    transition: outline .2s, box-shadow .2s;
+  }
+  .pm-footnote { font-size:.75rem !important; }
+  @media (max-width:1100px) {
+    .pm-checklist { grid-template-columns:repeat(4, minmax(0, 1fr)); }
+  }
+  @media (max-width:700px) {
+    .pm-checklist { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+    .pm-check-notes { grid-template-columns:1fr; }
+  }
+  @media (max-width:520px) {
+    .pm-frac-head, .pm-frac-row { grid-template-columns:72px repeat(4, 1fr); gap:4px; }
+    .pm-row { grid-template-columns:64px 1fr; }
+    .pm-ticket-card { max-width:100%; }
+  }
+
+
+  .usm-open-btn {
+    background:#16a34a; color:#fff; border:none; border-radius:8px;
+    padding:4px 10px; font-weight:700; font-size:.78rem; cursor:pointer;
+    white-space:nowrap;
+  }
+  .usm-open-btn:hover { background:#15803d; }
+  .usm-open-btn.is-disabled, .usm-open-btn:disabled {
+    background:#94a3b8 !important; color:#f8fafc !important; cursor:not-allowed; opacity:.75;
+  }
+  .pm-buy-btn.is-disabled, .pm-buy-btn:disabled {
+    background:#94a3b8 !important; cursor:not-allowed; opacity:.75;
+  }
+  .pm-buy-btn.is-disabled:hover { background:#94a3b8 !important; }
+  .entry-gate-fails {
+    margin-top:10px; padding:8px 10px; border-radius:10px;
+    background:#fff1f2; border:1px solid #fecdd3; font-size:.86rem;
+  }
+  .entry-gate-fails ul { margin:6px 0 0; padding-left:1.2em; }
+  .entry-gate-fails li { margin:2px 0; font-weight:600; color:#9f1239; }
+  .entry-gate-tip {
+    margin:6px 0 14px; font-size:.88rem; color:#475569; font-weight:600;
+  }
+  .entry-gate {
+    margin: 12px 0 16px; padding: 12px 14px; border-radius: 12px;
+    border: 1px solid #cbd5e1; background: #fff;
+  }
+  .entry-gate.allow { border-color: #86efac; background: #f0fdf4; }
+  .entry-gate.pause { border-color: #fca5a5; background: #fef2f2; }
+  .entry-gate h3 { margin: 0 0 6px; font-size: 1rem; }
+  .entry-gate .conds {
+    display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; margin-top: 10px;
+  }
+  .entry-gate .cond {
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 8px 10px; font-size: .82rem;
+  }
+  .entry-gate .cond.ok { border-color: #86efac; }
+  .entry-gate .cond.bad { border-color: #fca5a5; }
+  .entry-gate .cond .lab { color: #64748b; font-weight: 600; }
+  .entry-gate .cond .val { font-weight: 800; margin-top: 2px; }
+  @media (max-width:700px) {
+    .entry-gate .conds { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <button type="button" class="lang-btn active" data-set="zh" id="btn-zh">中文</button>
+    <button type="button" class="lang-btn" data-set="en" id="btn-en">English</button>
+  </div>
+  <div class="hero">
+    <div class="hero-row">
+      <div class="hero-text">
+        <h1>
+          <span class="zh">美股短线清洗台 v2.5.1</span>
+          <span class="en">US Short Scrub Desk v2.5.1</span>
+        </h1>
+        <p>
+          <span class="zh">多策略规则清洗 + 专业玩家公开账户对照 · 你自己下单 · 离线可打开 · 可切数字货币世界</span>
+          <span class="en">Multi-lens rule scrub + public pro accounts · you place your own orders · works offline · crypto desk toggle</span>
+        </p>
+      </div>
+      <div class="hero-right">
+        <a class="hero-cta" href="crypto.html">
+          <span class="zh">数字货币世界</span>
+          <span class="en">Crypto World</span>
+        </a>
+      </div>
+    </div>
+    <div class="hero-credit">
+      <span class="who">作者：美颖Sanmarry</span>
+      <span>Copyright © 2026 MiracleLove LLC. All rights reserved</span>
+    </div>
+  </div>
+  <div class="metrics">
+    <div class="metric"><div class="k"><span class="zh">市场体制</span><span class="en">Regime</span></div><div class="v">RISK_ON</div></div>
+    <div class="metric"><div class="k">QQQ</div><div class="v">714.88</div></div>
+    <div class="metric"><div class="k">QQQ SMA200</div><div class="v">659.26</div></div>
+    <div class="metric"><div class="k"><span class="zh">扫描/命中</span><span class="en">Scanned / tagged</span></div><div class="v">5577 / 43</div></div>
+  </div>
+  <p><span class="pill"><span class="zh">绿灯 · 可做动量</span><span class="en">Green · momentum OK</span></span>
+     <span class="muted"><span class="zh">短线动量 / 突破偏友好</span><span class="en">short-term momentum / breakouts favored</span></span></p>
+  <p class="muted"><span class="zh">仅供参考分析，非投资建议，不会替你下单。数据来自 Yahoo Finance（可能延迟）。过滤规则是启发式，不是已验证实盘优势。风险自负。</span><span class="en">Reference analysis only. Not investment advice. No orders placed. Data via Yahoo Finance (may be delayed). Filters are rule-based heuristics, not a proven live edge. You execute at your own risk.</span></p>
+  <div class="entry-gate allow" id="entry-gate" data-allow="1"><h3><span class="zh">新开仓总闸：允许新开仓（绿灯可做动量）</span><span class="en">New-entry gate: New entries allowed (green — momentum OK)</span></h3><p class="muted" style="margin:0"><span class="zh">大盘前置过滤：三条全过才允许新开个股；已有持仓不受限，止盈止损照常。</span><span class="en">Market gate: all 3 must pass for NEW entries; open positions keep stops/TPs.</span></p><div class="conds"><div class="cond ok"><div class="lab"><span class="zh">① SPX > 50日均线</span><span class="en">① SPX > SMA50</span> · ✓</div><div class="val">SPX 7656.98 / SMA50 7607.34</div></div><div class="cond ok"><div class="lab"><span class="zh">② VIX < 25</span><span class="en">② VIX < 25</span> · ✓</div><div class="val">VIX 15.85 (max 25.0)</div></div><div class="cond ok"><div class="lab"><span class="zh">③ SPX近20日回撤 ≤8%</span><span class="en">③ SPX 20d DD ≤8%</span> · ✓</div><div class="val">2.49% / max 8.0%</div></div></div></div><p class="entry-gate-tip"><span class="zh">仅限制新开仓，已有持仓止盈止损正常运行。</span><span class="en">Only new entries are blocked; open-position stops/TPs still apply.</span></p><script>window.USM_ENTRY_GATE = {"allow": true, "fail_zh": [], "fail_en": [], "block_zh": "当前大盘条件不满足，禁止新建仓位，已有持仓不受影响。", "block_en": "Market gate failed — no new positions. Open holdings are unaffected."};</script>
+  <p class="muted">
+    <span class="zh">数据更新（UTC）：2026-09-11 20:26 UTC · 页面生成：2026-09-11 20:27 UTC</span>
+    <span class="en">Data as of (UTC): 2026-09-11 20:26 UTC · Page built: 2026-09-11 20:27 UTC</span>
+  </p>
+
+  
+  <div class="pm-finviz-split" id="pm-finviz-split">
+    <div class="pm-finviz-left">
+
+  <h2 id="position-manager"><span class="zh">仓位管理</span><span class="en">Position manager</span></h2>
+  <p class="muted">
+    <span class="zh">仅分析参考 · 选股后抄到 moomoo</span>
+    <span class="en">Analysis only · copy to moomoo</span>
+  </p>
+  <script>window.USM_CANDIDATES = [{"ticker": "MFG", "close": 11.45, "tags": ["A_near_breakout", "B_rs_leader", "F_volume_price_lift"], "pct1": 3.53, "primary_lens": "A_near_breakout", "friendly_zh": "A近突破 · B龙头 · F抬升", "friendly_en": "A Near-breakout · B Leader · F Lift"}, {"ticker": "DELL", "close": 567.12, "tags": ["B_rs_leader", "F_volume_price_lift"], "pct1": 11.94, "primary_lens": "F_volume_price_lift", "friendly_zh": "B龙头 · F抬升", "friendly_en": "B Leader · F Lift"}, {"ticker": "NOK", "close": 11.13, "tags": ["A_near_breakout", "B_rs_leader", "F_prove_it_watch"], "pct1": 4.8, "primary_lens": "A_near_breakout", "friendly_zh": "A近突破 · B龙头 · F观察窗口", "friendly_en": "A Near-breakout · B Leader · F Prove-it watch"}, {"ticker": "HPE", "close": 62.09, "tags": ["B_rs_leader", "F_volume_price_lift"], "pct1": 12.44, "primary_lens": "F_volume_price_lift", "friendly_zh": "B龙头 · F抬升", "friendly_en": "B Leader · F Lift"}, {"ticker": "HDB", "close": 23.34, "tags": ["A_near_breakout", "C_rvol_event"], "pct1": 6.87, "primary_lens": "A_near_breakout", "friendly_zh": "A近突破 · C事件", "friendly_en": "A Near-breakout · C Event"}, {"ticker": "BE", "close": 275.75, "tags": ["B_rs_leader", "F_prove_it_watch"], "pct1": 6.68, "primary_lens": "B_rs_leader", "friendly_zh": "B龙头 · F观察窗口", "friendly_en": "B Leader · F Prove-it watch"}, {"ticker": "EQNR", "close": 44.8, "tags": ["B_rs_leader", "F_prove_it_watch"], "pct1": -0.69, "primary_lens": "B_rs_leader", "friendly_zh": "B龙头 · F观察窗口", "friendly_en": "B Leader · F Prove-it watch"}, {"ticker": "QCOM", "close": 181.97, "tags": ["B_rs_leader", "F_prove_it_watch"], "pct1": 2.88, "primary_lens": "B_rs_leader", "friendly_zh": "B龙头 · F观察窗口", "friendly_en": "B Leader · F Prove-it watch"}, {"ticker": "AMD", "close": 516.13, "tags": ["B_rs_leader", "F_prove_it_watch"], "pct1": 2.49, "primary_lens": "B_rs_leader", "friendly_zh": "B龙头 · F观察窗口", "friendly_en": "B Leader · F Prove-it watch"}, {"ticker": "HCA", "close": 426.94, "tags": ["B_rs_leader", "F_prove_it_watch"], "pct1": 1.36, "primary_lens": "B_rs_leader", "friendly_zh": "B龙头 · F观察窗口", "friendly_en": "B Leader · F Prove-it watch"}, {"ticker": "MRNA", "close": 143.97, "tags": ["F_volume_price_lift"], "pct1": 5.38, "primary_lens": "F_volume_price_lift", "friendly_zh": "F抬升", "friendly_en": "F Lift"}, {"ticker": "VLO", "close": 390.42, "tags": ["B_rs_leader"], "pct1": 1.29, "primary_lens": "B_rs_leader", "friendly_zh": "B龙头", "friendly_en": "B Leader"}, {"ticker": "FIX", "close": 1690.82, "tags": ["F_volume_price_lift"], "pct1": 6.29, "primary_lens": "F_volume_price_lift", "friendly_zh": "F抬升", "friendly_en": "F Lift"}, {"ticker": "MPC", "close": 395.93, "tags": ["B_rs_leader"], "pct1": 0.89, "primary_lens": "B_rs_leader", "friendly_zh": "B龙头", "friendly_en": "B Leader"}, {"ticker": "ANET", "close": 199.59, "tags": ["F_volume_price_lift"], "pct1": 5.61, "primary_lens": "F_volume_price_lift", "friendly_zh": "F抬升", "friendly_en": "F Lift"}, {"ticker": "JCI", "close": 146.01, "tags": ["A_near_breakout"], "pct1": 2.24, "primary_lens": "A_near_breakout", "friendly_zh": "A近突破", "friendly_en": "A Near-breakout"}, {"ticker": "CSCO", "close": 112.13, "tags": ["F_volume_price_lift"], "pct1": 4.37, "primary_lens": "F_volume_price_lift", "friendly_zh": "F抬升", "friendly_en": "F Lift"}, {"ticker": "ADI", "close": 378.78, "tags": ["F_volume_price_lift"], "pct1": 4.85, "primary_lens": "F_volume_price_lift", "friendly_zh": "F抬升", "friendly_en": "F Lift"}, {"ticker": "TXN", "close": 268.7, "tags": ["F_volume_price_lift"], "pct1": 3.82, "primary_lens": "F_volume_price_lift", "friendly_zh": "F抬升", "friendly_en": "F Lift"}, {"ticker": "AAPL", "close": 332.27, "tags": ["B_rs_leader"], "pct1": 1.75, "primary_lens": "B_rs_leader", "friendly_zh": "B龙头", "friendly_en": "B Leader"}, {"ticker": "T", "close": 26.06, "tags": ["A_near_breakout"], "pct1": 2.0, "primary_lens": "A_near_breakout", "friendly_zh": "A近突破", "friendly_en": "A Near-breakout"}, {"ticker": "META", "close": 648.03, "tags": ["F_prove_it_watch"], "pct1": 0.57, "primary_lens": "F_prove_it_watch", "friendly_zh": "F观察窗口", "friendly_en": "F Prove-it watch"}, {"ticker": "IBM", "close": 243.29, "tags": ["F_prove_it_watch"], "pct1": 3.96, "primary_lens": "F_prove_it_watch", "friendly_zh": "F观察窗口", "friendly_en": "F Prove-it watch"}, {"ticker": "GD", "close": 355.9, "tags": ["D_oversold_bounce_watch"], "pct1": 0.47, "primary_lens": "D_oversold_bounce_watch", "friendly_zh": "D超卖观察", "friendly_en": "D Oversold watch"}];</script>
+
+  <div class="pm-capital-bar">
+    <span class="pm-cap-label"><span class="zh">账户本金</span><span class="en">Account capital</span></span>
+    <div class="pm-cap-ctrl">
+      <span class="pm-cap-prefix">$</span>
+      <input type="number" id="pm-capital" min="100" step="1000" value="100000"/>
+    </div>
+    <span class="muted pm-cap-hint"><span class="zh">记在本机</span><span class="en">Saved locally</span></span>
+  </div>
+
+  <div class="card pm-ticket-card" id="pm-root">
+    <div id="pm-msg" class="pm-msg" hidden></div>
+    <div id="pm-warn" class="pm-warn" hidden></div>
+    <div id="pm-toast" class="pm-toast" hidden></div>
+
+    <div class="pm-row">
+      <div class="pm-lab"><span class="zh">代码</span><span class="en">Symbol</span></div>
+      <div class="pm-ctl pm-ctl-ticker">
+        <div class="pm-combo" id="pm-combo">
+          <input type="text" id="pm-ticker-input" class="pm-ticker-select" autocomplete="off" spellcheck="false"
+            placeholder="输入或下拉选择" inputmode="latin"/>
+          <button type="button" class="pm-combo-caret" id="pm-ticker-caret" aria-label="open list">▾</button>
+          <ul class="pm-combo-menu" id="pm-ticker-menu" hidden></ul>
+          <input type="hidden" id="pm-ticker" value=""/>
+        </div>
+      </div>
+    </div>
+
+    <div class="pm-row">
+      <div class="pm-lab"><span class="zh">时段</span><span class="en">Session</span></div>
+      <div class="pm-ctl"><div class="pm-fixed">盘中</div></div>
+    </div>
+
+    <div class="pm-row">
+      <div class="pm-lab"><span class="zh">类型</span><span class="en">Type</span></div>
+      <div class="pm-ctl"><div class="pm-fixed">限价单</div></div>
+    </div>
+
+    <div class="pm-row">
+      <div class="pm-lab"><span class="zh">价格</span><span class="en">Price</span></div>
+      <div class="pm-ctl">
+        <div class="pm-stepper">
+          <button type="button" class="pm-step-btn" id="pm-price-minus" aria-label="-">−</button>
+          <input type="number" id="pm-entry" min="0.01" step="0.01" value="100"/>
+          <button type="button" class="pm-step-btn" id="pm-price-plus" aria-label="+">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pm-row pm-row-toggle">
+      <div class="pm-lab"></div>
+      <div class="pm-ctl">
+        <div class="pm-pill" id="pm-mode-pill" role="tablist">
+          <button type="button" class="pm-pill-btn active" data-mode="qty" id="pm-mode-qty"><span class="zh">数量</span><span class="en">Qty</span></button>
+          <button type="button" class="pm-pill-btn" data-mode="amt" id="pm-mode-amt"><span class="zh">金额</span><span class="en">Amount</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pm-row" id="pm-qty-row">
+      <div class="pm-lab" id="pm-qty-lab"><span class="zh">数量</span><span class="en">Qty</span></div>
+      <div class="pm-ctl">
+        <div class="pm-stepper">
+          <button type="button" class="pm-step-btn" id="pm-qty-minus" aria-label="-">−</button>
+          <div class="pm-step-mid">
+            <input type="number" id="pm-qty" min="0" step="1" value="0"/>
+            <input type="number" id="pm-amount-edit" class="pm-hidden" min="0" step="10" value="0" inputmode="decimal"/>
+          </div>
+          <button type="button" class="pm-step-btn" id="pm-qty-plus" aria-label="+">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pm-frac-block">
+      <div class="pm-frac-head">
+        <span></span>
+        <span>全仓</span><span>1/2</span><span>1/3</span><span>1/4</span>
+      </div>
+      <div class="pm-frac-row suggest">
+        <div class="pm-frac-lab">
+          <span class="zh">建议仓位</span><span class="en">Suggested</span>
+          <div class="pm-frac-sub"><span class="zh">按止损风险</span><span class="en">Risk-sized</span></div>
+        </div>
+        <button type="button" class="pm-frac-btn suggest active" data-src="suggest" data-frac="1" id="pm-sug-1">0</button>
+        <button type="button" class="pm-frac-btn suggest" data-src="suggest" data-frac="2" id="pm-sug-2">0</button>
+        <button type="button" class="pm-frac-btn suggest" data-src="suggest" data-frac="3" id="pm-sug-3">0</button>
+        <button type="button" class="pm-frac-btn suggest" data-src="suggest" data-frac="4" id="pm-sug-4">0</button>
+      </div>
+      <details class="pm-more-frac">
+        <summary><span class="zh">更多：现金可买 / 持仓可卖</span><span class="en">More: cash buy / position sell</span></summary>
+        <div class="pm-frac-row cash">
+          <div class="pm-frac-lab"><span class="zh">现金可买</span><span class="en">Cash buy</span></div>
+          <button type="button" class="pm-frac-btn cash" data-src="cash" data-frac="1" id="pm-cash-1">0</button>
+          <button type="button" class="pm-frac-btn cash" data-src="cash" data-frac="2" id="pm-cash-2">0</button>
+          <button type="button" class="pm-frac-btn cash" data-src="cash" data-frac="3" id="pm-cash-3">0</button>
+          <button type="button" class="pm-frac-btn cash" data-src="cash" data-frac="4" id="pm-cash-4">0</button>
+        </div>
+        <div class="pm-frac-row sell">
+          <div class="pm-frac-lab">
+            <span class="zh">持仓可卖</span><span class="en">Position sell</span>
+            <div class="pm-frac-sub muted"><span class="zh">分析页无真实持仓</span><span class="en">No live positions here</span></div>
+          </div>
+          <button type="button" class="pm-frac-btn sell" disabled>0</button>
+          <button type="button" class="pm-frac-btn sell" disabled>0</button>
+          <button type="button" class="pm-frac-btn sell" disabled>0</button>
+          <button type="button" class="pm-frac-btn sell" disabled>0</button>
+        </div>
+      </details>
+    </div>
+
+    <div class="pm-row pm-row-amount">
+      <div class="pm-lab"><span class="zh">金额</span><span class="en">Amount</span></div>
+      <div class="pm-ctl">
+        <div class="pm-amount-edit-wrap">
+          <input type="number" class="pm-amount-big-input" id="pm-notional-input" min="0" step="10" value="0" inputmode="decimal"/>
+          <span class="pm-amount-ccy">USD</span>
+        </div>
+        <div class="pm-amount-hint muted" id="pm-amount-hint">
+          <span class="zh">改金额会反算股数</span>
+          <span class="en">Edits back-calc shares</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pm-row pm-row-meta">
+      <div class="pm-lab"><span class="zh">条件/期限</span><span class="en">Cond / TIF</span></div>
+      <div class="pm-ctl"><div class="pm-fixed pm-fixed-compact"><span class="zh">无 · 当日有效</span><span class="en">None · Day</span></div></div>
+    </div>
+
+    <div class="pm-row pm-row-tpsl">
+      <div class="pm-lab"><span class="zh">止盈/止损</span><span class="en">TP / SL</span></div>
+      <div class="pm-ctl">
+        <div class="pm-tpsl" id="pm-tpsl-summary">—</div>
+      </div>
+    </div>
+
+    <details class="pm-ladder-details" id="pm-ladder-details">
+      <summary><span class="zh">展开卖出阶梯（护本止损 / 第一档 / 第二档 / 跟踪）</span><span class="en">Expand sell ladder (protect / TP1 / TP2 / trail)</span></summary>
+      <div class="table-wrap" style="margin:8px 0 0">
+        <table id="pm-schedule">
+          <thead><tr>
+            <th><span class="zh">步骤</span><span class="en">Step</span></th>
+            <th><span class="zh">价格</span><span class="en">Price</span></th>
+            <th><span class="zh">操作</span><span class="en">Action</span></th>
+            <th><span class="zh">股数</span><span class="en">Shares</span></th>
+            <th><span class="zh">约占仓位</span><span class="en">% of pos</span></th>
+            <th><span class="zh">大约金额</span><span class="en">Est. $</span></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </details>
+
+    <button type="button" class="pm-buy-btn" id="pm-buy-btn"><span class="zh">买入</span><span class="en">Buy</span></button>
+
+    <input type="hidden" id="pm-lens" value="A_momentum_burst"/>
+    <input type="hidden" id="pm-stop" value="96"/>
+    <input type="hidden" id="pm-risk" value="0.5"/>
+    <input type="hidden" id="pm-partial" value="0.5"/>
+    <p class="muted" id="pm-type-line" style="margin:10px 0 0;font-size:.8rem"></p>
+  </div>
+
+
+    </div>
+    <div class="pm-finviz-right card">
+      <div class="pm-finviz-head">
+        <h2 style="margin:0;font-size:1.1rem">
+          <span class="zh">板块热力图</span><span class="en">Sector heatmap</span>
+        </h2>
+        <span class="pm-finviz-links">
+          <a class="pm-finviz-link" href="https://www.tradingview.com/heatmap/stock/" target="_blank" rel="noopener noreferrer">
+            <span class="zh">TradingView</span><span class="en">TradingView</span>
+          </a>
+          <a class="pm-finviz-link" href="https://finviz.com/map?t=sec&amp;st=d1" target="_blank" rel="noopener noreferrer">
+            <span class="zh">Finviz</span><span class="en">Finviz</span>
+          </a>
+        </span>
+      </div>
+      <p class="muted" style="margin:4px 0 6px;font-size:.78rem">
+        <span class="zh">深色绿涨红跌 · 铺满右侧 · 底边略低于「买入」以露出百分比色条</span>
+        <span class="en">Dark green/red · fills right · bottom below Buy so % legend shows</span>
+      </p>
+      <div class="pm-finviz-frame-wrap pm-tv-frame">
+
+      <div class="pm-tv-wrap">
+        <div class="tradingview-widget-container" style="height:100%;width:100%">
+          <div class="tradingview-widget-container__widget" style="height:calc(100% - 24px);width:100%"></div>
+          <div class="tradingview-widget-copyright">
+            <a href="https://www.tradingview.com/heatmap/stock/" rel="noopener nofollow" target="_blank">
+              <span class="blue-text">Stock Heatmap</span></a>
+            <span class="trademark"> by TradingView</span>
+          </div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js" async>
+          {
+            "exchanges": [],
+            "dataSource": "SPX500",
+            "grouping": "sector",
+            "blockSize": "market_cap_basic",
+            "blockColor": "change",
+            "locale": "zh_CN",
+            "symbolUrl": "",
+            "colorTheme": "dark",
+            "hasTopBar": false,
+            "isDataSetEnabled": false,
+            "isZoomEnabled": true,
+            "hasSymbolTooltip": true,
+            "isMonoSize": false,
+            "width": "100%",
+            "height": "100%"
+          }
+          </script>
+        </div>
+      </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="pm-below" id="pm-checklist-box">
+    <div class="pm-check-title"><span class="zh">对照 moomoo 填写</span><span class="en">Fill on moomoo</span></div>
+    <ol class="pm-checklist" id="pm-checklist">
+      <li><span class="pm-check-num">1</span><span class="pm-check-txt"><span class="zh">代码 → 选同一标的</span><span class="en">Symbol → same ticker</span></span></li>
+      <li><span class="pm-check-num">2</span><span class="pm-check-txt"><span class="zh">时段 → 盘中 · 类型 → 限价单</span><span class="en">Session → Regular · Type → Limit</span></span></li>
+      <li><span class="pm-check-num">3</span><span class="pm-check-txt"><span class="zh">价格 → 填上方限价</span><span class="en">Price → limit above</span></span></li>
+      <li><span class="pm-check-num">4</span><span class="pm-check-txt"><span class="zh">数量 → 优先用「建议仓位·全仓」（风险算），勿盲目用现金全仓</span><span class="en">Qty → prefer Suggested·Full (risk-sized), not cash full</span></span></li>
+      <li><span class="pm-check-num">5</span><span class="pm-check-txt"><span class="zh">期限 → 当日有效 · 条件 → 无</span><span class="en">TIF → Day · Condition → None</span></span></li>
+      <li><span class="pm-check-num">6</span><span class="pm-check-txt"><span class="zh">止盈/止损 → 按上方止损价 / 止盈① / 止盈② 挂单</span><span class="en">TP/SL → use protect / TP1 / TP2 above</span></span></li>
+      <li><span class="pm-check-num">7</span><span class="pm-check-txt"><span class="zh">在 moomoo 手动确认后下单（本页不下单）</span><span class="en">Confirm &amp; place on moomoo (this page never orders)</span></span></li>
+    </ol>
+    <div class="pm-check-notes">
+      <p class="muted pm-footnote" id="pm-r-footnote"></p>
+      <p class="muted" id="pm-timestop"></p>
+      <p class="muted" id="pm-slots-note"></p>
+      <p class="muted">
+        <span class="zh">仅作分析参考，非投资建议；不下单。止损在剧烈波动下可能滑点。</span>
+        <span class="en">Reference only — not advice; no orders. Stops can slip in fast markets.</span>
+      </p>
+    </div>
+  </div>
+
+
+
+  <h2><span class="zh">按板块</span><span class="en">By sector</span></h2><p class="muted"><span class="zh">综合候选按 GICS 风格板块分组（缓存 + Yahoo 补全）。</span><span class="en">Composite candidates grouped by GICS-like sector (cache + Yahoo fill).</span></p>
+<details class="sector-board" open><summary><span class="zh">科技 (9)</span><span class="en">Technology (9)</span></summary><div class="table-wrap"><table><thead><tr>
+<th><span class="zh">代码</span><span class="en">Ticker</span></th>
+<th><span class="zh">现价</span><span class="en">Price</span></th>
+<th><span class="zh">今日%</span><span class="en">Day %</span></th>
+<th><span class="zh">量比</span><span class="en">RVOL</span></th>
+<th>RS20</th>
+<th>RSI</th>
+<th><span class="zh">分数</span><span class="en">Score</span></th>
+<th><span class="zh">标签</span><span class="en">Tags</span></th>
+<th><span class="zh">开仓</span><span class="en">Open</span></th>
+</tr></thead><tbody><tr><td>DELL</td><td>567.12</td><td>11.94</td><td>1.62</td><td>17.03</td><td>66.6</td><td>51.33</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="DELL"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>NOK</td><td>11.13</td><td>4.8</td><td>1.22</td><td>7.75</td><td>60.9</td><td>47.99</td><td><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span> <span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="NOK"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>HPE</td><td>62.09</td><td>12.44</td><td>1.59</td><td>6.14</td><td>64.1</td><td>43.25</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="HPE"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>QCOM</td><td>181.97</td><td>2.88</td><td>1.02</td><td>13.37</td><td>67.4</td><td>30.36</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="QCOM"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>AMD</td><td>516.13</td><td>2.49</td><td>1.04</td><td>9.21</td><td>58.0</td><td>27.91</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="AMD"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>ANET</td><td>199.59</td><td>5.61</td><td>0.92</td><td>0.37</td><td>57.1</td><td>21.8</td><td><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="ANET"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>CSCO</td><td>112.13</td><td>4.37</td><td>0.91</td><td>1.17</td><td>51.0</td><td>21.34</td><td><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="CSCO"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>ADI</td><td>378.78</td><td>4.85</td><td>0.79</td><td>2.02</td><td>56.6</td><td>21.3</td><td><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="ADI"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>TXN</td><td>268.7</td><td>3.82</td><td>0.96</td><td>0.62</td><td>51.8</td><td>20.83</td><td><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="TXN"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr></tbody></table></div></details>
+<details class="sector-board" open><summary><span class="zh">工业 (3)</span><span class="en">Industrials (3)</span></summary><div class="table-wrap"><table><thead><tr>
+<th><span class="zh">代码</span><span class="en">Ticker</span></th>
+<th><span class="zh">现价</span><span class="en">Price</span></th>
+<th><span class="zh">今日%</span><span class="en">Day %</span></th>
+<th><span class="zh">量比</span><span class="en">RVOL</span></th>
+<th>RS20</th>
+<th>RSI</th>
+<th><span class="zh">分数</span><span class="en">Score</span></th>
+<th><span class="zh">标签</span><span class="en">Tags</span></th>
+<th><span class="zh">开仓</span><span class="en">Open</span></th>
+</tr></thead><tbody><tr><td>BE</td><td>275.75</td><td>6.68</td><td>1.04</td><td>19.08</td><td>65.0</td><td>32.54</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="BE"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>FIX</td><td>1690.82</td><td>6.29</td><td>0.87</td><td>0.22</td><td>53.8</td><td>21.9</td><td><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="FIX"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>JCI</td><td>146.01</td><td>2.24</td><td>1.71</td><td>-1.24</td><td>53.0</td><td>21.42</td><td><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="JCI"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr></tbody></table></div></details>
+<details class="sector-board" open><summary><span class="zh">能源 (3)</span><span class="en">Energy (3)</span></summary><div class="table-wrap"><table><thead><tr>
+<th><span class="zh">代码</span><span class="en">Ticker</span></th>
+<th><span class="zh">现价</span><span class="en">Price</span></th>
+<th><span class="zh">今日%</span><span class="en">Day %</span></th>
+<th><span class="zh">量比</span><span class="en">RVOL</span></th>
+<th>RS20</th>
+<th>RSI</th>
+<th><span class="zh">分数</span><span class="en">Score</span></th>
+<th><span class="zh">标签</span><span class="en">Tags</span></th>
+<th><span class="zh">开仓</span><span class="en">Open</span></th>
+</tr></thead><tbody><tr><td>EQNR</td><td>44.8</td><td>-0.69</td><td>1.07</td><td>13.93</td><td>64.5</td><td>30.45</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="EQNR"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>VLO</td><td>390.42</td><td>1.29</td><td>1.25</td><td>16.2</td><td>78.7</td><td>23.1</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="VLO"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>MPC</td><td>395.93</td><td>0.89</td><td>1.0</td><td>13.75</td><td>74.7</td><td>21.88</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="MPC"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr></tbody></table></div></details>
+<details class="sector-board" open><summary><span class="zh">医疗健康 (2)</span><span class="en">Healthcare (2)</span></summary><div class="table-wrap"><table><thead><tr>
+<th><span class="zh">代码</span><span class="en">Ticker</span></th>
+<th><span class="zh">现价</span><span class="en">Price</span></th>
+<th><span class="zh">今日%</span><span class="en">Day %</span></th>
+<th><span class="zh">量比</span><span class="en">RVOL</span></th>
+<th>RS20</th>
+<th>RSI</th>
+<th><span class="zh">分数</span><span class="en">Score</span></th>
+<th><span class="zh">标签</span><span class="en">Tags</span></th>
+<th><span class="zh">开仓</span><span class="en">Open</span></th>
+</tr></thead><tbody><tr><td>HCA</td><td>426.94</td><td>1.36</td><td>1.0</td><td>6.04</td><td>59.6</td><td>26.95</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="HCA"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>MRNA</td><td>143.97</td><td>5.38</td><td>0.45</td><td>128.54</td><td>61.2</td><td>23.73</td><td><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="MRNA"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr></tbody></table></div></details>
+<details class="sector-board" open><summary><span class="zh">金融 (1)</span><span class="en">Financial Services (1)</span></summary><div class="table-wrap"><table><thead><tr>
+<th><span class="zh">代码</span><span class="en">Ticker</span></th>
+<th><span class="zh">现价</span><span class="en">Price</span></th>
+<th><span class="zh">今日%</span><span class="en">Day %</span></th>
+<th><span class="zh">量比</span><span class="en">RVOL</span></th>
+<th>RS20</th>
+<th>RSI</th>
+<th><span class="zh">分数</span><span class="en">Score</span></th>
+<th><span class="zh">标签</span><span class="en">Tags</span></th>
+<th><span class="zh">开仓</span><span class="en">Open</span></th>
+</tr></thead><tbody><tr><td>HDB</td><td>23.34</td><td>6.87</td><td>2.26</td><td>3.39</td><td>51.5</td><td>36.78</td><td><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span> <span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="HDB"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr></tbody></table></div></details>
+<details class="sector-board" open><summary><span class="zh">未知 (2)</span><span class="en">Unknown (2)</span></summary><div class="table-wrap"><table><thead><tr>
+<th><span class="zh">代码</span><span class="en">Ticker</span></th>
+<th><span class="zh">现价</span><span class="en">Price</span></th>
+<th><span class="zh">今日%</span><span class="en">Day %</span></th>
+<th><span class="zh">量比</span><span class="en">RVOL</span></th>
+<th>RS20</th>
+<th>RSI</th>
+<th><span class="zh">分数</span><span class="en">Score</span></th>
+<th><span class="zh">标签</span><span class="en">Tags</span></th>
+<th><span class="zh">开仓</span><span class="en">Open</span></th>
+</tr></thead><tbody><tr><td>MFG</td><td>11.45</td><td>3.53</td><td>1.35</td><td>6.53</td><td>65.9</td><td>61.17</td><td><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span> <span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="MFG"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>AAPL</td><td>332.27</td><td>1.75</td><td>1.18</td><td>11.2</td><td>62.8</td><td>20.6</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="AAPL"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr></tbody></table></div></details>
+
+  <h2><span class="zh">综合候选</span><span class="en">Composite candidates</span></h2><div class="table-wrap"><table><thead><tr>
+<th><span class="zh">代码</span><span class="en">Ticker</span></th>
+<th><span class="zh">现价</span><span class="en">Price</span></th>
+<th><span class="zh">今日%</span><span class="en">Day %</span></th>
+<th><span class="zh">量比</span><span class="en">RVOL</span></th>
+<th>RS20</th>
+<th>RSI</th>
+<th><span class="zh">分数</span><span class="en">Score</span></th>
+<th><span class="zh">标签</span><span class="en">Tags</span></th>
+<th><span class="zh">开仓</span><span class="en">Open</span></th>
+</tr></thead><tbody><tr><td>MFG</td><td>11.45</td><td>3.53</td><td>1.35</td><td>6.53</td><td>65.9</td><td>61.17</td><td><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span> <span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="MFG"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>DELL</td><td>567.12</td><td>11.94</td><td>1.62</td><td>17.03</td><td>66.6</td><td>51.33</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="DELL"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>NOK</td><td>11.13</td><td>4.8</td><td>1.22</td><td>7.75</td><td>60.9</td><td>47.99</td><td><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span> <span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="NOK"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>HPE</td><td>62.09</td><td>12.44</td><td>1.59</td><td>6.14</td><td>64.1</td><td>43.25</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="HPE"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>HDB</td><td>23.34</td><td>6.87</td><td>2.26</td><td>3.39</td><td>51.5</td><td>36.78</td><td><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span> <span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="HDB"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>BE</td><td>275.75</td><td>6.68</td><td>1.04</td><td>19.08</td><td>65.0</td><td>32.54</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="BE"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>EQNR</td><td>44.8</td><td>-0.69</td><td>1.07</td><td>13.93</td><td>64.5</td><td>30.45</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="EQNR"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>QCOM</td><td>181.97</td><td>2.88</td><td>1.02</td><td>13.37</td><td>67.4</td><td>30.36</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="QCOM"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>AMD</td><td>516.13</td><td>2.49</td><td>1.04</td><td>9.21</td><td>58.0</td><td>27.91</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="AMD"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>HCA</td><td>426.94</td><td>1.36</td><td>1.0</td><td>6.04</td><td>59.6</td><td>26.95</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="HCA"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>MRNA</td><td>143.97</td><td>5.38</td><td>0.45</td><td>128.54</td><td>61.2</td><td>23.73</td><td><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="MRNA"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>VLO</td><td>390.42</td><td>1.29</td><td>1.25</td><td>16.2</td><td>78.7</td><td>23.1</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="VLO"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>FIX</td><td>1690.82</td><td>6.29</td><td>0.87</td><td>0.22</td><td>53.8</td><td>21.9</td><td><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="FIX"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>MPC</td><td>395.93</td><td>0.89</td><td>1.0</td><td>13.75</td><td>74.7</td><td>21.88</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="MPC"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>ANET</td><td>199.59</td><td>5.61</td><td>0.92</td><td>0.37</td><td>57.1</td><td>21.8</td><td><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="ANET"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>JCI</td><td>146.01</td><td>2.24</td><td>1.71</td><td>-1.24</td><td>53.0</td><td>21.42</td><td><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="JCI"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>CSCO</td><td>112.13</td><td>4.37</td><td>0.91</td><td>1.17</td><td>51.0</td><td>21.34</td><td><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="CSCO"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>ADI</td><td>378.78</td><td>4.85</td><td>0.79</td><td>2.02</td><td>56.6</td><td>21.3</td><td><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="ADI"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>TXN</td><td>268.7</td><td>3.82</td><td>0.96</td><td>0.62</td><td>51.8</td><td>20.83</td><td><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="TXN"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>AAPL</td><td>332.27</td><td>1.75</td><td>1.18</td><td>11.2</td><td>62.8</td><td>20.6</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="AAPL"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr></tbody></table></div>
+  <h2><span class="zh">A 严格动量爆发</span><span class="en">A Strict momentum burst</span></h2><p class="muted"><span class="zh">（无）</span><span class="en">(none)</span></p>
+  <h2><span class="zh">A 近突破观察</span><span class="en">A Near-breakout watch</span></h2><div class="table-wrap"><table><thead><tr>
+<th><span class="zh">代码</span><span class="en">Ticker</span></th>
+<th><span class="zh">现价</span><span class="en">Price</span></th>
+<th><span class="zh">今日%</span><span class="en">Day %</span></th>
+<th><span class="zh">量比</span><span class="en">RVOL</span></th>
+<th>RS20</th>
+<th>RSI</th>
+<th><span class="zh">分数</span><span class="en">Score</span></th>
+<th><span class="zh">标签</span><span class="en">Tags</span></th>
+<th><span class="zh">开仓</span><span class="en">Open</span></th>
+</tr></thead><tbody><tr><td>MFG</td><td>11.45</td><td>3.53</td><td>1.35</td><td>6.53</td><td>65.9</td><td>61.17</td><td><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span> <span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="MFG"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>NOK</td><td>11.13</td><td>4.8</td><td>1.22</td><td>7.75</td><td>60.9</td><td>47.99</td><td><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span> <span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="NOK"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>HDB</td><td>23.34</td><td>6.87</td><td>2.26</td><td>3.39</td><td>51.5</td><td>36.78</td><td><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span> <span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="HDB"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>JCI</td><td>146.01</td><td>2.24</td><td>1.71</td><td>-1.24</td><td>53.0</td><td>21.42</td><td><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="JCI"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>T</td><td>26.06</td><td>2.0</td><td>1.27</td><td>8.37</td><td>62.0</td><td>20.54</td><td><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="T"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr></tbody></table></div>
+  <h2><span class="zh">B 相对强弱龙头</span><span class="en">B Relative-strength leaders</span></h2><div class="table-wrap"><table><thead><tr>
+<th><span class="zh">代码</span><span class="en">Ticker</span></th>
+<th><span class="zh">现价</span><span class="en">Price</span></th>
+<th><span class="zh">今日%</span><span class="en">Day %</span></th>
+<th><span class="zh">量比</span><span class="en">RVOL</span></th>
+<th>RS20</th>
+<th>RSI</th>
+<th><span class="zh">分数</span><span class="en">Score</span></th>
+<th><span class="zh">标签</span><span class="en">Tags</span></th>
+<th><span class="zh">开仓</span><span class="en">Open</span></th>
+</tr></thead><tbody><tr><td>MFG</td><td>11.45</td><td>3.53</td><td>1.35</td><td>6.53</td><td>65.9</td><td>61.17</td><td><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span> <span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="MFG"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>DELL</td><td>567.12</td><td>11.94</td><td>1.62</td><td>17.03</td><td>66.6</td><td>51.33</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="DELL"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>NOK</td><td>11.13</td><td>4.8</td><td>1.22</td><td>7.75</td><td>60.9</td><td>47.99</td><td><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span> <span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="NOK"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>HPE</td><td>62.09</td><td>12.44</td><td>1.59</td><td>6.14</td><td>64.1</td><td>43.25</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="HPE"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>BE</td><td>275.75</td><td>6.68</td><td>1.04</td><td>19.08</td><td>65.0</td><td>32.54</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="BE"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>EQNR</td><td>44.8</td><td>-0.69</td><td>1.07</td><td>13.93</td><td>64.5</td><td>30.45</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="EQNR"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>QCOM</td><td>181.97</td><td>2.88</td><td>1.02</td><td>13.37</td><td>67.4</td><td>30.36</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="QCOM"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>AMD</td><td>516.13</td><td>2.49</td><td>1.04</td><td>9.21</td><td>58.0</td><td>27.91</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="AMD"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr></tbody></table></div>
+  <h2><span class="zh">C 放量事件</span><span class="en">C Relative-volume events</span></h2><div class="table-wrap"><table><thead><tr>
+<th><span class="zh">代码</span><span class="en">Ticker</span></th>
+<th><span class="zh">现价</span><span class="en">Price</span></th>
+<th><span class="zh">今日%</span><span class="en">Day %</span></th>
+<th><span class="zh">量比</span><span class="en">RVOL</span></th>
+<th>RS20</th>
+<th>RSI</th>
+<th><span class="zh">分数</span><span class="en">Score</span></th>
+<th><span class="zh">标签</span><span class="en">Tags</span></th>
+<th><span class="zh">开仓</span><span class="en">Open</span></th>
+</tr></thead><tbody><tr><td>HDB</td><td>23.34</td><td>6.87</td><td>2.26</td><td>3.39</td><td>51.5</td><td>36.78</td><td><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span> <span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="HDB"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr></tbody></table></div>
+  <h2><span class="zh">D 超卖反弹观察</span><span class="en">D Oversold bounce watch</span></h2><div class="table-wrap"><table><thead><tr>
+<th><span class="zh">代码</span><span class="en">Ticker</span></th>
+<th><span class="zh">现价</span><span class="en">Price</span></th>
+<th><span class="zh">今日%</span><span class="en">Day %</span></th>
+<th><span class="zh">量比</span><span class="en">RVOL</span></th>
+<th>RS20</th>
+<th>RSI</th>
+<th><span class="zh">分数</span><span class="en">Score</span></th>
+<th><span class="zh">标签</span><span class="en">Tags</span></th>
+<th><span class="zh">开仓</span><span class="en">Open</span></th>
+</tr></thead><tbody><tr><td>GD</td><td>355.9</td><td>0.47</td><td>1.4</td><td>-7.08</td><td>31.9</td><td>10.0</td><td><span class="tag"><span class="zh">D·超卖反弹观察</span><span class="en">D·Oversold bounce</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="GD"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr></tbody></table></div>
+  <h2><span class="zh">F 温和放量抬升</span><span class="en">F Mild volume+price lift</span></h2><div class="table-wrap"><table><thead><tr>
+<th><span class="zh">代码</span><span class="en">Ticker</span></th>
+<th><span class="zh">现价</span><span class="en">Price</span></th>
+<th><span class="zh">今日%</span><span class="en">Day %</span></th>
+<th><span class="zh">量比</span><span class="en">RVOL</span></th>
+<th>RS20</th>
+<th>RSI</th>
+<th><span class="zh">分数</span><span class="en">Score</span></th>
+<th><span class="zh">标签</span><span class="en">Tags</span></th>
+<th><span class="zh">开仓</span><span class="en">Open</span></th>
+</tr></thead><tbody><tr><td>MFG</td><td>11.45</td><td>3.53</td><td>1.35</td><td>6.53</td><td>65.9</td><td>61.17</td><td><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span> <span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="MFG"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>DELL</td><td>567.12</td><td>11.94</td><td>1.62</td><td>17.03</td><td>66.6</td><td>51.33</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="DELL"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>HPE</td><td>62.09</td><td>12.44</td><td>1.59</td><td>6.14</td><td>64.1</td><td>43.25</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="HPE"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>MRNA</td><td>143.97</td><td>5.38</td><td>0.45</td><td>128.54</td><td>61.2</td><td>23.73</td><td><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="MRNA"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>FIX</td><td>1690.82</td><td>6.29</td><td>0.87</td><td>0.22</td><td>53.8</td><td>21.9</td><td><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="FIX"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>ANET</td><td>199.59</td><td>5.61</td><td>0.92</td><td>0.37</td><td>57.1</td><td>21.8</td><td><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="ANET"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>CSCO</td><td>112.13</td><td>4.37</td><td>0.91</td><td>1.17</td><td>51.0</td><td>21.34</td><td><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="CSCO"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>ADI</td><td>378.78</td><td>4.85</td><td>0.79</td><td>2.02</td><td>56.6</td><td>21.3</td><td><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="ADI"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr></tbody></table></div>
+  <h2><span class="zh">F 证明窗口观察（近几日已触发）</span><span class="en">F Prove-it watch (recent F trigger)</span></h2><div class="table-wrap"><table><thead><tr>
+<th><span class="zh">代码</span><span class="en">Ticker</span></th>
+<th><span class="zh">现价</span><span class="en">Price</span></th>
+<th><span class="zh">今日%</span><span class="en">Day %</span></th>
+<th><span class="zh">量比</span><span class="en">RVOL</span></th>
+<th>RS20</th>
+<th>RSI</th>
+<th><span class="zh">分数</span><span class="en">Score</span></th>
+<th><span class="zh">标签</span><span class="en">Tags</span></th>
+<th><span class="zh">开仓</span><span class="en">Open</span></th>
+</tr></thead><tbody><tr><td>NOK</td><td>11.13</td><td>4.8</td><td>1.22</td><td>7.75</td><td>60.9</td><td>47.99</td><td><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span> <span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="NOK"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>BE</td><td>275.75</td><td>6.68</td><td>1.04</td><td>19.08</td><td>65.0</td><td>32.54</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="BE"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>EQNR</td><td>44.8</td><td>-0.69</td><td>1.07</td><td>13.93</td><td>64.5</td><td>30.45</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="EQNR"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>QCOM</td><td>181.97</td><td>2.88</td><td>1.02</td><td>13.37</td><td>67.4</td><td>30.36</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="QCOM"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>AMD</td><td>516.13</td><td>2.49</td><td>1.04</td><td>9.21</td><td>58.0</td><td>27.91</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="AMD"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>HCA</td><td>426.94</td><td>1.36</td><td>1.0</td><td>6.04</td><td>59.6</td><td>26.95</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="HCA"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>META</td><td>648.03</td><td>0.57</td><td>0.87</td><td>11.27</td><td>67.2</td><td>8.84</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="META"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>IBM</td><td>243.29</td><td>3.96</td><td>1.01</td><td>4.94</td><td>57.1</td><td>8.72</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="IBM"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr></tbody></table></div>
+
+  <h2><span class="zh">专业玩家公开账户（12）</span>
+      <span class="en">Public pro accounts (12)</span></h2>
+  <p class="muted"><span class="zh">仅为公开教育/参考账户，非背书。过往比赛成绩≠未来表现。我们不复制私人券商账户。</span><span class="en">Public educational/reference accounts only. Not endorsements. Past competition results ≠ future performance. We do not copy private brokerage accounts.</span></p>
+  <div class="grid">
+    <div class="card">
+  <b>Kristjan Kullamägi</b> <span class="muted">(Qullamaggie)</span><br/>
+  <a href="https://x.com/Qullamaggie">@Qullamaggie</a> · <a href="https://qullamaggie.com/"><span class="zh">站点</span><span class="en">Site</span></a>
+  <div style="margin-top:6px"><b><span class="zh">风格：</span><span class="en">Style: </span></b>
+    <span class="zh">动量突破 / 波段</span><span class="en">Momentum breakout / swing</span></div>
+  <div class="muted"><span class="zh">高辨识度的动量突破与持仓管理；公开分享方法与直播复盘</span><span class="en">Highly recognizable breakout + position management; shares methods and live recaps</span></div>
+  <div><span class="tag"><span class="zh">A·严格动量爆发</span><span class="en">A·Momentum burst</span></span> <span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span> <span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span></div>
+  <div class="muted" style="margin-top:6px"><span class="zh">公开内容偏教学与思路，不是实时跟单账户</span><span class="en">Educational content — not a live copy-trade feed</span></div>
+</div><div class="card">
+  <b>Pradeep Bonde</b> <span class="muted">(Stockbee)</span><br/>
+  <a href="https://x.com/PradeepBonde">@PradeepBonde</a> · <a href="https://stockbee.biz/"><span class="zh">站点</span><span class="en">Site</span></a>
+  <div style="margin-top:6px"><b><span class="zh">风格：</span><span class="en">Style: </span></b>
+    <span class="zh">动量爆发 / Episodic Pivot</span><span class="en">Momentum burst / Episodic Pivot</span></div>
+  <div class="muted"><span class="zh">短线 3–5 日动量爆发与催化剂枢轴的系统化框架</span><span class="en">Systematic 3–5 day bursts and catalyst pivots</span></div>
+  <div><span class="tag"><span class="zh">A·严格动量爆发</span><span class="en">A·Momentum burst</span></span> <span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span></div>
+  <div class="muted" style="margin-top:6px"><span class="zh">社区/博客驱动；适合对照我们的 A/C 镜头</span><span class="en">Community/blog driven; maps to our A/C lenses</span></div>
+</div><div class="card">
+  <b>Mark Minervini</b> <span class="muted">(Minervini)</span><br/>
+  <a href="https://x.com/markminervini">@markminervini</a> · <a href="https://www.minervini.com/"><span class="zh">站点</span><span class="en">Site</span></a>
+  <div style="margin-top:6px"><b><span class="zh">风格：</span><span class="en">Style: </span></b>
+    <span class="zh">SEPA / 趋势波段</span><span class="en">SEPA / trend swing</span></div>
+  <div class="muted"><span class="zh">USIC 冠军背景；趋势模板与风险控制被大量短线/波段玩家引用</span><span class="en">USIC champion background; trend templates and risk rules widely cited</span></div>
+  <div><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span></div>
+  <div class="muted" style="margin-top:6px"><span class="zh">偏波段，但对「只做强势股」纪律极有参考价值</span><span class="en">More swing-oriented; great for ‘trade leaders only’ discipline</span></div>
+</div><div class="card">
+  <b>Oliver Kell</b> <span class="muted">(Kell)</span><br/>
+  <a href="https://x.com/OliverKell_">@OliverKell_</a> · <a href="https://www.kelltrading.com/"><span class="zh">站点</span><span class="en">Site</span></a>
+  <div style="margin-top:6px"><b><span class="zh">风格：</span><span class="en">Style: </span></b>
+    <span class="zh">价格周期 / CAN SLIM 变体</span><span class="en">Price cycle / CAN SLIM variant</span></div>
+  <div class="muted"><span class="zh">2020 US Investing Championship 冠军；公开写框架与交易想法</span><span class="en">2020 US Investing Championship winner; publishes frameworks and ideas</span></div>
+  <div><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">A·严格动量爆发</span><span class="en">A·Momentum burst</span></span></div>
+  <div class="muted" style="margin-top:6px"><span class="zh">另有历史账号 @1charts6 流传；以官网/现用 X 为准</span><span class="en">Older handle @1charts6 exists; prefer site / current X</span></div>
+</div><div class="card">
+  <b>Leif Soreide</b> <span class="muted">(Soreide)</span><br/>
+  <a href="https://x.com/LeifSoreide">@LeifSoreide</a> · <a href="https://championteamtrading.com/"><span class="zh">站点</span><span class="en">Site</span></a>
+  <div style="margin-top:6px"><b><span class="zh">风格：</span><span class="en">Style: </span></b>
+    <span class="zh">高紧旗 / 动量突破</span><span class="en">High tight flag / momentum</span></div>
+  <div class="muted"><span class="zh">2019 USIC 冠军；High Tight Flag 与强势股交易公开讲解多</span><span class="en">2019 USIC winner; lots of HTF / leader teaching</span></div>
+  <div><span class="tag"><span class="zh">A·严格动量爆发</span><span class="en">A·Momentum burst</span></span> <span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span></div>
+  <div class="muted" style="margin-top:6px"><span class="zh">冠军赛成绩可查；日常为教学内容非托管账户镜像</span><span class="en">Championship results public; content is teaching, not a managed book</span></div>
+</div><div class="card">
+  <b>Dan Zanger</b> <span class="muted">(Zanger)</span><br/>
+  <a href="https://x.com/DanZanger">@DanZanger</a> · <a href="https://chartpattern.com/"><span class="zh">站点</span><span class="en">Site</span></a>
+  <div style="margin-top:6px"><b><span class="zh">风格：</span><span class="en">Style: </span></b>
+    <span class="zh">形态 + 量能速度</span><span class="en">Patterns + volume velocity</span></div>
+  <div class="muted"><span class="zh">经典动量突破与成交量速度思路；chartpattern 通讯历史悠久</span><span class="en">Classic breakout + volume-speed thinking; long-running Chartpattern letter</span></div>
+  <div><span class="tag"><span class="zh">A·严格动量爆发</span><span class="en">A·Momentum burst</span></span> <span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span></div>
+  <div class="muted" style="margin-top:6px"><span class="zh">早期神话收益不可外推到今日市场</span><span class="en">Early mythical returns do not extrapolate to today</span></div>
+</div><div class="card">
+  <b>TraderLion</b> <span class="muted">(TraderLion)</span><br/>
+  <a href="https://x.com/TraderLion_">@TraderLion_</a> · <a href="https://traderlion.com/"><span class="zh">站点</span><span class="en">Site</span></a>
+  <div style="margin-top:6px"><b><span class="zh">风格：</span><span class="en">Style: </span></b>
+    <span class="zh">动量/波段教育聚合</span><span class="en">Momentum/swing education hub</span></div>
+  <div class="muted"><span class="zh">大量冠军/职业短线玩家访谈，适合跟踪「圈子在讨论什么结构」</span><span class="en">Many champion/pro interviews — good for ‘what structures the circle discusses’</span></div>
+  <div><span class="tag"><span class="zh">A·严格动量爆发</span><span class="en">A·Momentum burst</span></span> <span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span></div>
+  <div class="muted" style="margin-top:6px"><span class="zh">媒体/教育账号，不是单一实盘账户</span><span class="en">Media/education account, not a single live book</span></div>
+</div><div class="card">
+  <b>SMB Capital</b> <span class="muted">(SMB)</span><br/>
+  <a href="https://x.com/smbcapital">@smbcapital</a> · <a href="https://www.smbtraining.com/"><span class="zh">站点</span><span class="en">Site</span></a>
+  <div style="margin-top:6px"><b><span class="zh">风格：</span><span class="en">Style: </span></b>
+    <span class="zh">日内 / 短线交易室</span><span class="en">Intraday / short-term prop desk</span></div>
+  <div class="muted"><span class="zh">职业自营交易文化与盘中思维；适合学执行与复盘语言</span><span class="en">Prop trading culture and intraday process language</span></div>
+  <div><span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span> <span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span></div>
+  <div class="muted" style="margin-top:6px"><span class="zh">培训机构账号；跟的是方法论不是个人持仓</span><span class="en">Training firm account — follow methods, not personal positions</span></div>
+</div><div class="card">
+  <b>Nate Michaud</b> <span class="muted">(Investors Underground)</span><br/>
+  <a href="https://x.com/InvestorsLive">@InvestorsLive</a> · <a href="https://www.investorsunderground.com/"><span class="zh">站点</span><span class="en">Site</span></a>
+  <div style="margin-top:6px"><b><span class="zh">风格：</span><span class="en">Style: </span></b>
+    <span class="zh">小盘动量 / 催化剂</span><span class="en">Small-cap momentum / catalysts</span></div>
+  <div class="muted"><span class="zh">短线动量与消息驱动盘感；公开晨会/教育内容多</span><span class="en">Short-term momentum and news-driven tape; many public morning sessions</span></div>
+  <div><span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span> <span class="tag"><span class="zh">A·严格动量爆发</span><span class="en">A·Momentum burst</span></span></div>
+  <div class="muted" style="margin-top:6px"><span class="zh">风格更偏小盘；与我们大盘流动池对照时要打折</span><span class="en">More small-cap; discount when comparing to our liquid large/mid pool</span></div>
+</div><div class="card">
+  <b>Ross Cameron</b> <span class="muted">(Warrior Trading)</span><br/>
+  <a href="https://x.com/WarriorTrading">@WarriorTrading</a> · <a href="https://www.warriortrading.com/"><span class="zh">站点</span><span class="en">Site</span></a>
+  <div style="margin-top:6px"><b><span class="zh">风格：</span><span class="en">Style: </span></b>
+    <span class="zh">日内动量</span><span class="en">Intraday momentum</span></div>
+  <div class="muted"><span class="zh">公开晒日内动量交易过程较多，适合学盘感与风控话术</span><span class="en">Lots of public intraday process; useful for tape feel and risk language</span></div>
+  <div><span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span> <span class="tag"><span class="zh">A·严格动量爆发</span><span class="en">A·Momentum burst</span></span></div>
+  <div class="muted" style="margin-top:6px"><span class="zh">教育营销属性强；只作参考勿神话</span><span class="en">Strong education/marketing bent — reference only</span></div>
+</div><div class="card">
+  <b>ClayTrader</b> <span class="muted">(Clay)</span><br/>
+  <a href="https://x.com/ClayTrader">@ClayTrader</a> · <a href="https://claytrader.com/"><span class="zh">站点</span><span class="en">Site</span></a>
+  <div style="margin-top:6px"><b><span class="zh">风格：</span><span class="en">Style: </span></b>
+    <span class="zh">日内 / 短线技术</span><span class="en">Intraday / short-term technical</span></div>
+  <div class="muted"><span class="zh">长期公开视频复盘，结构简单好懂</span><span class="en">Long-running public video reviews; simple structure</span></div>
+  <div><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span> <span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span></div>
+  <div class="muted" style="margin-top:6px"><span class="zh">教育向</span><span class="en">Educational</span></div>
+</div><div class="card">
+  <b>StatBear</b> <span class="muted">(Qullamaggie recaps)</span><br/>
+  <a href="https://x.com/StatBear">@StatBear</a>
+  <div style="margin-top:6px"><b><span class="zh">风格：</span><span class="en">Style: </span></b>
+    <span class="zh">直播复盘整理</span><span class="en">Live-stream recap curator</span></div>
+  <div class="muted"><span class="zh">常整理 Qullamaggie 等直播要点，适合快速扫「今天圈子关注什么」</span><span class="en">Often summarizes Qullamaggie etc. live points — quick scan of circle focus</span></div>
+  <div><span class="tag"><span class="zh">A·严格动量爆发</span><span class="en">A·Momentum burst</span></span> <span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span></div>
+  <div class="muted" style="margin-top:6px"><span class="zh">二手整理；需回点原出处</span><span class="en">Second-hand notes; verify against originals</span></div>
+</div>
+  </div>
+
+  <div class="hero" style="margin-top:16px"><h1 style="font-size:1.25rem"><span class="zh">2.0 执行规则（控制回撤）</span><span class="en">2.0 Execution rules (drawdown control)</span> · v2.1</h1><p><span class="zh">先找强股 → 等确认 → 小风险进场 → 1.5–2R 先兑现一部分 → 强就让利润跑 → 弱就价格止损或时间止损。</span><span class="en">Find strength → wait for confirmation → small-risk entry → bank part at 1.5–2R → let winners run → exit on price or time stop if weak.</span></p><p style="opacity:.85;font-size:.9rem"><span class="zh">2–5 个交易日是「证明自己」的窗口，不是强制到期日：提前走强可继续持有；三四天不动则清理。</span><span class="en">2–5 sessions is a prove-it window, not a hard expiry: keep if already strong; clear if still dead after 3–4 days.</span></p></div><p class="muted"><span class="zh">仅作分析参考框架，非投资建议；不下单。止损在剧烈波动下可能滑点（杠杆/高波动风险更大）。</span><span class="en">Reference framework only — not advice; no orders placed. Stops can slip in fast markets (leverage/high-vol amplify risk).</span></p><h2><span class="zh">六条硬规则</span><span class="en">Six hard rules</span></h2><ul><li><b><span class="zh">1. 先定止损，再定仓位</span><span class="en">1. Define stop first, then size</span></b><br/><span class="zh">例如买 $100、技术止损 $96 → 每股风险 $4（1R=$4）。若单笔最多亏账户 0.5%，用风险反推股数，而不是先买再想止损。保证金/杠杆时更严格。</span><span class="en">e.g. buy $100, technical stop $96 → $4 risk/share (1R=$4). Cap loss at e.g. 0.5% of equity and back into shares — never size first then invent a stop. Stricter with margin/leverage.</span></li><li><b><span class="zh">2. 用 R 倍数管盈利，不用固定涨跌幅</span><span class="en">2. Manage profits in R, not fixed %</span></b><br/><span class="zh">涨到 $106 = +1.5R；涨到 $108 = +2R。爆发股到 1.5–2R 可先卖 1/3～1/2，剩余跟 5日线/10日线或前一日低点。比「一律涨 10% 就卖」更合理。</span><span class="en">+$6 on a $4 stop = +1.5R; +$8 = +2R. On bursts, bank 1/3–1/2 at 1.5–2R; trail the rest with 5/10-day MA or prior-day low. Better than a flat +10% sell rule.</span></li><li><b><span class="zh">3. 时间止损（证明窗口）</span><span class="en">3. Time stop (prove-it window)</span></b><br/><span class="zh">A 爆发：第1天不涨、第2天仍弱、第3天仍无量价配合 → 即使未触及价格止损也开始退出。买的理由是「马上爆发」；没爆发，逻辑已弱。注意：若第3天已大涨且结构漂亮，不必因「到5天」机械卖掉。</span><span class="en">A-burst: day1 flat, day2 weak, day3 still no volume/price follow-through → start exiting even if price stop untouched. Thesis was immediate thrust. Exception: if already strongly up with clean structure by day3, do not force-sell just because day5 arrived.</span></li><li><b><span class="zh">4. 突破股不提前猜</span><span class="en">4. Do not front-run breakouts</span></b><br/><span class="zh">A 近突破：关键价位突破 → 成交量确认 → 次日不迅速跌回突破位下。宁愿贵 2% 买确认，也不为便宜 2% 提前赌。</span><span class="en">A-near: break level → volume confirm → next day does not quickly fail back below. Prefer paying ~2% for confirmation over guessing early to save 2%.</span></li><li><b><span class="zh">5. 龙头可比爆发股拿更久</span><span class="en">5. Leaders may be held longer than bursts</span></b><br/><span class="zh">B 类趋势未坏不必涨 8–10% 就机械清仓。可用：跌破 10 日线减仓；跌破 20 日线/关键平台清掉。B 与 A 的卖法必须分开。</span><span class="en">B-leaders: do not mechanically dump at +8–10% if trend intact. Trim under 10-day MA; exit under 20-day MA / key shelf. B exits ≠ A exits.</span></li><li><b><span class="zh">6. 事件股仓位最严</span><span class="en">6. Event names: smallest size</span></b><br/><span class="zh">财报/FDA/大单/合作/政策等可能隔夜跳空，止损单触发后成交价可能远离预期。C 类仓位应最小。</span><span class="en">Earnings/FDA/contracts/etc. can gap overnight; stop fills can slip far from the trigger. Keep C-event size smallest.</span></li></ul><h2><span class="zh">分镜头卖法</span><span class="en">Lens exit bias</span></h2><ul><li><code>A_momentum_burst</code> — <span class="zh">速度交易：1.5–2R 先兑现部分；弱则价格/时间止损；强则剩余跟短均线。</span><span class="en">Speed trade: partial at 1.5–2R; weak → price/time stop; strong → trail remainder on short MAs.</span></li><li><code>A_near_breakout</code> — <span class="zh">等确认再进；失败跌回突破位下则快速离场。</span><span class="en">Enter only after confirmation; fail back under breakout → exit fast.</span></li><li><code>B_rs_leader</code> — <span class="zh">趋势持有：10日减仓 / 20日或平台破坏清仓；不用固定%硬卖。</span><span class="en">Trend hold: trim under 10DMA / clear under 20DMA or shelf break; no fixed-% dump.</span></li><li><code>C_rvol_event</code> — <span class="zh">催化驱动：最小仓；隔夜风险高；逻辑失效或跳空不利立即收缩。</span><span class="en">Catalyst-driven: smallest size; overnight gap risk; shrink fast if thesis fails.</span></li><li><code>D_oversold_bounce_watch</code> — <span class="zh">仅观察，不是单独买点。</span><span class="en">Watch only — not a standalone entry.</span></li><li><code>F_volume_price_lift</code> — <span class="zh">温和放量抬升：确认量价仍同步；若放量衰竭或跌回启动平台则时间/价格止损。仓位小于 A 爆发。</span><span class="en">Mild vol+price lift: keep only while volume still supports; exit if volume fades or price loses launch shelf. Size smaller than A-burst.</span></li></ul><h2><span class="zh">下单前自检（2.0）</span><span class="en">Pre-trade checklist (2.0)</span></h2><ul><li><span class="zh">已写下硬止损价，并用「账户风险% ÷ 每股风险」算出股数（未先拍脑袋定仓）</span><span class="en">Hard stop written; share count = account risk% ÷ risk per share (not gut-sized)</span></li><li><span class="zh">已算清 1R；计划在约 1.5–2R 如何分批兑现（尤其 A 爆发）</span><span class="en">1R defined; plan for partials near 1.5–2R (especially A-burst)</span></li><li><span class="zh">已设时间止损：2–5 日是证明窗口——不动则清，已走强可续持</span><span class="en">Time stop set: 2–5 days is prove-it — clear if dead, may hold if already strong</span></li><li><span class="zh">若是近突破：只在突破+量能确认+次日未快速失败后考虑进场</span><span class="en">If near-breakout: only after break + volume confirm + no quick next-day fail</span></li><li><span class="zh">若是龙头 B：卖法用均线/结构，不用固定涨幅%</span><span class="en">If leader B: exit via MA/structure, not a fixed % gain</span></li><li><span class="zh">若是事件 C：仓位是今天所有候选里最小的一档</span><span class="en">If event C: size is the smallest sleeve among today&#x27;s ideas</span></li><li><span class="zh">市场体制与策略匹配（突破偏好 RISK_ON/MIXED）</span><span class="en">Regime matches strategy (breakouts prefer RISK_ON/MIXED)</span></li><li><span class="zh">未同时堆叠多只高相关标的</span><span class="en">Not stacking many highly correlated names</span></li></ul><p class="muted"><span class="zh">回滚 1.0：运行 <code>./rollback_to_v1.sh</code>（归档在 archives/us-short-momentum-v1.0）</span><span class="en">Rollback to 1.0: run <code>./rollback_to_v1.sh</code> (archive at archives/us-short-momentum-v1.0)</span></p>
+
+  <h2><span class="zh">公开提及层（非持仓）</span><span class="en">Public mentions layer (NOT holdings)</span></h2><p class="muted"><span class="zh">仅为公开提及，非券商持仓。不完整且可能延迟。非投资建议。</span><span class="en">Public mentions only. Not brokerage holdings. Incomplete and delayed. Not investment advice.</span></p><div class="metrics"><div class="metric"><div class="k"><span class="zh">有提及的玩家</span><span class="en">Traders with hits</span></div><div class="v">10</div></div><div class="metric"><div class="k"><span class="zh">独立代码</span><span class="en">Unique tickers</span></div><div class="v">79</div></div><div class="metric"><div class="k"><span class="zh">提及条数</span><span class="en">Mention rows</span></div><div class="v">100</div></div><div class="metric"><div class="k"><span class="zh">与规则候选重合</span><span class="en">Overlap w/ scrub</span></div><div class="v">1</div></div></div><p class="muted"><span class="zh">客观用法：重合只加标签，不改规则分数；优先高置信+带日期公开名单；新闻转述=中置信。</span><span class="en">Objective use: overlap is a tag only — never changes rule scores. Prefer high-confidence dated public lists; news relays = medium.</span></p><h3><span class="zh">与规则候选重合（仅标签，不改分）</span><span class="en">Overlap with rule candidates (tag only)</span></h3><ul><li><b>AMD</b> — @ClayTrader</li></ul><div class="table-wrap"><table><thead><tr><th><span class="zh">代码</span><span class="en">Ticker</span></th><th><span class="zh">玩家</span><span class="en">Trader</span></th><th><span class="zh">置信</span><span class="en">Confidence</span></th><th><span class="zh">时间</span><span class="en">When</span></th><th><span class="zh">类型</span><span class="en">Type</span></th><th><span class="zh">摘要</span><span class="en">Snippet</span></th><th><span class="zh">来源</span><span class="en">Link</span></th></tr></thead><tbody><tr><td>FSLR</td><td>@OliverKell_</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2023-03-04</td><td>site</td><td>Public Substack: FSLR monster breakout on huge volume — premier solar</td><td><a href='https://weeklieswatch.substack.com/p/holding-weekly-moving-averages' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>MELI</td><td>@OliverKell_</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2023-03-04</td><td>site</td><td>Public Substack: MELI weekly bull flag after strong earnings</td><td><a href='https://weeklieswatch.substack.com/p/holding-weekly-moving-averages' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>NVDA</td><td>@OliverKell_</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2023-03-04</td><td>site</td><td>Public Substack Weeklies Watch: NVDA weekly/daily discussion — strongest big cap; long again on 10EMA support</td><td><a href='https://weeklieswatch.substack.com/p/holding-weekly-moving-averages' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>TSLA</td><td>@OliverKell_</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2023-03-04</td><td>site</td><td>Public Substack: TSLA weekly/daily levels and structure discussed in detail</td><td><a href='https://weeklieswatch.substack.com/p/holding-weekly-moving-averages' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>UBER</td><td>@OliverKell_</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2023-03-04</td><td>site</td><td>Public Substack: UBER four-week bull flag / wedge pop</td><td><a href='https://weeklieswatch.substack.com/p/holding-weekly-moving-averages' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>CRWD</td><td>@TraderLion_</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2025-06-05</td><td>site</td><td>Today&#x27;s watchlist includes CRWD</td><td><a href='https://traderlion.com/profile/richard-moglen/pltr-and-tsla-break-down/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>HIMS</td><td>@TraderLion_</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2025-06-05</td><td>site</td><td>Watchlist + HIMS tight day vulnerable below 21ema</td><td><a href='https://traderlion.com/profile/richard-moglen/pltr-and-tsla-break-down/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>HOOD</td><td>@TraderLion_</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2025-06-05</td><td>site</td><td>Today&#x27;s watchlist includes HOOD</td><td><a href='https://traderlion.com/profile/richard-moglen/pltr-and-tsla-break-down/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>META</td><td>@TraderLion_</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2025-06-05</td><td>site</td><td>Today&#x27;s watchlist includes META</td><td><a href='https://traderlion.com/profile/richard-moglen/pltr-and-tsla-break-down/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>MSTR</td><td>@TraderLion_</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2025-06-05</td><td>site</td><td>Today&#x27;s watchlist includes MSTR</td><td><a href='https://traderlion.com/profile/richard-moglen/pltr-and-tsla-break-down/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>NBIS</td><td>@TraderLion_</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2025-06-05</td><td>site</td><td>Key moves: NBIS strong push higher</td><td><a href='https://traderlion.com/profile/richard-moglen/pltr-and-tsla-break-down/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>NVDA</td><td>@TraderLion_</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2025-06-05</td><td>site</td><td>Richard Moglen public TraderLion watchlist (2025-06-05): NVDA, TSLA, META, PLTR, MSTR, CRWD, UBER, HOOD, HIMS</td><td><a href='https://traderlion.com/profile/richard-moglen/pltr-and-tsla-break-down/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>PLTR</td><td>@TraderLion_</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2025-06-05</td><td>site</td><td>Watchlist + PLTR reversal closing below 21ema</td><td><a href='https://traderlion.com/profile/richard-moglen/pltr-and-tsla-break-down/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>TSLA</td><td>@TraderLion_</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2025-06-05</td><td>site</td><td>Watchlist + commentary: TSLA very negative bar on Elon/Trump feud</td><td><a href='https://traderlion.com/profile/richard-moglen/pltr-and-tsla-break-down/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>UBER</td><td>@TraderLion_</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2025-06-05</td><td>site</td><td>Today&#x27;s watchlist includes UBER</td><td><a href='https://traderlion.com/profile/richard-moglen/pltr-and-tsla-break-down/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>PLTR</td><td>@TraderLion_</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2025-06-11</td><td>site</td><td>Educational IPO article examples include PLTR, CAVA, HOOD, TSLA</td><td><a href='https://traderlion.com/technical-analysis/trading-ipo-stocks/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>ALAB</td><td>@TraderLion_</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2025-07-01</td><td>site</td><td>Later Moglen watchlist (2025-07): HIMS KD GOGO ALAB CRWV ARLO ELF QUBT</td><td><a href='https://traderlion.com/profile/richard-moglen/cracks-starting-in-growth/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>CRWV</td><td>@TraderLion_</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2025-07-01</td><td>site</td><td>Watchlist includes CRWV</td><td><a href='https://traderlion.com/profile/richard-moglen/cracks-starting-in-growth/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>AMZN</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-04-19</td><td>site</td><td>Main watches: AMZN strong uptrend near ATH; exhaustion risk</td><td><a href='https://www.investorsunderground.com/free-scan-april-20-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>BIRD</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-04-19</td><td>site</td><td>Watching retest of prior day high / new highs / failed follow-through</td><td><a href='https://www.investorsunderground.com/free-scan-april-20-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>CAR</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-04-19</td><td>site</td><td>Still a major name on radar but difficult share structure</td><td><a href='https://www.investorsunderground.com/free-scan-april-20-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>MSFT</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-04-19</td><td>site</td><td>Apr 20 2026 free scan: Technology names including MSFT, AVGO, AMZN performed well</td><td><a href='https://www.investorsunderground.com/free-scan-april-20-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>NVTS</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-04-19</td><td>site</td><td>Showing characteristics similar to LUNR; continuation if breakout holds</td><td><a href='https://www.investorsunderground.com/free-scan-april-20-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>AVGO</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-08-23</td><td>site</td><td>On watch as potential downside beneficiary if NVIDIA earnings disappoint</td><td><a href='https://www.investorsunderground.com/free-scan-august-24-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>BABA</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-08-23</td><td>site</td><td>Watching downside continuation after earnings / AI CapEx plans</td><td><a href='https://www.investorsunderground.com/free-scan-august-24-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>CVX</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-08-23</td><td>site</td><td>Oil names on watch: OXY / CVX / XOM</td><td><a href='https://www.investorsunderground.com/free-scan-august-24-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>FCX</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-08-23</td><td>site</td><td>Copper/gold exposure breaking out of large base</td><td><a href='https://www.investorsunderground.com/free-scan-august-24-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>GLD</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-08-23</td><td>site</td><td>Gold strong momentum; inflation/dollar-debasement trade</td><td><a href='https://www.investorsunderground.com/free-scan-august-24-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>MU</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-08-23</td><td>site</td><td>Aug 24 scan: memory sector / MU watching for breakout another leg higher</td><td><a href='https://www.investorsunderground.com/free-scan-august-24-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>OXY</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-08-23</td><td>site</td><td>Oil names on watch with Hormuz supply risk (OXY/CVX/XOM)</td><td><a href='https://www.investorsunderground.com/free-scan-august-24-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>SLV</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-08-23</td><td>site</td><td>Silver one of strongest beneficiaries of rotation; volume confirming breakout</td><td><a href='https://www.investorsunderground.com/free-scan-august-24-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>SNDK</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-08-23</td><td>site</td><td>Stronger area within AI trade vs some optics names</td><td><a href='https://www.investorsunderground.com/free-scan-august-24-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>XOM</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-08-23</td><td>site</td><td>Oil names on watch: OXY / CVX / XOM</td><td><a href='https://www.investorsunderground.com/free-scan-august-24-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>ANF</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-08-30</td><td>site</td><td>Gap higher on highest-volume day of year; watch vs $150 / $140</td><td><a href='https://www.investorsunderground.com/free-scan-august-31-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>BMNR</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-08-30</td><td>site</td><td>Ethereum-linked name; long-term base mid-high teens to $23–$24</td><td><a href='https://www.investorsunderground.com/free-scan-august-31-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>CRWD</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-08-30</td><td>site</td><td>Main watches: CRWD similar structure to Nvidia post-earnings then selling pressure</td><td><a href='https://www.investorsunderground.com/free-scan-august-31-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>IBIT</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-08-30</td><td>site</td><td>Gaps below; floor of recent range at $43</td><td><a href='https://www.investorsunderground.com/free-scan-august-31-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>MRNA</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-08-30</td><td>site</td><td>After near-3x run; watch $130; convertible notes adding pressure</td><td><a href='https://www.investorsunderground.com/free-scan-august-31-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>MSTR</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-08-30</td><td>site</td><td>Broke out of flat $90–$100 base; rejecting upper $130s</td><td><a href='https://www.investorsunderground.com/free-scan-august-31-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>NVDA</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-08-30</td><td>site</td><td>IU free Sunday scan week of Aug 31 2026: NVDA earnings pop mostly given back; watch $220-$225 reclaim</td><td><a href='https://www.investorsunderground.com/free-scan-august-31-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>OKTA</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-08-30</td><td>site</td><td>Cyber basket with CrowdStrike; short-watch if software-AI stays heavy</td><td><a href='https://www.investorsunderground.com/free-scan-august-31-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>PLTR</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-08-30</td><td>site</td><td>Broke out of $170-$180s base; HTF resistance $180–$190</td><td><a href='https://www.investorsunderground.com/free-scan-august-31-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>TTWO</td><td>@InvestorsLive</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>2026-08-30</td><td>site</td><td>GTA 6 anticipation trade for Take-Two Interactive</td><td><a href='https://www.investorsunderground.com/free-scan-august-31-2026/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>DAVE</td><td>@TraderLion_</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>unknown</td><td>site</td><td>Setups into next week watchlist includes DAVE among others</td><td><a href='https://traderlion.com/profile/richard-moglen/setups-into-next-week/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>GEV</td><td>@TraderLion_</td><td><span class='zh'>高</span><span class='en'>high</span></td><td>unknown</td><td>site</td><td>Watchlist includes GEV</td><td><a href='https://traderlion.com/profile/richard-moglen/setups-into-next-week/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>RKLB</td><td>@LeifSoreide</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2024-10-11</td><td>search</td><td>Public notes: $RKLB inside-day entry ~11 Oct 2024 described by Leif</td><td><a href='https://tradingresourcehub.substack.com/p/leif-soreide-high-tight-flags' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>ASTS</td><td>@LeifSoreide</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2024-10-22</td><td>search</td><td>Public notes from HTF interview: $ASTS forming rocket base after failed HTF (Oct 2024 stream notes)</td><td><a href='https://tradingresourcehub.substack.com/p/leif-soreide-high-tight-flags' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>CORZ</td><td>@LeifSoreide</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2024-10-22</td><td>search</td><td>Public notes: $CORZ HTF / rocket / shakeout entry examples from Leif interview</td><td><a href='https://tradingresourcehub.substack.com/p/leif-soreide-high-tight-flags' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>DUOL</td><td>@LeifSoreide</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2024-10-22</td><td>search</td><td>Public notes: $DUOL cited as example that may look like HTF but he does not consider one</td><td><a href='https://tradingresourcehub.substack.com/p/leif-soreide-high-tight-flags' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>LUMN</td><td>@LeifSoreide</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2024-10-28</td><td>search</td><td>TraderLion podcast show notes: recent winning trades included ASTS, CORZ, RKLB, LUMN</td><td><a href='https://castro.fm/episode/syPvkb' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>IBRX</td><td>@ClayTrader</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-01-21</td><td>search</td><td>Top 10 Jan 21 2026: $IBRX, $IVF, $ONDS, $SHPH, $NVDA, $BBAI, $SGN, $SEGG, $SLV, $TSLA</td><td><a href='https://www.linkedin.com/posts/claytrader25_top-10-stocks-for-january-21-2026-ibrx-activity-7419486215927721984-DCPl' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>SLV</td><td>@ClayTrader</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-01-27</td><td>search</td><td>Top 10 Jan 27 2026 includes $SLV; Jan 21 list also had $SLV</td><td><a href='https://www.linkedin.com/posts/claytrader25_top-10-stocks-for-january-27-2026-zsl-activity-7421658798576058368-dX6R' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>PLTR</td><td>@ClayTrader</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-02-04</td><td>search</td><td>YouTube Top 10 Feb 04 2026 mentions $PLTR with $NVDA and others</td><td><a href='https://www.youtube.com/watch?v=xqkLLiEaifc' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>BBAI</td><td>@ClayTrader</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-02-11</td><td>search</td><td>Top 10 Feb 11 and Jan 21 2026 include $BBAI</td><td><a href='https://www.linkedin.com/posts/claytrader25_top-10-stocks-for-february-11-2026-phio-activity-7427094985893654528-1_Rq' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>HIMS</td><td>@ClayTrader</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-02-11</td><td>search</td><td>Top 10 Feb 11 2026: $PHIO, $QNCX, $JZXN, $BBAI, $NVDA, $ABP, $HIMS, $OPEN, $SOFI, $TSLA</td><td><a href='https://www.linkedin.com/posts/claytrader25_top-10-stocks-for-february-11-2026-phio-activity-7427094985893654528-1_Rq' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>PHIO</td><td>@ClayTrader</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-02-11</td><td>search</td><td>Top 10 Feb 17 and Feb 11 2026 lists include $PHIO</td><td><a href='https://www.linkedin.com/posts/claytrader25_top-10-stocks-for-february-11-2026-phio-activity-7427094985893654528-1_Rq' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>SOFI</td><td>@ClayTrader</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-02-11</td><td>search</td><td>Top 10 Feb 11 2026 includes $SOFI</td><td><a href='https://www.linkedin.com/posts/claytrader25_top-10-stocks-for-february-11-2026-phio-activity-7427094985893654528-1_Rq' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>AMC</td><td>@ClayTrader</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-02-12</td><td>search</td><td>Top 10 Feb 12 2026 includes $AMC</td><td><a href='https://www.linkedin.com/posts/claytrader25_top-10-stocks-for-february-12-2026-nci-activity-7427454723777249280-EY1P' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>AMD</td><td>@ClayTrader</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-02-12</td><td>search</td><td>Top 10 Feb 12 2026 includes $AMD, $AMC among others</td><td><a href='https://www.linkedin.com/posts/claytrader25_top-10-stocks-for-february-12-2026-nci-activity-7427454723777249280-EY1P' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>NVDA</td><td>@ClayTrader</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-02-17</td><td>search</td><td>LinkedIn Top 10 Stocks For Feb 17 2026 includes $NVDA (also frequent across Jan/Feb 2026 lists)</td><td><a href='https://www.linkedin.com/posts/claytrader25_top-10-stocks-for-february-17-2026-rime-activity-7428187716128948224-rtQ0' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>RIME</td><td>@ClayTrader</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-02-17</td><td>search</td><td>Top 10 Feb 17 2026: $RIME, $RIVN, $IVDA, $JDZG, $NVDA, $MLEC, $ATOM, $CRSR, $PHIO, $TSLA</td><td><a href='https://www.linkedin.com/posts/claytrader25_top-10-stocks-for-february-17-2026-rime-activity-7428187716128948224-rtQ0' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>RIVN</td><td>@ClayTrader</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-02-17</td><td>search</td><td>Top 10 Feb 17 2026 includes $RIVN</td><td><a href='https://www.linkedin.com/posts/claytrader25_top-10-stocks-for-february-17-2026-rime-activity-7428187716128948224-rtQ0' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>TSLA</td><td>@ClayTrader</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-02-17</td><td>search</td><td>Top 10 Feb 17 2026 includes $TSLA</td><td><a href='https://www.linkedin.com/posts/claytrader25_top-10-stocks-for-february-17-2026-rime-activity-7428187716128948224-rtQ0' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>AEHR</td><td>@markminervini</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-04-30</td><td>search</td><td>AEHR highlighted as a strong performer for the day</td><td><a href='https://tradersunion.com/news/market-voices/show/1976073-sphr-positions-deliver-gains/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>CAT</td><td>@markminervini</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-04-30</td><td>search</td><td>Positions in GOOGL and CAT held through earnings</td><td><a href='https://tradersunion.com/news/market-voices/show/1976073-sphr-positions-deliver-gains/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>FDX</td><td>@markminervini</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-04-30</td><td>search</td><td>Recent portfolio additions include FDX</td><td><a href='https://tradersunion.com/news/market-voices/show/1976073-sphr-positions-deliver-gains/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>GOOGL</td><td>@markminervini</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-04-30</td><td>search</td><td>Positions in GOOGL and CAT were held through earnings</td><td><a href='https://tradersunion.com/news/market-voices/show/1976073-sphr-positions-deliver-gains/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>SPHR</td><td>@markminervini</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-04-30</td><td>search</td><td>April 2026: notable personal position in SPHR showing strong profit</td><td><a href='https://tradersunion.com/news/market-voices/show/1976073-sphr-positions-deliver-gains/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>WMT</td><td>@markminervini</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-04-30</td><td>search</td><td>Recent portfolio additions such as WMT, TKR, JCI, and FDX</td><td><a href='https://tradersunion.com/news/market-voices/show/1976073-sphr-positions-deliver-gains/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>ADM</td><td>@markminervini</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-09</td><td>search</td><td>Current long positions including ADM</td><td><a href='https://tradersunion.com/news/market-voices/show/2805720-long-positions-profit-stops/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>CSX</td><td>@markminervini</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-09</td><td>search</td><td>Long positions including PACS, CSX, HXL, ADM, MRK, LLY, HSBC performing well with gains</td><td><a href='https://tradersunion.com/news/market-voices/show/2805720-long-positions-profit-stops/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>HSBC</td><td>@markminervini</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-09</td><td>search</td><td>Current long positions including HSBC at profits with breakeven stops</td><td><a href='https://tradersunion.com/news/market-voices/show/2805720-long-positions-profit-stops/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>HXL</td><td>@markminervini</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-09</td><td>search</td><td>Current long positions including HXL among names at profits with breakeven stops</td><td><a href='https://tradersunion.com/news/market-voices/show/2805720-long-positions-profit-stops/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>LLY</td><td>@markminervini</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-09</td><td>search</td><td>Current longs include LLY; earlier June 2026 report of adding LLY to portfolio (time-stamped for members)</td><td><a href='https://tradersunion.com/news/market-voices/show/2805720-long-positions-profit-stops/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>MRK</td><td>@markminervini</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-09</td><td>search</td><td>Current long positions including MRK</td><td><a href='https://tradersunion.com/news/market-voices/show/2805720-long-positions-profit-stops/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>PACS</td><td>@markminervini</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-09</td><td>search</td><td>TradersUnion aggregate of Minervini public post: current longs including PACS, CSX, HXL, ADM, MRK, LLY, HSBC at profits </td><td><a href='https://tradersunion.com/news/market-voices/show/2805720-long-positions-profit-stops/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>SPY</td><td>@markminervini</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>2026-09</td><td>search</td><td>Reports SPY short performing well as hedge; selective longs held</td><td><a href='https://tradersunion.com/news/market-voices/show/2837833-spy-short-trade-update/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>ALAB</td><td>@Qullamaggie</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>Erection candle... $ALAB $RGTI $QBTS $DAVE; also passed on $ALAB perfect base breakout vs peers ($CRDO)</td><td><a href='https://www.instalker.org/1Qullamaggie_' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>AMST</td><td>@WarriorTrading</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>Public YouTube recap transcript: AMST pops after hours, squeezes at 4am, backside — no trades</td><td><a href='https://www.youtube.com/watch?v=wEszUmPYSvU' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>BSX</td><td>@LeifSoreide</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>TraderLion conference: BSX as quality name example</td><td><a href='https://getpodcast.com/podcast/the-traderlion-podcast/inside-the-mind-of-a-us-investing-champion-leif-soreide-on-high-tight-_bcaa437c93' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>CELH</td><td>@LeifSoreide</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>TraderLion conference: Celsius (~900%) move breakdown</td><td><a href='https://getpodcast.com/podcast/the-traderlion-podcast/inside-the-mind-of-a-us-investing-champion-leif-soreide-on-high-tight-_bcaa437c93' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>CRDO</td><td>@Qullamaggie</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>Passed on $ALAB perfect base breakout... while peers ($CRDO) and $QQQ had ripping for months</td><td><a href='https://www.instalker.org/1Qullamaggie_' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>DAVE</td><td>@Qullamaggie</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>Base breakouts this year: $ALAB $RGTI $QBTS $DAVE (also setting up again)</td><td><a href='https://www.instalker.org/1Qullamaggie_' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>EZGO</td><td>@WarriorTrading</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>Transcript: EZGO on short-sale restriction; fade discussion</td><td><a href='https://www.youtube.com/watch?v=wEszUmPYSvU' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>HIMS</td><td>@Qullamaggie</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>$HIMS retail favorite and based all year has that look</td><td><a href='https://www.instalker.org/1Qullamaggie_' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>HOOD</td><td>@LeifSoreide</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>Conference Q&amp;A: earnings digestion (Hood example)</td><td><a href='https://getpodcast.com/podcast/the-traderlion-podcast/inside-the-mind-of-a-us-investing-champion-leif-soreide-on-high-tight-_bcaa437c93' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>INM</td><td>@WarriorTrading</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>Transcript: INM 34M volume, pops then sells off; maybe curl but not loved</td><td><a href='https://www.youtube.com/watch?v=wEszUmPYSvU' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>LAES</td><td>@Qullamaggie</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>$RGTI right back to highs... $LAES lesser known one breaking out with some news</td><td><a href='https://www.instalker.org/1Qullamaggie_' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>MTVA</td><td>@WarriorTrading</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>Transcript: MTVA super cheap, not interested</td><td><a href='https://www.youtube.com/watch?v=wEszUmPYSvU' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>NVDA</td><td>@OliverKell_</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>YouTube educational: swing strategy framed around finding next TSLA/NVDA; NVDA on radar with AVGO/semis</td><td><a href='https://www.youtube.com/watch?v=eu8onWJ5y34' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>OKLO</td><td>@Qullamaggie</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>At the same times lots of short setups too. $RGTI $QBTS $OKLO and others look juicy on any pops and fails</td><td><a href='https://www.instalker.org/1Qullamaggie_' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>OKLO</td><td>@LeifSoreide</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>TraderLion conference: live chart examples include Oklo</td><td><a href='https://getpodcast.com/podcast/the-traderlion-podcast/inside-the-mind-of-a-us-investing-champion-leif-soreide-on-high-tight-_bcaa437c93' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>QBTS</td><td>@Qullamaggie</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>Erection candle. These types of base breakouts have made massive moves this year. $ALAB $RGTI $QBTS $DAVE (also setting </td><td><a href='https://www.instalker.org/1Qullamaggie_' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>RGTI</td><td>@Qullamaggie</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>$RGTI right back to highs, the others lagging a bit. $LAES lesser known one breaking out with some news. Feels like this</td><td><a href='https://www.instalker.org/1Qullamaggie_' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>ROOT</td><td>@PradeepBonde</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>Public transcript: EP examples including ROOT (earnings-driven episodic pivots)</td><td><a href='https://pickscribe.com/v/A_0ep4ekGWM/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>SMCI</td><td>@PradeepBonde</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>Public transcript/interview: classical EP examples where a stock like SMCI or ROOT comes out with earnings and makes 100</td><td><a href='https://pickscribe.com/v/A_0ep4ekGWM/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>TLRY</td><td>@Qullamaggie</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>Secondary writeup of Qullamaggie clip using TLRY as 2025 textbook build / extension example</td><td><a href='https://vinnystone.com/qullamaggie-on-what-to-do-if-your-trade-is-just-going-sideways/' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>TSLA</td><td>@smbcapital</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>Public Benzinga/Yahoo feature on SMB trader Brandon Sachi: example core position if Tesla (TSLA) breaks out above $300 o</td><td><a href='https://finance.yahoo.com/news/smb-capitals-fastest-growing-trader-140111336.html' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>TTWO</td><td>@LeifSoreide</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>TraderLion conference/podcast: live walk-throughs include Take-Two / GTA VI setup</td><td><a href='https://getpodcast.com/podcast/the-traderlion-podcast/inside-the-mind-of-a-us-investing-champion-leif-soreide-on-high-tight-_bcaa437c93' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr><tr><td>WNW</td><td>@WarriorTrading</td><td><span class='zh'>中</span><span class='en'>medium</span></td><td>unknown</td><td>search</td><td>Transcript mentions WNW among names discussed that day</td><td><a href='https://www.youtube.com/watch?v=wEszUmPYSvU' target='_blank'><span class='zh'>来源</span><span class='en'>Source</span></a></td></tr></tbody></table></div><details><summary><span class="zh">未抓到的账号（诚实空白）</span><span class="en">Accounts with no hits (honest blanks)</span></summary><ul><li>@DanZanger: X blocked; chartpattern.com Zanger Report / chatroom are paid — not scraped.; No recent free public named ticker list found for 2026; reviews confirm annotated charts are subscriber-only.</li><li>@StatBear: X fully blocked; no independent public website.; qullamaggie.com credits @StatBear for stream recaps, but no scrapable public ticker dump found without X access.</li></ul></details>
+
+  <p class="muted"><span class="zh">自检清单已并入上方 2.0 执行规则。</span><span class="en">Checklist merged into the 2.0 execution block above.</span></p>
+</div>
+<script>
+(function () {
+  var root = document.documentElement;
+  function apply(lang) {
+    root.setAttribute('data-lang', lang);
+    root.setAttribute('lang', lang === 'zh' ? 'zh-CN' : 'en');
+    document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    try { localStorage.setItem('scrub-lang', lang); } catch (e) {}
+  }
+  document.getElementById('btn-zh').addEventListener('click', function () { apply('zh'); });
+  document.getElementById('btn-en').addEventListener('click', function () { apply('en'); });
+  var saved = null;
+  try { saved = localStorage.getItem('scrub-lang'); } catch (e) {}
+  apply(saved === 'en' ? 'en' : 'zh');
+})();
+</script>
+
+<script>
+(function () {
+  var RISK = {
+    A_momentum_burst: 0.5,
+    A_near_breakout: 0.5,
+    B_rs_leader: 0.4,
+    F_volume_price_lift: 0.35,
+    F_prove_it_watch: 0.25,
+    C_rvol_event: 0.25,
+    D_oversold_bounce_watch: 0
+  };
+  var PARTIAL = {
+    A_momentum_burst: 0.5,
+    A_near_breakout: 0.5,
+    B_rs_leader: 1/3,
+    F_volume_price_lift: 1/3,
+    F_prove_it_watch: 1/3,
+    C_rvol_event: 1/3,
+    D_oversold_bounce_watch: 0
+  };
+  var STOP_MULT = {
+    A_momentum_burst: 0.96,
+    A_near_breakout: 0.96,
+    F_volume_price_lift: 0.96,
+    F_prove_it_watch: 0.96,
+    B_rs_leader: 0.95,
+    C_rvol_event: 0.97,
+    D_oversold_bounce_watch: 0.96
+  };
+  var PRIORITY = [
+    "A_momentum_burst","A_near_breakout","F_volume_price_lift",
+    "B_rs_leader","C_rvol_event","F_prove_it_watch","D_oversold_bounce_watch"
+  ];
+  var FRIENDLY = {
+    A_momentum_burst: {zh:"A爆发", en:"A Burst"},
+    A_near_breakout: {zh:"A近突破", en:"A Near-breakout"},
+    B_rs_leader: {zh:"B龙头", en:"B Leader"},
+    C_rvol_event: {zh:"C事件", en:"C Event"},
+    F_volume_price_lift: {zh:"F抬升", en:"F Lift"},
+    F_prove_it_watch: {zh:"F观察窗口", en:"F Prove-it watch"},
+    D_oversold_bounce_watch: {zh:"D超卖观察", en:"D Oversold watch"}
+  };
+  var TRAIL = {
+    A_momentum_burst: {
+      zh: "跌破5/10日线或前一日低点再考虑",
+      en: "Consider exit under 5/10-day MA or prior-day low"
+    },
+    A_near_breakout: {
+      zh: "失败跌回突破位下则快速离场；强则短均线跟踪",
+      en: "Fail under breakout → exit fast; else trail short MAs"
+    },
+    B_rs_leader: {
+      zh: "跌破10日线减仓；跌破20日线/关键平台清仓",
+      en: "Trim under 10DMA; clear under 20DMA / key shelf"
+    },
+    C_rvol_event: {
+      zh: "逻辑失效或跳空不利立即收缩",
+      en: "Shrink fast if thesis fails or gap goes against you"
+    },
+    F_volume_price_lift: {
+      zh: "放量衰竭或跌回启动平台则出",
+      en: "Exit if volume fades or price loses launch shelf"
+    },
+    F_prove_it_watch: {
+      zh: "观察窗口仓位更小；跌破5/10日线再考虑",
+      en: "Smaller prove-it size; exit under 5/10DMA"
+    },
+    D_oversold_bounce_watch: {
+      zh: "仅观察，不是单独买点",
+      en: "Watch only — not a standalone entry"
+    }
+  };
+  var TIME_ZH = "⏱ 2–5 个交易日是「证明自己」的窗口，不是强制到期日：提前走强可继续持有；三四天不动则清理。";
+  var TIME_EN = "⏱ 2–5 sessions is a prove-it window, not a hard expiry: keep if already strong; clear if still dead after 3–4 days.";
+
+  var elCap = document.getElementById("pm-capital");
+  var elLens = document.getElementById("pm-lens");
+  var elEntry = document.getElementById("pm-entry");
+  var elStop = document.getElementById("pm-stop");
+  var elRisk = document.getElementById("pm-risk");
+  var elPartial = document.getElementById("pm-partial");
+  var elTicker = document.getElementById("pm-ticker");
+  var elQty = document.getElementById("pm-qty");
+  var elAmtEdit = document.getElementById("pm-amount-edit");
+  if (!elCap || !elQty) return;
+
+  var CANDS = window.USM_CANDIDATES || [];
+  var elTickerInput = document.getElementById("pm-ticker-input");
+  var elTickerMenu = document.getElementById("pm-ticker-menu");
+  var elTickerCaret = document.getElementById("pm-ticker-caret");
+  var manualTicker = "";
+
+  function candLabel(c) {
+    var tags = c.friendly_zh || "";
+    return c.ticker + " · $" + Number(c.close || 0).toFixed(2) + (tags ? (" · " + tags) : "");
+  }
+  function findCandIdxByTicker(sym) {
+    sym = String(sym || "").trim().toUpperCase();
+    if (!sym) return -1;
+    for (var i = 0; i < CANDS.length; i++) {
+      if (String(CANDS[i].ticker || "").toUpperCase() === sym) return i;
+    }
+    return -1;
+  }
+  function setTickerDisplay(txt) {
+    if (elTickerInput) elTickerInput.value = txt || "";
+  }
+  function closeTickerMenu() {
+    if (elTickerMenu) elTickerMenu.hidden = true;
+  }
+  function openTickerMenu(filter) {
+    if (!elTickerMenu) return;
+    var q = String(filter || "").trim().toUpperCase();
+    var html = "";
+    var n = 0;
+    for (var i = 0; i < CANDS.length; i++) {
+      var c = CANDS[i];
+      var lab = candLabel(c);
+      if (q && lab.toUpperCase().indexOf(q) < 0 && String(c.ticker).toUpperCase().indexOf(q) < 0) continue;
+      html += '<li data-idx="' + i + '">' + lab + "</li>";
+      n++;
+      if (n >= 40) break;
+    }
+    if (!n) html = '<li class="muted">' + (lang() === "zh" ? "无匹配 · 可直接输入代码" : "No match · type a ticker") + "</li>";
+    elTickerMenu.innerHTML = html;
+    elTickerMenu.hidden = false;
+  }
+  function applyManualTicker(sym) {
+    sym = String(sym || "").trim().toUpperCase().replace(/[^A-Z0-9.\-]/g, "");
+    if (!sym) return;
+    var idx = findCandIdxByTicker(sym);
+    if (idx >= 0) { selectCand(idx); return; }
+    manualTicker = sym;
+    elTicker.value = "";
+    setTickerDisplay(sym);
+    closeTickerMenu();
+    var line = document.getElementById("pm-type-line");
+    if (line) {
+      line.innerHTML = lang() === "zh"
+        ? ("手动代码：<b>" + sym + "</b>（不在榜单 · 请自填价格/止损）")
+        : ("Manual: <b>" + sym + "</b> (not in list · set price/stop yourself)");
+    }
+    recalc(false);
+  }
+  var mode = "qty"; // qty | amt
+  var qtyTouched = false;
+  var riskTouched = false;
+  var partialTouched = false;
+  var stopTouched = false;
+  var activeFrac = { src: "suggest", frac: 1 };
+  var lastPlan = null;
+  var suppress = false;
+
+  try {
+    var saved = localStorage.getItem("usm_capital");
+    if (saved && !isNaN(parseFloat(saved))) elCap.value = saved;
+  } catch (e) {}
+
+  function lang() {
+    return document.documentElement.getAttribute("data-lang") || "zh";
+  }
+  function fmt(n, d) {
+    if (n == null || isNaN(n)) return "—";
+    return Number(n).toLocaleString(undefined, { maximumFractionDigits: d == null ? 2 : d });
+  }
+  function primaryLens(tags) {
+    tags = tags || [];
+    for (var i = 0; i < PRIORITY.length; i++) {
+      if (tags.indexOf(PRIORITY[i]) >= 0) return PRIORITY[i];
+    }
+    return tags[0] || "A_momentum_burst";
+  }
+  function suggestStop(entry, lens) {
+    var m = STOP_MULT[lens] != null ? STOP_MULT[lens] : 0.96;
+    return Math.round(entry * m * 100) / 100;
+  }
+  function friendly(tag) {
+    var f = FRIENDLY[tag];
+    if (!f) return tag;
+    return lang() === "zh" ? f.zh : f.en;
+  }
+  function round2(n) { return Math.round(n * 100) / 100; }
+
+  function computeRiskShares(capital, entry, stop, lens, riskPct) {
+    if (capital <= 0 || entry <= 0 || stop <= 0 || stop >= entry || riskPct <= 0) {
+      return { shares: 0, capped: false, r1: 0, riskDollars: 0, maxFrac: 0.2 };
+    }
+    var r1 = Math.abs(entry - stop);
+    var riskDollars = capital * (riskPct / 100);
+    var rawShares = Math.floor(riskDollars / r1);
+    var maxFrac = lens === "C_rvol_event" ? 0.10 : 0.20;
+    var maxShares = Math.floor((capital * maxFrac) / entry);
+    var capped = false;
+    var shares = rawShares;
+    if (shares > maxShares) { shares = maxShares; capped = true; }
+    return { shares: shares, capped: capped, r1: r1, riskDollars: riskDollars, maxFrac: maxFrac };
+  }
+
+  function applyLensDefaults(lens) {
+    elLens.value = lens;
+    if (!riskTouched) elRisk.value = RISK[lens] != null ? RISK[lens] : 0;
+    if (!partialTouched) elPartial.value = PARTIAL[lens] != null ? Math.round(PARTIAL[lens] * 1000) / 1000 : 0;
+    var line = document.getElementById("pm-type-line");
+    if (line) {
+      line.innerHTML = lang() === "zh"
+        ? ("当前类型：<b>" + friendly(lens) + "</b>（由标签自动选 · 仅供风险默认）")
+        : ("Type: <b>" + friendly(lens) + "</b> (auto from tags · risk defaults)");
+    }
+  }
+
+  function setMode(m, focusAmt) {
+    mode = m;
+    document.getElementById("pm-mode-qty").classList.toggle("active", m === "qty");
+    document.getElementById("pm-mode-amt").classList.toggle("active", m === "amt");
+    var lab = document.getElementById("pm-qty-lab");
+    var elNotional = document.getElementById("pm-notional-input");
+    if (m === "qty") {
+      lab.innerHTML = '<span class="zh">数量</span><span class="en">Qty</span>';
+      elQty.classList.remove("pm-hidden");
+      elAmtEdit.classList.add("pm-hidden");
+    } else {
+      lab.innerHTML = '<span class="zh">金额</span><span class="en">Amount</span>';
+      elQty.classList.add("pm-hidden");
+      elAmtEdit.classList.remove("pm-hidden");
+      var price = parseFloat(elEntry.value) || 0;
+      var sh = parseInt(elQty.value, 10) || 0;
+      var dollars = round2(sh * price);
+      suppress = true;
+      elAmtEdit.value = dollars;
+      if (elNotional) elNotional.value = dollars;
+      suppress = false;
+      if (focusAmt) {
+        setTimeout(function () {
+          if (elNotional) { elNotional.focus(); elNotional.select(); }
+          else { elAmtEdit.focus(); elAmtEdit.select(); }
+        }, 0);
+      }
+    }
+  }
+
+  function setQty(n, markTouched) {
+    n = Math.max(0, Math.floor(n || 0));
+    suppress = true;
+    elQty.value = n;
+    var price = parseFloat(elEntry.value) || 0;
+    elAmtEdit.value = round2(n * price);
+    suppress = false;
+    if (markTouched) qtyTouched = true;
+  }
+
+  function highlightFrac(src, frac) {
+    activeFrac = { src: src, frac: frac };
+    document.querySelectorAll(".pm-frac-btn.cash, .pm-frac-btn.suggest").forEach(function (b) {
+      var match = b.getAttribute("data-src") === src && String(b.getAttribute("data-frac")) === String(frac);
+      b.classList.toggle("active", match);
+    });
+  }
+
+  function selectCand(idx) {
+    if (idx === "" || idx == null || !CANDS[idx]) return;
+    var c = CANDS[idx];
+    var lens = c.primary_lens || primaryLens(c.tags);
+    suppress = true;
+    elEntry.value = c.close;
+    stopTouched = false;
+    riskTouched = false;
+    partialTouched = false;
+    qtyTouched = false;
+    applyLensDefaults(lens);
+    elStop.value = suggestStop(c.close, lens);
+    elTicker.value = String(idx);
+    manualTicker = "";
+    setTickerDisplay(candLabel(c));
+    suppress = false;
+    closeTickerMenu();
+    highlightFrac("suggest", 1);
+    recalc(true);
+  }
+
+  function recalc(forceSuggest) {
+    var capital = parseFloat(elCap.value) || 0;
+    var entry = parseFloat(elEntry.value) || 0;
+    var stop = parseFloat(elStop.value) || 0;
+    var lens = elLens.value;
+    var riskPct = parseFloat(elRisk.value) || 0;
+    var partial = parseFloat(elPartial.value);
+    if (isNaN(partial)) partial = 0;
+    partial = Math.max(0, Math.min(1, partial));
+
+    try { localStorage.setItem("usm_capital", String(capital)); } catch (e) {}
+
+    var msg = document.getElementById("pm-msg");
+    var warn = document.getElementById("pm-warn");
+    var tbody = document.querySelector("#pm-schedule tbody");
+    var L = lang();
+
+    function setMsg(show, zh, en) {
+      if (!show) { msg.hidden = true; msg.textContent = ""; return; }
+      msg.hidden = false;
+      msg.textContent = L === "zh" ? zh : en;
+    }
+    function setWarn(show, zh, en) {
+      if (!show) { warn.hidden = true; warn.textContent = ""; return; }
+      warn.hidden = false;
+      warn.textContent = L === "zh" ? zh : en;
+    }
+
+    document.getElementById("pm-timestop").textContent = L === "zh" ? TIME_ZH : TIME_EN;
+    document.getElementById("pm-r-footnote").textContent = L === "zh"
+      ? "专业对应：约 1.5R / 2R（第一档 / 第二档止盈）· 护本止损 ≈ −1R · 股数按止损距离反推风险，不是现金全仓。"
+      : "Pro footnotes: ~1.5R / 2R (TP1 / TP2) · protect stop ≈ −1R · shares from stop-risk, not cash full.";
+
+    var tkr = "—";
+    var idx = elTicker.value;
+    if (idx !== "" && CANDS[idx]) tkr = CANDS[idx].ticker;
+    else if (manualTicker) tkr = manualTicker;
+    else if (elTickerInput && elTickerInput.value) {
+      var typed = String(elTickerInput.value).trim().toUpperCase().split(/[·\s]/)[0];
+      if (typed) tkr = typed;
+    }
+
+    // Cash grid
+    var cashFull = entry > 0 ? Math.floor(capital / entry) : 0;
+    var cashVals = [
+      cashFull,
+      Math.floor(cashFull / 2),
+      Math.floor(cashFull / 3),
+      Math.floor(cashFull / 4)
+    ];
+    ["pm-cash-1","pm-cash-2","pm-cash-3","pm-cash-4"].forEach(function (id, i) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = String(cashVals[i]);
+    });
+
+    if (lens === "D_oversold_bounce_watch") {
+      setMsg(true, "D 超卖观察：仅观察，不做仓位计划。", "D oversold watch: watch only — no size plan.");
+      setWarn(false);
+      ["pm-sug-1","pm-sug-2","pm-sug-3","pm-sug-4"].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = "0";
+      });
+      document.getElementById("pm-notional").textContent = "0.00 USD";
+      document.getElementById("pm-tpsl-summary").textContent = "—";
+      tbody.innerHTML = "";
+      document.getElementById("pm-slots-note").textContent = "";
+      lastPlan = null;
+      return;
+    }
+
+    if (capital <= 0 || entry <= 0) {
+      setMsg(true, "请输入有效的本金与价格。", "Enter valid capital and price.");
+      return;
+    }
+    if (!stopTouched) {
+      stop = suggestStop(entry, lens);
+      elStop.value = stop;
+    }
+    stop = parseFloat(elStop.value) || 0;
+    if (stop <= 0 || stop >= entry) {
+      setMsg(true, "做多：止损价必须低于买入价。", "For longs, stop must be below entry.");
+      return;
+    }
+    if (riskPct <= 0) {
+      setMsg(true, "风险%无效。", "Risk % invalid.");
+      return;
+    }
+    setMsg(false);
+
+    var rs = computeRiskShares(capital, entry, stop, lens, riskPct);
+    setWarn(
+      rs.capped,
+      "按风险算出的股数超过本金 " + (rs.maxFrac * 100) + "% 上限，已缩至上限股数。",
+      "Risk-based shares exceeded " + (rs.maxFrac * 100) + "% notional cap; reduced to cap."
+    );
+
+    var sugFull = rs.shares;
+    var sugVals = [
+      sugFull,
+      Math.floor(sugFull / 2),
+      Math.floor(sugFull / 3),
+      Math.floor(sugFull / 4)
+    ];
+    ["pm-sug-1","pm-sug-2","pm-sug-3","pm-sug-4"].forEach(function (id, i) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = String(sugVals[i]);
+    });
+
+    // Default / refresh qty from suggested full unless user edited
+    if (forceSuggest || !qtyTouched) {
+      setQty(sugFull, false);
+      highlightFrac("suggest", 1);
+    }
+
+    var shares = parseInt(elQty.value, 10) || 0;
+    if (mode === "amt" && !suppress) {
+      var amt = parseFloat(elAmtEdit.value) || 0;
+      shares = entry > 0 ? Math.floor(amt / entry) : 0;
+      suppress = true;
+      elQty.value = shares;
+      suppress = false;
+    }
+
+    var notional = shares * entry;
+    var elNotional = document.getElementById("pm-notional-input");
+    suppress = true;
+    if (mode === "qty") {
+      elAmtEdit.value = round2(notional);
+      if (elNotional) elNotional.value = round2(notional);
+    } else {
+      // keep user-typed amount in amt mode; still refresh qty-derived display if empty
+      var typed = parseFloat(elAmtEdit.value);
+      if (!isNaN(typed) && elNotional && document.activeElement !== elNotional) {
+        /* leave notional if focused */
+      }
+      if (elNotional && document.activeElement !== elNotional && document.activeElement !== elAmtEdit) {
+        elNotional.value = round2(parseFloat(elAmtEdit.value) || notional);
+      }
+    }
+    suppress = false;
+
+    var r1 = rs.r1;
+    var p15 = round2(entry + 1.5 * r1);
+    var p2 = round2(entry + 2 * r1);
+    var sell15 = Math.floor(shares * partial);
+    if (sell15 > shares) sell15 = shares;
+    var rem = shares - sell15;
+    var sell2 = Math.floor(rem / 2);
+    var trailSh = rem - sell2;
+    var slots = riskPct > 0 ? Math.min(4, Math.floor(2.0 / riskPct)) : 0;
+    var trail = TRAIL[lens] || { zh: "跌破5/10日线再考虑", en: "Consider exit under 5/10-day MA" };
+
+    document.getElementById("pm-tpsl-summary").innerHTML =
+      '<span class="pm-tpsl-item"><b>止损价</b> $' + fmt(stop, 2) + '</span>' +
+      '<span class="pm-tpsl-sep">/</span>' +
+      '<span class="pm-tpsl-item"><b>止盈①</b> $' + fmt(p15, 2) + '</span>' +
+      '<span class="pm-tpsl-sep">/</span>' +
+      '<span class="pm-tpsl-item"><b>止盈②</b> $' + fmt(p2, 2) + '</span>';
+
+    var act1 = partial >= 0.45
+      ? (L==="zh"?"卖掉一半左右":"Sell about half")
+      : (L==="zh"?"卖掉约三分之一":"Sell about one-third");
+    var rows = [
+      {
+        step: L==="zh"?"① 护本止损":"① Capital-protect stop",
+        price: "$" + fmt(stop, 2),
+        action: L==="zh"?"全部卖掉":"Sell all",
+        sh: shares, amount: "$" + fmt(shares * stop, 0)
+      },
+      {
+        step: L==="zh"?"② 第一档止盈":"② First take-profit",
+        price: "$" + fmt(p15, 2),
+        action: act1,
+        sh: sell15, amount: "$" + fmt(sell15 * p15, 0)
+      },
+      {
+        step: L==="zh"?"③ 第二档止盈":"③ Second take-profit",
+        price: "$" + fmt(p2, 2),
+        action: L==="zh"?"再卖掉剩下的一半":"Sell half of what remains",
+        sh: sell2, amount: "$" + fmt(sell2 * p2, 0)
+      },
+      {
+        step: L==="zh"?"④ 留着跟踪":"④ Trail the rest",
+        price: "—",
+        action: (L==="zh"?"先不急着卖完":"No rush to sell all") + " · " + (L==="zh"?trail.zh:trail.en),
+        sh: trailSh, amount: "—"
+      }
+    ];
+    tbody.innerHTML = rows.map(function (r) {
+      var pct = shares ? (r.sh / shares * 100) : 0;
+      return "<tr>" +
+        "<td>" + r.step + "</td>" +
+        "<td>" + r.price + "</td>" +
+        "<td>" + r.action + "</td>" +
+        "<td>" + fmt(r.sh, 0) + "</td>" +
+        "<td>" + fmt(pct, 1) + "%</td>" +
+        "<td>" + r.amount + "</td>" +
+        "</tr>";
+    }).join("");
+
+    document.getElementById("pm-slots-note").textContent = slots
+      ? (L === "zh"
+          ? ("同时大概最多做 " + slots + " 笔同类风险（家庭总风险预算约 2%）。建议仓位全仓=" + sugFull + " 股（风险 " + riskPct.toFixed(2) + "% ≈ $" + fmt(rs.riskDollars, 0) + "）。")
+          : ("Roughly up to " + slots + " concurrent similar-risk trades (~2% budget). Suggested full=" + sugFull + " sh (risk " + riskPct.toFixed(2) + "% ≈ $" + fmt(rs.riskDollars, 0) + ")."))
+      : "";
+
+    lastPlan = {
+      ticker: tkr, entry: entry, stop: stop, shares: shares, notional: notional,
+      p15: p15, p2: p2, sugFull: sugFull, cashFull: cashFull, riskPct: riskPct
+    };
+  }
+
+  if (elTickerMenu) {
+    elTickerMenu.addEventListener("mousedown", function (e) {
+      var li = e.target.closest("li[data-idx]");
+      if (!li) return;
+      e.preventDefault();
+      selectCand(li.getAttribute("data-idx"));
+    });
+  }
+  if (elTickerCaret) {
+    elTickerCaret.addEventListener("click", function () {
+      if (!elTickerMenu) return;
+      if (elTickerMenu.hidden) openTickerMenu(elTickerInput ? elTickerInput.value : "");
+      else closeTickerMenu();
+    });
+  }
+  if (elTickerInput) {
+    elTickerInput.addEventListener("focus", function () {
+      openTickerMenu(elTickerInput.value);
+    });
+    elTickerInput.addEventListener("input", function () {
+      openTickerMenu(elTickerInput.value);
+    });
+    elTickerInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        applyManualTicker(elTickerInput.value.split(/[·\s]/)[0]);
+      } else if (e.key === "Escape") {
+        closeTickerMenu();
+      }
+    });
+    elTickerInput.addEventListener("blur", function () {
+      setTimeout(function () {
+        closeTickerMenu();
+        var raw = String(elTickerInput.value || "").trim();
+        if (!raw) return;
+        var sym = raw.toUpperCase().split(/[·\s]/)[0];
+        var idx = findCandIdxByTicker(sym);
+        if (idx >= 0) {
+          if (String(elTicker.value) !== String(idx)) selectCand(idx);
+        } else if (sym && sym !== manualTicker) {
+          applyManualTicker(sym);
+        }
+      }, 150);
+    });
+  }
+  document.addEventListener("click", function (e) {
+    var combo = document.getElementById("pm-combo");
+    if (combo && !combo.contains(e.target)) closeTickerMenu();
+  });
+
+  document.getElementById("pm-mode-qty").addEventListener("click", function () { setMode("qty"); recalc(false); });
+  document.getElementById("pm-mode-amt").addEventListener("click", function () { setMode("amt", true); recalc(false); });
+
+  document.getElementById("pm-price-minus").addEventListener("click", function () {
+    var v = round2((parseFloat(elEntry.value) || 0) - 0.01);
+    if (v < 0.01) v = 0.01;
+    elEntry.value = v.toFixed(2);
+    if (!stopTouched) elStop.value = suggestStop(v, elLens.value);
+    if (mode === "amt") {
+      var amt = parseFloat(elAmtEdit.value) || 0;
+      setQty(v > 0 ? Math.floor(amt / v) : 0, true);
+    }
+    recalc(false);
+  });
+  document.getElementById("pm-price-plus").addEventListener("click", function () {
+    var v = round2((parseFloat(elEntry.value) || 0) + 0.01);
+    elEntry.value = v.toFixed(2);
+    if (!stopTouched) elStop.value = suggestStop(v, elLens.value);
+    if (mode === "amt") {
+      var amt = parseFloat(elAmtEdit.value) || 0;
+      setQty(v > 0 ? Math.floor(amt / v) : 0, true);
+    }
+    recalc(false);
+  });
+
+  document.getElementById("pm-qty-minus").addEventListener("click", function () {
+    if (mode === "qty") {
+      setQty((parseInt(elQty.value, 10) || 0) - 1, true);
+    } else {
+      var a = round2((parseFloat(elAmtEdit.value) || 0) - 1);
+      if (a < 0) a = 0;
+      elAmtEdit.value = a;
+      qtyTouched = true;
+      var price = parseFloat(elEntry.value) || 0;
+      setQty(price > 0 ? Math.floor(a / price) : 0, true);
+    }
+    highlightFrac("", 0);
+    recalc(false);
+  });
+  document.getElementById("pm-qty-plus").addEventListener("click", function () {
+    if (mode === "qty") {
+      setQty((parseInt(elQty.value, 10) || 0) + 1, true);
+    } else {
+      var a = round2((parseFloat(elAmtEdit.value) || 0) + 1);
+      elAmtEdit.value = a;
+      qtyTouched = true;
+      var price = parseFloat(elEntry.value) || 0;
+      setQty(price > 0 ? Math.floor(a / price) : 0, true);
+    }
+    highlightFrac("", 0);
+    recalc(false);
+  });
+
+  elQty.addEventListener("input", function () {
+    if (suppress) return;
+    qtyTouched = true;
+    highlightFrac("", 0);
+    recalc(false);
+  });
+  elAmtEdit.addEventListener("input", function () {
+    if (suppress) return;
+    qtyTouched = true;
+    highlightFrac("", 0);
+    var price = parseFloat(elEntry.value) || 0;
+    var amt = parseFloat(elAmtEdit.value) || 0;
+    setQty(price > 0 ? Math.floor(amt / price) : 0, true);
+    recalc(false);
+  });
+
+  elEntry.addEventListener("input", function () {
+    if (suppress) return;
+    if (!stopTouched) {
+      elStop.value = suggestStop(parseFloat(elEntry.value) || 0, elLens.value);
+    }
+    recalc(!qtyTouched);
+  });
+
+  document.querySelectorAll(".pm-frac-btn.cash, .pm-frac-btn.suggest").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var src = b.getAttribute("data-src");
+      var frac = parseInt(b.getAttribute("data-frac"), 10) || 1;
+      var n = parseInt(b.textContent, 10) || 0;
+      setQty(n, true);
+      highlightFrac(src, frac);
+      if (mode === "amt") setMode("amt");
+      recalc(false);
+    });
+  });
+
+  function applyAmountDollars(amt) {
+    amt = Math.max(0, parseFloat(amt) || 0);
+    var price = parseFloat(elEntry.value) || 0;
+    qtyTouched = true;
+    highlightFrac("", 0);
+    setMode("amt", false);
+    suppress = true;
+    elAmtEdit.value = round2(amt);
+    var elNotional = document.getElementById("pm-notional-input");
+    if (elNotional && document.activeElement !== elNotional) elNotional.value = round2(amt);
+    suppress = false;
+    setQty(price > 0 ? Math.floor(amt / price) : 0, true);
+    recalc(false);
+  }
+
+  var elNotionalInput = document.getElementById("pm-notional-input");
+  if (elNotionalInput) {
+    elNotionalInput.addEventListener("input", function () {
+      if (suppress) return;
+      applyAmountDollars(elNotionalInput.value);
+    });
+    elNotionalInput.addEventListener("focus", function () {
+      setMode("amt", false);
+    });
+  }
+
+  // When editing stepper amount field, sync bottom 金额
+  elAmtEdit.addEventListener("input", function () {
+    if (suppress) return;
+    var elN = document.getElementById("pm-notional-input");
+    if (elN) { suppress = true; elN.value = elAmtEdit.value; suppress = false; }
+  });
+
+  document.getElementById("pm-buy-btn").addEventListener("click", function () {
+    var toast = document.getElementById("pm-toast");
+    var L = lang();
+    toast.hidden = false;
+    toast.textContent = L === "zh"
+      ? "仅分析参考，请到 moomoo 手动下单"
+      : "Analysis only — place the order manually on moomoo";
+    var box = document.getElementById("pm-checklist-box");
+    box.classList.add("pm-check-flash");
+    box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    setTimeout(function () { box.classList.remove("pm-check-flash"); }, 2200);
+    setTimeout(function () { toast.hidden = true; }, 3200);
+  });
+
+  ["pm-capital"].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener("input", function () { recalc(!qtyTouched); });
+  });
+
+  var btnZh = document.getElementById("btn-zh");
+  var btnEn = document.getElementById("btn-en");
+  if (btnZh) btnZh.addEventListener("click", function () { setTimeout(function(){ recalc(false); }, 0); });
+  if (btnEn) btnEn.addEventListener("click", function () { setTimeout(function(){ recalc(false); }, 0); });
+
+  window.USM_selectByTicker = function (sym) {
+    sym = String(sym || "").trim().toUpperCase();
+    var idx = findCandIdxByTicker(sym);
+    if (idx >= 0) selectCand(idx);
+    else applyManualTicker(sym);
+  };
+  setMode("qty");
+  if (CANDS.length) {
+    selectCand(0);
+  } else {
+    applyLensDefaults("A_momentum_burst");
+    recalc(true);
+  }
+})();
+
+</script>
+
+
+<script>
+(function () {
+  var G = window.USM_ENTRY_GATE || { allow: true, block_zh: "", block_en: "" };
+  function lang() {
+    return document.documentElement.getAttribute("data-lang") || "zh";
+  }
+  function blockMsg() {
+    return lang() === "zh"
+      ? (G.block_zh || "当前大盘条件不满足，禁止新建仓位，已有持仓不受影响。")
+      : (G.block_en || "Market gate failed — no new positions. Open holdings are unaffected.");
+  }
+  function toast(msg) {
+    var el = document.getElementById("pm-toast");
+    if (!el) { alert(msg); return; }
+    el.hidden = false;
+    el.textContent = msg;
+    setTimeout(function () { el.hidden = true; }, 3800);
+  }
+  function setOpenEnabled(on) {
+    // CSS-only gray: keep clickable so pause toast still fires
+    document.querySelectorAll(".usm-open-btn").forEach(function (b) {
+      b.classList.toggle("is-disabled", !on);
+      b.setAttribute("aria-disabled", on ? "false" : "true");
+    });
+    var buy = document.getElementById("pm-buy-btn");
+    if (buy) {
+      buy.classList.toggle("is-disabled", !on);
+      buy.setAttribute("aria-disabled", on ? "false" : "true");
+    }
+  }
+  setOpenEnabled(!!G.allow);
+
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest(".usm-open-btn");
+    if (!btn) return;
+    e.preventDefault();
+    if (!G.allow) {
+      toast(blockMsg());
+      return;
+    }
+    var sym = (btn.getAttribute("data-ticker") || "").toUpperCase();
+    if (window.USM_selectByTicker) {
+      window.USM_selectByTicker(sym);
+    }
+    var pm = document.getElementById("pm-ticket") || document.querySelector(".pm-ticket-card");
+    if (pm) pm.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, true);
+
+  var buy = document.getElementById("pm-buy-btn");
+  if (buy) {
+    buy.addEventListener("click", function (e) {
+      if (!G.allow) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        toast(blockMsg());
+      }
+    }, true);
+  }
+})();
+</script>
+
+
+<script>
+(function () {
+  function syncHeatmapHeight() {
+    var split = document.getElementById('pm-finviz-split');
+    var buy = document.getElementById('pm-buy-btn');
+    var root = document.getElementById('pm-root');
+    var right = split && split.querySelector('.pm-finviz-right');
+    var wrap = split && split.querySelector('.pm-tv-wrap');
+    var frame = split && split.querySelector('.pm-tv-frame');
+    if (!split || !buy || !root || !right || !wrap) return;
+
+    if (window.matchMedia('(max-width: 900px)').matches) {
+      right.style.height = '';
+      right.style.minHeight = '';
+      right.style.maxHeight = '';
+      right.style.width = '100%';
+      right.style.flex = '';
+      wrap.style.height = '360px';
+      if (frame) frame.style.height = '360px';
+      return;
+    }
+
+    // Top of right card aligns with left column top; bottom a bit below green 买入
+    // so TradingView's -3%…+3% color legend is not clipped
+    var topY = right.getBoundingClientRect().top;
+    var buyBottom = buy.getBoundingClientRect().bottom;
+    var legendPad = 42; // room for TV color-scale strip under the map
+    var ticketH = Math.max(320, Math.round(buyBottom - topY) + legendPad);
+
+    var head = right.querySelector('.pm-finviz-head');
+    var hint = right.querySelector('p.muted');
+    var chrome = 14; // card padding top+bottom
+    if (head) chrome += head.getBoundingClientRect().height;
+    if (hint) chrome += hint.getBoundingClientRect().height + 6;
+    var mapH = Math.max(260, ticketH - chrome);
+
+    // Fill remaining row width (no 16:9 width lock — that left empty page space)
+    right.style.width = 'auto';
+    right.style.flex = '1 1 0';
+    right.style.minWidth = '0';
+    right.style.height = ticketH + 'px';
+    right.style.minHeight = ticketH + 'px';
+    right.style.maxHeight = ticketH + 'px';
+    right.style.boxSizing = 'border-box';
+
+    wrap.style.height = mapH + 'px';
+    wrap.style.width = '100%';
+    if (frame) {
+      frame.style.height = mapH + 'px';
+      frame.style.flex = '1 1 auto';
+      frame.style.minHeight = '0';
+    }
+    var box = wrap.querySelector('.tradingview-widget-container');
+    if (box) {
+      box.style.height = mapH + 'px';
+      box.style.width = '100%';
+    }
+    var widget = wrap.querySelector('.tradingview-widget-container__widget');
+    if (widget) {
+      widget.style.height = mapH + 'px';
+      widget.style.width = '100%';
+    }
+    // Hide TV copyright strip so map uses full frame
+    var copy = wrap.querySelector('.tradingview-widget-copyright');
+    if (copy) copy.style.display = 'none';
+  }
+  function boot() {
+    syncHeatmapHeight();
+    setTimeout(syncHeatmapHeight, 400);
+    setTimeout(syncHeatmapHeight, 1200);
+    setTimeout(syncHeatmapHeight, 2500);
+  }
+  window.addEventListener('load', boot);
+  window.addEventListener('resize', syncHeatmapHeight);
+  if (window.ResizeObserver) {
+    var root = document.getElementById('pm-root');
+    if (root) new ResizeObserver(syncHeatmapHeight).observe(root);
+    var buy = document.getElementById('pm-buy-btn');
+    if (buy) new ResizeObserver(syncHeatmapHeight).observe(buy);
+    var split = document.getElementById('pm-finviz-split');
+    if (split) new ResizeObserver(syncHeatmapHeight).observe(split);
+  }
+})();
+</script>
+
+</body>
+</html>

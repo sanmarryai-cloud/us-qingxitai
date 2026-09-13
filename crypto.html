@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-lang="zh">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>数字货币短线清洗台 · Crypto Short Scrub Desk</title>
+<style>
+  :root { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  body { margin: 0; background: #f1f5f9; color: #0f172a; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; }
+  .topbar { display:flex; justify-content:flex-end; gap:8px; margin-bottom:12px; }
+  .lang-btn {
+    border:1px solid #cbd5e1; background:#fff; color:#0f172a; border-radius:999px;
+    padding:8px 14px; font-weight:700; font-size:.9rem; cursor:pointer;
+  }
+  .lang-btn.active { background:#0f172a; color:#fff; border-color:#0f172a; }
+  .hero { background: linear-gradient(135deg,#0f172a,#1e293b 55%,#0ea5e9);
+           color:#f8fafc; border-radius:16px; padding:20px 22px; }
+  .hero-row { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .hero-text { flex:1; min-width:200px; }
+  .hero h1 { margin:0; font-size:1.6rem; }
+  .hero p { margin:8px 0 0; opacity:.9; }
+  .hero-cta {
+    display:inline-block; align-self:flex-start; white-space:nowrap;
+    border:2px solid #f8fafc; color:#f8fafc; background:rgba(255,255,255,.12);
+    border-radius:999px; padding:10px 16px; font-weight:800; font-size:.92rem;
+    text-decoration:none; box-shadow:0 0 0 1px rgba(14,165,233,.35);
+  }
+  .hero-cta:hover { background:rgba(255,255,255,.22); }
+
+  .hero-right {
+    display:flex; flex-direction:column; align-items:flex-end; gap:10px; text-align:right;
+  }
+  .hero-credit {
+    display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 14px;
+    margin-top:12px; padding-top:10px; border-top:1px solid rgba(248,250,252,.22);
+    font-size:.68rem; line-height:1.35; font-weight:500; opacity:.78;
+    letter-spacing:.01em;
+  }
+  .hero-credit .who { font-weight:700; opacity:.95; }
+  .metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:16px 0; }
+  .metric { background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:14px; }
+  .metric .k { color:#64748b; font-size:.8rem; }
+  .metric .v { font-size:1.4rem; font-weight:700; margin-top:4px; }
+  .pill { display:inline-block; padding:4px 10px; border-radius:999px; font-weight:700; font-size:.85rem;
+           background:#dcfce7; color:#166534; }
+  .muted { color:#64748b; font-size:.9rem; }
+  .tag { display:inline-block; margin:2px 4px 2px 0; padding:2px 8px; border-radius:6px;
+          font-size:.72rem; font-weight:600; background:#e0f2fe; color:#075985; }
+  table { width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden;
+           border:1px solid #e2e8f0; margin:8px 0 20px; }
+  th, td { padding:10px 12px; text-align:left; border-bottom:1px solid #f1f5f9; font-size:.92rem; }
+  th { background:#f8fafc; color:#475569; font-weight:600; }
+  h2 { margin:24px 0 8px; font-size:1.15rem; }
+  a { color:#0284c7; }
+  ul.check { background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:14px 14px 14px 36px; }
+  .table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; margin:8px 0 20px; }
+  .table-wrap table { margin:0; }
+  .badge { display:inline-block; margin-left:8px; padding:2px 8px; border-radius:6px;
+            font-size:.75rem; font-weight:700; background:#e0f2fe; color:#0369a1; vertical-align:middle; }
+  html[data-lang="zh"] .en { display:none !important; }
+  html[data-lang="en"] .zh { display:none !important; }
+  .entry-gate-fails { margin-top:10px; }
+  .entry-gate-fails ul { margin:6px 0 0; padding-left:1.2em; }
+  .entry-gate-fails li { margin:2px 0; font-weight:600; color:#9f1239; }
+  .entry-gate-tip { color:#64748b; font-size:.88rem; margin:8px 0 16px; }
+  .entry-gate {
+    border:2px solid #cbd5e1; border-radius:14px; padding:14px 16px; margin:14px 0 8px; background:#fff;
+  }
+  .entry-gate.allow { border-color: #86efac; background: #f0fdf4; }
+  .entry-gate.pause { border-color: #fca5a5; background: #fef2f2; }
+  .entry-gate h3 { margin: 0 0 6px; font-size: 1rem; }
+  .entry-gate .conds {
+    display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:10px;
+  }
+  .entry-gate .cond {
+    background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:10px;
+  }
+  .entry-gate .cond.ok { border-color: #86efac; }
+  .entry-gate .cond.bad { border-color: #fca5a5; }
+  .entry-gate .cond .lab { color: #64748b; font-weight: 600; }
+  .entry-gate .cond .val { font-weight: 800; margin-top: 2px; }
+  @media (max-width:800px) { .metrics { grid-template-columns:1fr 1fr; } }
+  @media (max-width:700px) {
+    .entry-gate .conds { grid-template-columns: 1fr; }
+  }
+  @media (max-width:520px) {
+    .metrics { grid-template-columns:1fr; }
+    .hero h1 { font-size:1.25rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <button type="button" class="lang-btn active" data-set="zh" id="btn-zh">中文</button>
+    <button type="button" class="lang-btn" data-set="en" id="btn-en">English</button>
+  </div>
+  <div class="hero">
+    <div class="hero-row">
+      <div class="hero-text">
+        <h1>
+          <span class="zh">数字货币短线清洗台 v1.0.0</span>
+          <span class="en">Crypto Short Scrub Desk v1.0.0</span>
+          <span class="badge">crypto</span>
+        </h1>
+        <p>
+          <span class="zh">流动性加密宇宙 · 相对 BTC 多镜头清洗 · 仅分析不下单 · 离线可打开</span>
+          <span class="en">Liquid crypto universe · multi-lens scrub vs BTC · analysis only · works offline</span>
+        </p>
+      </div>
+      <div class="hero-right">
+        <a class="hero-cta" href="index.html">
+          <span class="zh">美股清洗台</span>
+          <span class="en">US Stocks</span>
+        </a>
+      </div>
+    </div>
+    <div class="hero-credit">
+      <span class="who">作者：美颖Sanmarry</span>
+      <span>Copyright © 2026 MiracleLove LLC. All rights reserved</span>
+    </div>
+  </div>
+  <div class="metrics">
+    <div class="metric"><div class="k"><span class="zh">市场体制</span><span class="en">Regime</span></div><div class="v">RISK_ON</div></div>
+    <div class="metric"><div class="k">BTC</div><div class="v">76645.8</div></div>
+    <div class="metric"><div class="k">BTC SMA50</div><div class="v">70404.48</div></div>
+    <div class="metric"><div class="k"><span class="zh">扫描/命中</span><span class="en">Scanned / tagged</span></div><div class="v">82 / 13</div></div>
+  </div>
+  <p><span class="pill"><span class="zh">绿灯 · 可做动量</span><span class="en">Green · momentum OK</span></span>
+     <span class="muted"><span class="zh">短线动量 / 突破偏友好</span><span class="en">short-term crypto momentum / breakouts favored</span></span></p>
+  <p class="muted"><span class="zh">仅供参考分析，非投资建议，不会替你下单。数据来自 Yahoo Finance（可能延迟）。加密资产波动极大。过滤规则是启发式，不是已验证实盘优势。风险自负。</span><span class="en">Reference analysis only. Not investment advice. No orders placed. Data via Yahoo Finance (may be delayed). Crypto is highly volatile. Filters are rule-based heuristics, not a proven live edge. You execute at your own risk.</span></p>
+  <div class="entry-gate allow" id="entry-gate" data-allow="1"><h3><span class="zh">新开仓总闸：允许新开仓（绿灯可做动量）</span><span class="en">New-entry gate: New entries allowed (green — momentum OK)</span></h3><p class="muted" style="margin:0"><span class="zh">加密前置过滤：三条全过才允许新开仓；已有持仓不受限（概念上止盈止损照常）。阈值比美股更宽：回撤≤15%、ATR%≤7%（加密波动更大）。</span><span class="en">Crypto gate: all 3 must pass for NEW entries; open positions keep stops/TPs. Wider than US: DD≤15%, ATR%≤7% (crypto is more volatile).</span></p><div class="conds"><div class="cond ok"><div class="lab"><span class="zh">① BTC > 50日均线</span><span class="en">① BTC > SMA50</span> · ✓</div><div class="val">BTC 77055.0 / SMA50 70643.13</div></div><div class="cond ok"><div class="lab"><span class="zh">② BTC近20日回撤 ≤15%</span><span class="en">② BTC 20d DD ≤15%</span> · ✓</div><div class="val">5.79% / max 15.0%</div></div><div class="cond ok"><div class="lab"><span class="zh">③ BTC ATR%（14）不太极端 ≤7%</span><span class="en">③ BTC ATR%(14) ≤7%</span> · ✓</div><div class="val">2.78% / max 7.0%</div></div></div></div><p class="entry-gate-tip"><span class="zh">仅限制新开仓；加密波动比美股大，回撤/ATR 阈值更宽。三条规则（无 VIX 等价物，用 ATR% 代替）。</span><span class="en">Only new entries are blocked. Wider DD/ATR thresholds than US equities; ATR% replaces VIX.</span></p>
+  <p class="muted">
+    <span class="zh">数据更新（UTC）：2026-09-11 00:04 UTC · 页面生成：2026-09-11 18:14 UTC · BTC 20日涨跌 -2.16%</span>
+    <span class="en">Data as of (UTC): 2026-09-11 00:04 UTC · Page built: 2026-09-11 18:14 UTC · BTC 20d -2.16%</span>
+  </p>
+
+  <h2><span class="zh">综合候选</span><span class="en">Composite candidates</span></h2><div class="table-wrap"><table><thead><tr>
+<th><span class="zh">代码</span><span class="en">Ticker</span></th>
+<th><span class="zh">现价</span><span class="en">Price</span></th>
+<th><span class="zh">今日%</span><span class="en">Day %</span></th>
+<th><span class="zh">量比</span><span class="en">RVOL</span></th>
+<th>RS20<sub>BTC</sub></th>
+<th>RSI</th>
+<th><span class="zh">分数</span><span class="en">Score</span></th>
+<th><span class="zh">标签</span><span class="en">Tags</span></th>
+</tr></thead><tbody><tr><td><b>EGLD-USD</b></td><td>4.8126</td><td>-7.03</td><td>3.02</td><td>49.76</td><td>65.5</td><td>49.92</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span> <span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span></td></tr><tr><td><b>MINA-USD</b></td><td>0.0919</td><td>-1.91</td><td>1.58</td><td>66.18</td><td>87.6</td><td>41.47</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span></td></tr><tr><td><b>VET-USD</b></td><td>0.007627</td><td>2.09</td><td>1.96</td><td>35.68</td><td>69.1</td><td>38.18</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td></tr><tr><td><b>RUNE-USD</b></td><td>0.498114</td><td>3.82</td><td>2.4</td><td>7.73</td><td>60.9</td><td>37.2</td><td><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span> <span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span></td></tr><tr><td><b>ZEC-USD</b></td><td>1085.07</td><td>-12.79</td><td>1.28</td><td>50.23</td><td>63.3</td><td>35.09</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span></td></tr><tr><td><b>NEAR-USD</b></td><td>2.4609</td><td>-1.02</td><td>1.3</td><td>27.37</td><td>70.8</td><td>34.94</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td></tr><tr><td><b>AIOZ-USD</b></td><td>0.06923</td><td>-5.22</td><td>1.02</td><td>23.33</td><td>65.0</td><td>33.22</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td></tr><tr><td><b>STRK-USD</b></td><td>0.028036</td><td>-10.85</td><td>20.0</td><td>-0.1</td><td>51.6</td><td>32.0</td><td><span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span></td></tr><tr><td><b>KAVA-USD</b></td><td>0.0634</td><td>2.3</td><td>1.33</td><td>42.28</td><td>91.2</td><td>31.91</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span></td></tr><tr><td><b>ATOM-USD</b></td><td>1.7982</td><td>-3.19</td><td>1.35</td><td>14.47</td><td>69.1</td><td>30.32</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td></tr><tr><td><b>KAS-USD</b></td><td>0.035392</td><td>-3.06</td><td>1.98</td><td>21.47</td><td>68.4</td><td>23.59</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span></td></tr><tr><td><b>DOT-USD</b></td><td>1.0984</td><td>-2.12</td><td>1.01</td><td>19.17</td><td>64.7</td><td>22.67</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span></td></tr></tbody></table></div>
+  <h2><span class="zh">A 严格动量爆发</span><span class="en">A Strict momentum burst</span></h2><p class="muted"><span class="zh">（无）</span><span class="en">(none)</span></p>
+  <h2><span class="zh">A 近突破观察</span><span class="en">A Near-breakout watch</span></h2><div class="table-wrap"><table><thead><tr>
+<th><span class="zh">代码</span><span class="en">Ticker</span></th>
+<th><span class="zh">现价</span><span class="en">Price</span></th>
+<th><span class="zh">今日%</span><span class="en">Day %</span></th>
+<th><span class="zh">量比</span><span class="en">RVOL</span></th>
+<th>RS20<sub>BTC</sub></th>
+<th>RSI</th>
+<th><span class="zh">分数</span><span class="en">Score</span></th>
+<th><span class="zh">标签</span><span class="en">Tags</span></th>
+</tr></thead><tbody><tr><td><b>RUNE-USD</b></td><td>0.498114</td><td>3.82</td><td>2.4</td><td>7.73</td><td>60.9</td><td>37.2</td><td><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span> <span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span></td></tr></tbody></table></div>
+  <h2><span class="zh">B 相对强弱龙头（vs BTC）</span><span class="en">B Relative-strength leaders vs BTC</span></h2><div class="table-wrap"><table><thead><tr>
+<th><span class="zh">代码</span><span class="en">Ticker</span></th>
+<th><span class="zh">现价</span><span class="en">Price</span></th>
+<th><span class="zh">今日%</span><span class="en">Day %</span></th>
+<th><span class="zh">量比</span><span class="en">RVOL</span></th>
+<th>RS20<sub>BTC</sub></th>
+<th>RSI</th>
+<th><span class="zh">分数</span><span class="en">Score</span></th>
+<th><span class="zh">标签</span><span class="en">Tags</span></th>
+</tr></thead><tbody><tr><td><b>EGLD-USD</b></td><td>4.8126</td><td>-7.03</td><td>3.02</td><td>49.76</td><td>65.5</td><td>49.92</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span> <span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span></td></tr><tr><td><b>MINA-USD</b></td><td>0.0919</td><td>-1.91</td><td>1.58</td><td>66.18</td><td>87.6</td><td>41.47</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span></td></tr><tr><td><b>VET-USD</b></td><td>0.007627</td><td>2.09</td><td>1.96</td><td>35.68</td><td>69.1</td><td>38.18</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td></tr><tr><td><b>ZEC-USD</b></td><td>1085.07</td><td>-12.79</td><td>1.28</td><td>50.23</td><td>63.3</td><td>35.09</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span></td></tr><tr><td><b>NEAR-USD</b></td><td>2.4609</td><td>-1.02</td><td>1.3</td><td>27.37</td><td>70.8</td><td>34.94</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td></tr><tr><td><b>AIOZ-USD</b></td><td>0.06923</td><td>-5.22</td><td>1.02</td><td>23.33</td><td>65.0</td><td>33.22</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td></tr><tr><td><b>KAVA-USD</b></td><td>0.0634</td><td>2.3</td><td>1.33</td><td>42.28</td><td>91.2</td><td>31.91</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span></td></tr><tr><td><b>ATOM-USD</b></td><td>1.7982</td><td>-3.19</td><td>1.35</td><td>14.47</td><td>69.1</td><td>30.32</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td></tr></tbody></table></div>
+  <h2><span class="zh">C 放量事件</span><span class="en">C Relative-volume events</span></h2><div class="table-wrap"><table><thead><tr>
+<th><span class="zh">代码</span><span class="en">Ticker</span></th>
+<th><span class="zh">现价</span><span class="en">Price</span></th>
+<th><span class="zh">今日%</span><span class="en">Day %</span></th>
+<th><span class="zh">量比</span><span class="en">RVOL</span></th>
+<th>RS20<sub>BTC</sub></th>
+<th>RSI</th>
+<th><span class="zh">分数</span><span class="en">Score</span></th>
+<th><span class="zh">标签</span><span class="en">Tags</span></th>
+</tr></thead><tbody><tr><td><b>EGLD-USD</b></td><td>4.8126</td><td>-7.03</td><td>3.02</td><td>49.76</td><td>65.5</td><td>49.92</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span> <span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span></td></tr><tr><td><b>RUNE-USD</b></td><td>0.498114</td><td>3.82</td><td>2.4</td><td>7.73</td><td>60.9</td><td>37.2</td><td><span class="tag"><span class="zh">A·近突破观察</span><span class="en">A·Near breakout</span></span> <span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span></td></tr><tr><td><b>STRK-USD</b></td><td>0.028036</td><td>-10.85</td><td>20.0</td><td>-0.1</td><td>51.6</td><td>32.0</td><td><span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span></td></tr></tbody></table></div>
+  <h2><span class="zh">D 超卖反弹观察</span><span class="en">D Oversold bounce watch</span></h2><p class="muted"><span class="zh">（无）</span><span class="en">(none)</span></p>
+  <h2><span class="zh">F 温和放量抬升</span><span class="en">F Mild volume+price lift</span></h2><p class="muted"><span class="zh">（无）</span><span class="en">(none)</span></p>
+  <h2><span class="zh">F 证明窗口观察（近几日已触发）</span><span class="en">F Prove-it watch (recent F trigger)</span></h2><div class="table-wrap"><table><thead><tr>
+<th><span class="zh">代码</span><span class="en">Ticker</span></th>
+<th><span class="zh">现价</span><span class="en">Price</span></th>
+<th><span class="zh">今日%</span><span class="en">Day %</span></th>
+<th><span class="zh">量比</span><span class="en">RVOL</span></th>
+<th>RS20<sub>BTC</sub></th>
+<th>RSI</th>
+<th><span class="zh">分数</span><span class="en">Score</span></th>
+<th><span class="zh">标签</span><span class="en">Tags</span></th>
+</tr></thead><tbody><tr><td><b>VET-USD</b></td><td>0.007627</td><td>2.09</td><td>1.96</td><td>35.68</td><td>69.1</td><td>38.18</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td></tr><tr><td><b>NEAR-USD</b></td><td>2.4609</td><td>-1.02</td><td>1.3</td><td>27.37</td><td>70.8</td><td>34.94</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td></tr><tr><td><b>AIOZ-USD</b></td><td>0.06923</td><td>-5.22</td><td>1.02</td><td>23.33</td><td>65.0</td><td>33.22</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td></tr><tr><td><b>ATOM-USD</b></td><td>1.7982</td><td>-3.19</td><td>1.35</td><td>14.47</td><td>69.1</td><td>30.32</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader vs BTC</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td></tr><tr><td><b>XTZ-USD</b></td><td>0.2533</td><td>-3.55</td><td>1.87</td><td>7.29</td><td>64.7</td><td>9.15</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td></tr></tbody></table></div>
+
+  <h2><span class="zh">动手前自检清单</span><span class="en">Pre-trade checklist</span></h2>
+  <ul class="check">
+    <li><span class="zh">硬止损已写好；仓位 = 账户风险% ÷ 每单位风险（不要凭感觉）</span><span class="en">Hard stop written; size from account risk% ÷ risk per unit (not gut-sized)</span></li><li><span class="zh">1R 已定义；计划在约 1.5–2R 分批止盈（尤其 A 爆发）</span><span class="en">1R defined; plan for partials near 1.5–2R (especially A-burst)</span></li><li><span class="zh">时间止损：2–5 天是「证明自己」窗口——不动就清，已走强可继续拿</span><span class="en">Time stop: 2–5 days is prove-it — clear if dead, may hold if already strong</span></li><li><span class="zh">近突破：等突破+放量确认，且次日不快速失败再进</span><span class="en">If near-breakout: only after break + volume confirm + no quick next-day fail</span></li><li><span class="zh">龙头 B：按均线/相对 BTC 结构离场，不要死磕固定涨幅</span><span class="en">If leader B: exit via MA/structure vs BTC, not a fixed % gain</span></li><li><span class="zh">事件 C：仓位是今日想法里最小的一档</span><span class="en">If event C: size is the smallest sleeve among today&#x27;s ideas</span></li><li><span class="zh">市场体制匹配策略（突破更偏 RISK_ON / MIXED）</span><span class="en">Regime matches strategy (breakouts prefer RISK_ON/MIXED)</span></li><li><span class="zh">新开仓总闸：BTC&gt;SMA50 且 BTC近20日回撤≤15% 且 BTC ATR%≤7%（已有持仓不受影响）</span><span class="en">New-entry crypto gate: BTC&gt;SMA50 AND BTC 20d DD≤15% AND BTC ATR%≤7% (open positions exempt)</span></li><li><span class="zh">加密 24/7 交易——周末流动性与美股不同，注意跳空</span><span class="en">Crypto moves 24/7 — gaps and weekend liquidity differ from US equities</span></li><li><span class="zh">不要同时堆叠多只高度相关山寨（多数山寨≈BTC贝塔）</span><span class="en">Not stacking many highly correlated alts (most alts ≈ BTC beta)</span></li>
+  </ul>
+
+  <p class="muted" style="margin-top:24px">
+    <span class="zh">版本徽章：数字货币清洗台 v1.0.0 · 分析参考专用 · 与美股清洗台一键互切</span>
+    <span class="en">Badge: Crypto Scrub Desk v1.0.0 · analysis only · one-click switch with US desk</span>
+  </p>
+</div>
+<script>
+(function () {
+  var root = document.documentElement;
+  function apply(lang) {
+    root.setAttribute('data-lang', lang);
+    root.setAttribute('lang', lang === 'zh' ? 'zh-CN' : 'en');
+    document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    try { localStorage.setItem('scrub-lang', lang); } catch (e) {}
+  }
+  document.getElementById('btn-zh').addEventListener('click', function () { apply('zh'); });
+  document.getElementById('btn-en').addEventListener('click', function () { apply('en'); });
+  var saved = null;
+  try { saved = localStorage.getItem('scrub-lang'); } catch (e) {}
+  apply(saved === 'en' ? 'en' : 'zh');
+})();
+</script>
+</body>
+</html>
