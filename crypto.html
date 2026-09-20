@@ -132,6 +132,288 @@
     .metrics { grid-template-columns:1fr; }
     .hero h1 { font-size:1.25rem; }
   }
+
+/* --- position manager (restored) --- */
+.pm-capital-bar {
+    display:flex; flex-wrap:wrap; align-items:center; gap:6px 10px;
+    background:#fff; border:1px solid #e2e8f0; border-radius:10px;
+    padding:6px 10px; margin:0 0 6px;
+  }
+.pm-cap-label { font-weight:700; color:#0f172a; min-width:4rem; font-size:.88rem; }
+.pm-cap-ctrl { display:flex; align-items:center; gap:4px; }
+.pm-cap-prefix { font-weight:700; color:#64748b; }
+.pm-cap-ctrl input {
+    width:110px; border:1px solid #cbd5e1; border-radius:8px;
+    padding:5px 8px; font-size:.92rem; font-weight:700; color:#0f172a;
+  }
+.pm-cap-hint { font-size:.72rem; }
+.pm-finviz-left > h2 { margin:0 0 2px; font-size:1.05rem; }
+.pm-finviz-left > p.muted { margin:0 0 6px; font-size:.75rem; line-height:1.35; }
+.pm-finviz-split {
+    display:flex;
+    flex-wrap:nowrap;
+    gap:16px;
+    align-items:flex-start;
+    margin: 8px 0 18px;
+    width:100%;
+  }
+.pm-finviz-left {
+    flex:0 0 340px;
+    width:340px;
+    max-width:36%;
+    display:flex;
+    flex-direction:column;
+  }
+.pm-finviz-left .pm-ticket-card {
+    max-width:100%;
+  }
+.pm-finviz-head {
+    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+  }
+.pm-finviz-link {
+    font-size:.85rem; font-weight:700; color:#2563eb; text-decoration:none;
+  }
+.pm-finviz-link:hover { text-decoration:underline; }
+.pm-finviz-links { display:flex; gap:12px; align-items:center; }
+.pm-tv-wrap, .pm-tv-frame .tradingview-widget-container {
+    width:100%; height:100%; min-height:0; flex:1;
+  }
+.pm-tv-wrap .tradingview-widget-copyright { display:none !important; }
+.pm-tv-frame { background:#0b1220; }
+.pm-finviz-img-link { display:none; }
+/* replaced by TradingView live embed */
+
+  .pm-finviz-img {
+    width:100%; height:auto; max-height:min(62vh, 560px); object-fit:contain; display:block; background:#0b1220;
+  }
+.pm-finviz-split { flex-wrap:wrap; }
+.pm-finviz-left { flex:1 1 100%; width:100%; max-width:100%; }
+.pm-tv-wrap { height:360px !important; }
+.pm-ticket-card {
+    background:#fff; border:1px solid #e5e7eb; border-radius:10px;
+    padding:2px 8px 8px; box-shadow:0 1px 2px rgba(15,23,42,.04);
+    max-width:420px; width:100%;
+  }
+.pm-ticket-card { max-width:100%; padding:6px 8px 10px; border-radius:10px; }
+.pm-row { grid-template-columns:56px 1fr; }
+.pm-frac-btn { min-height:36px; }
+.pm-step-btn { min-width:36px; min-height:36px; }
+.pm-pill-btn { padding:8px 0; }
+.pm-ticket-card { max-width:400px; }
+.pm-finviz-left .pm-ticket-card { max-width:100%; }
+.pm-row { padding:2px 0; }
+.pm-stepper input { padding:5px 2px; font-size:0.92rem; }
+.pm-frac-btn { padding:5px 2px; font-size:0.82rem; }
+.pm-row {
+    display:grid; grid-template-columns:56px 1fr; gap:4px; align-items:center;
+    padding:2px 0; border-bottom:1px solid #f1f5f9;
+  }
+.pm-row:last-of-type { border-bottom:none; }
+.pm-row-toggle { border-bottom:none; padding-bottom:0; padding-top:1px; }
+.pm-lab { font-size:.82rem; color:#334155; font-weight:600; }
+.pm-ctl { min-width:0; }
+.pm-fixed, .pm-ctl select, .pm-stepper, .pm-amount-big, .pm-amount-edit-wrap, .pm-tpsl {
+    width:100%; box-sizing:border-box;
+  }
+.pm-fixed {
+    border:1px solid #e2e8f0; border-radius:8px; background:#f8fafc;
+    padding:5px 8px; font-weight:600; color:#0f172a; font-size:.84rem;
+  }
+.pm-combo {
+    position:relative; display:grid; grid-template-columns:1fr 34px; align-items:stretch;
+    width:100%;
+  }
+.pm-ticker-select {
+    width:100%; border:1px solid #3b82f6; border-right:none; border-radius:8px 0 0 8px;
+    padding:6px 8px; font-size:.92rem; font-weight:800; color:#0f172a;
+    background:#fff; letter-spacing:.01em; outline:none;
+  }
+.pm-ticker-select:focus { box-shadow:0 0 0 2px rgba(59,130,246,.25); }
+.pm-combo-caret {
+    border:1px solid #3b82f6; border-radius:0 8px 8px 0; background:#eff6ff;
+    color:#1d4ed8; font-size:.85rem; font-weight:800; cursor:pointer;
+  }
+.pm-combo-caret:hover { background:#dbeafe; }
+.pm-combo-menu {
+    position:absolute; left:0; right:0; top:calc(100% + 4px); z-index:40;
+    max-height:220px; overflow:auto; margin:0; padding:4px;
+    list-style:none; background:#fff; border:1px solid #cbd5e1; border-radius:10px;
+    box-shadow:0 8px 24px rgba(15,23,42,.12);
+  }
+.pm-combo-menu li {
+    padding:8px 10px; border-radius:8px; cursor:pointer;
+    font-size:.86rem; font-weight:700; color:#0f172a;
+  }
+.pm-combo-menu li:hover, .pm-combo-menu li.active { background:#eff6ff; color:#1d4ed8; }
+.pm-combo-menu li.muted { color:#94a3b8; font-weight:600; cursor:default; }
+.pm-stepper {
+    display:grid; grid-template-columns:32px 1fr 32px; align-items:stretch;
+    border:1px solid #cbd5e1; border-radius:8px; overflow:hidden; background:#fff;
+  }
+.pm-step-mid { min-width:0; }
+.pm-step-mid input { width:100%; }
+.pm-stepper input {
+    border:none; text-align:center; font-size:.95rem; font-weight:700;
+    color:#0f172a; padding:5px 2px; min-width:0; background:#fff;
+  }
+.pm-step-btn {
+    border:none; background:#f8fafc; color:#334155; font-size:1.05rem;
+    font-weight:700; cursor:pointer; border-right:1px solid #e2e8f0;
+  }
+.pm-step-btn:last-child { border-right:none; border-left:1px solid #e2e8f0; }
+.pm-step-btn:hover { background:#e2e8f0; }
+.pm-pill {
+    display:inline-flex; background:#eef2f7; border-radius:999px; padding:2px;
+    gap:2px; width:100%; max-width:200px;
+  }
+.pm-pill-btn {
+    flex:1; border:none; background:transparent; border-radius:999px;
+    padding:5px 0; font-weight:700; color:#64748b; cursor:pointer; font-size:.82rem;
+  }
+.pm-pill-btn.active { background:#fff; color:#0f172a; box-shadow:0 1px 2px rgba(0,0,0,.08); }
+.pm-more-frac {
+    margin-top:2px; font-size:.72rem; color:#64748b;
+  }
+.pm-more-frac > summary {
+    cursor:pointer; list-style:none; padding:2px 0; font-weight:600;
+  }
+.pm-more-frac > summary::-webkit-details-marker { display:none; }
+.pm-more-frac[open] > summary { margin-bottom:4px; color:#334155; }
+.pm-frac-block { margin:4px 0 2px; }
+.pm-frac-head, .pm-frac-row {
+    display:grid; grid-template-columns:72px repeat(4, 1fr); gap:4px; align-items:center;
+    margin-bottom:3px;
+  }
+.pm-frac-head { font-size:.68rem; color:#94a3b8; text-align:center; font-weight:600; }
+.pm-frac-head span:first-child { text-align:left; }
+.pm-frac-lab { font-size:.72rem; font-weight:700; line-height:1.15; }
+.pm-frac-sub { font-size:.62rem; font-weight:500; margin-top:1px; }
+.pm-frac-row.cash .pm-frac-lab { color:#15803d; }
+.pm-frac-row.suggest .pm-frac-lab { color:#0f766e; }
+.pm-frac-row.sell .pm-frac-lab { color:#be123c; }
+.pm-frac-btn {
+    border:none; border-radius:6px; padding:5px 2px; font-weight:700;
+    font-size:.85rem; cursor:pointer; text-align:center;
+  }
+.pm-frac-btn.cash { background:#dcfce7; color:#166534; }
+.pm-frac-btn.cash:hover, .pm-frac-btn.cash.active { outline:2px solid #16a34a; background:#bbf7d0; }
+.pm-frac-btn.suggest { background:#ccfbf1; color:#0f766e; }
+.pm-frac-btn.suggest:hover, .pm-frac-btn.suggest.active { outline:2px solid #0d9488; background:#99f6e4; }
+.pm-frac-btn.sell { background:#ffe4e6; color:#9f1239; cursor:default; opacity:.85; }
+.pm-hidden { display:none !important; }
+.pm-amount-edit-wrap {
+    display:grid; grid-template-columns:1fr auto; align-items:center; gap:6px;
+    border:1px solid #cbd5e1; border-radius:8px; background:#fff; padding:2px 8px;
+  }
+.pm-amount-big-input {
+    width:100%; border:none; outline:none; background:transparent;
+    font-size:1.05rem; font-weight:800; color:#0f172a; padding:5px 0; letter-spacing:.01em;
+  }
+.pm-amount-ccy { font-weight:700; color:#64748b; font-size:.85rem; }
+.pm-amount-hint { font-size:.68rem; margin-top:2px; }
+.pm-amount-big {
+    font-size:1.05rem; font-weight:800; color:#334155; padding:2px 0; letter-spacing:.01em;
+  }
+.pm-tpsl {
+    border:1px solid #e2e8f0; border-radius:8px; background:#fff;
+    padding:5px 8px; font-size:.78rem; color:#0f172a; line-height:1.3;
+    display:flex; flex-wrap:wrap; gap:2px 4px; align-items:center;
+  }
+.pm-tpsl-item b { color:#475569; font-weight:600; margin-right:2px; }
+.pm-tpsl-sep { color:#cbd5e1; }
+.pm-ladder-details {
+    margin:4px 0 6px; background:#f8fafc; border:1px solid #e2e8f0;
+    border-radius:8px; padding:4px 8px;
+  }
+.pm-ladder-details summary { cursor:pointer; font-weight:600; color:#475569; font-size:.78rem; }
+.pm-buy-btn {
+    display:block; width:100%; margin-top:2px; border:none; border-radius:10px;
+    background:#16a34a; color:#fff; font-size:1.02rem; font-weight:800;
+    padding:10px 12px; cursor:pointer; letter-spacing:.05em;
+  }
+.pm-buy-btn:hover { background:#15803d; }
+.pm-toast {
+    background:#0f172a; color:#fff; border-radius:10px; padding:10px 12px;
+    margin:0 0 10px; font-weight:700; font-size:.92rem;
+  }
+.pm-msg { background:#fef3c7; color:#92400e; border-radius:10px; padding:10px 12px; margin:8px 0; font-weight:600; }
+.pm-warn { background:#fee2e2; color:#991b1b; border-radius:10px; padding:10px 12px; margin:8px 0; }
+.pm-below {
+    margin-top:12px; width:100%; max-width:none; box-sizing:border-box;
+    background:#fff; border:1px solid #e2e8f0;
+    border-radius:12px; padding:12px 14px 10px;
+  }
+.pm-check-title { font-weight:800; margin-bottom:10px; color:#0f172a; font-size:1rem; }
+.pm-checklist {
+    list-style:none; margin:0; padding:0;
+    display:grid;
+    grid-template-columns:repeat(7, minmax(0, 1fr));
+    gap:8px;
+    color:#334155;
+  }
+.pm-checklist > li {
+    display:flex; flex-direction:column; gap:4px;
+    background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px;
+    padding:10px 10px 12px; min-height:0; box-sizing:border-box;
+  }
+.pm-check-num {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:22px; height:22px; border-radius:999px;
+    background:#16a34a; color:#fff; font-size:.75rem; font-weight:800;
+  }
+.pm-check-txt { font-size:.82rem; line-height:1.35; font-weight:600; color:#0f172a; }
+.pm-check-notes {
+    margin-top:10px; display:grid; grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:4px 16px;
+  }
+.pm-check-notes > p { margin:0; font-size:.75rem; line-height:1.4; }
+.pm-check-flash {
+    outline:3px solid #f59e0b; box-shadow:0 0 0 6px rgba(245,158,11,.25);
+    transition: outline .2s, box-shadow .2s;
+  }
+.pm-footnote { font-size:.75rem !important; }
+.pm-checklist { grid-template-columns:repeat(4, minmax(0, 1fr)); }
+.pm-checklist { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+.pm-check-notes { grid-template-columns:1fr; }
+.pm-frac-head, .pm-frac-row { grid-template-columns:72px repeat(4, 1fr); gap:4px; }
+.pm-row { grid-template-columns:64px 1fr; }
+.pm-ticket-card { max-width:100%; }
+.pm-buy-btn.is-disabled, .pm-buy-btn:disabled {
+    background:#94a3b8 !important; cursor:not-allowed; opacity:.75;
+  }
+.pm-buy-btn.is-disabled:hover { background:#94a3b8 !important; }
+@media (max-width:900px) {
+    .pm-finviz-split { flex-wrap:wrap; }
+    .pm-finviz-left { flex:1 1 100%; width:100%; max-width:100%; }
+    .pm-finviz-right { width:100% !important; max-width:100%; height:auto !important; max-height:none !important; flex:1 1 100% !important; }
+    .pm-tv-wrap { height:360px !important; }
+  }
+@media (max-width:480px) {
+    .pm-ticket-card { max-width:100%; padding:6px 8px 10px; border-radius:10px; }
+    .pm-row { grid-template-columns:56px 1fr; }
+    .pm-frac-btn { min-height:36px; }
+    .pm-step-btn { min-width:36px; min-height:36px; }
+    .pm-pill-btn { padding:8px 0; }
+  }
+@media (min-width:481px) {
+    .pm-ticket-card { max-width:400px; }
+    .pm-finviz-left .pm-ticket-card { max-width:100%; }
+    .pm-row { padding:2px 0; }
+    .pm-stepper input { padding:5px 2px; font-size:0.92rem; }
+    .pm-frac-btn { padding:5px 2px; font-size:0.82rem; }
+  }
+@media (max-width:1100px) {
+    .pm-checklist { grid-template-columns:repeat(4, minmax(0, 1fr)); }
+  }
+@media (max-width:700px) {
+    .pm-checklist { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+    .pm-check-notes { grid-template-columns:1fr; }
+  }
+@media (max-width:520px) {
+    .pm-frac-head, .pm-frac-row { grid-template-columns:72px repeat(4, 1fr); gap:4px; }
+    .pm-row { grid-template-columns:64px 1fr; }
+    .pm-ticket-card { max-width:100%; }
+  }
 </style>
 </head>
 <body>
@@ -181,6 +463,179 @@
   </p>
 
   <section class="buy-point-banner urgent compact" id="buy-point-confirm"><div class="buy-point-head"><h2><span class="zh">买点确认</span><span class="en">Buy-point confirm</span></h2><span class="buy-point-asof"><span class="zh">截至</span><span class="en">As of</span> <span class="zh">2026-09-20 05:49 LAX · 北京时间 2026-09-20 20:49</span><span class="en">2026-09-20 05:49 LAX · Beijing 2026-09-20 20:49</span></span></div><div class="buy-point-state"><span class="zh">本轮新确认</span><span class="en">Fresh confirmations this round</span></div><div class="buy-point-grid"><article class="buy-point-card"><div class="buy-point-quote"><b>ENA</b><span>$0.2082</span><span class="buy-point-pct">+1.93%</span></div><div class="buy-point-tags"><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></div><p class="buy-point-why"><span class="zh">温和放量抬升本轮新触发。确认，不是追高指令。</span><span class="en">Fresh volume+price lift. Confirmation, not a FOMO instruction.</span></p></article></div><div class="buy-point-watch-head"><span class="zh">观察 · 不是确认</span><span class="en">Watch · not confirmed</span></div><div class="buy-point-watch-grid"><article class="buy-point-watch-card"><div><b>XTZ</b> · $0.3366 · -8.80%</div><div class="buy-point-tags"><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于2 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 2 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>INJ</b> · $7.72 · -2.49%</div><div class="buy-point-tags"><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于2 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 2 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>AIOZ</b> · $0.0867 · -2.52%</div><div class="buy-point-tags"><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于1 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 1 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>AVAX</b> · $10.31 · +2.19%</div><div class="buy-point-tags"><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于2 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 2 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>KAS</b> · $0.0385 · -1.76%</div><div class="buy-point-tags"><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于1 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 1 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>OP</b> · $0.1235 · +1.60%</div><div class="buy-point-tags"><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于2 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 2 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>GT</b> · $10.16 · -2.03%</div><div class="buy-point-tags"><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于1 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 1 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>ALGO</b> · $0.1050 · +0.06%</div><div class="buy-point-tags"><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于1 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 1 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article></div><p class="buy-point-foot"><span class="zh">网页无铃声，以本条为准；仅分析不下单。</span><span class="en">No web alert sound; use this banner as the source of truth. Analysis only; no orders.</span></p></section>
+
+  <!-- restored 仓位管理 (surgical; from export_html.position_manager_section + crypto cands) -->
+
+  <h2 id="position-manager"><span class="zh">仓位管理</span><span class="en">Position manager</span></h2>
+  <p class="muted">
+    <span class="zh">仅分析参考 · 选股后抄到 moomoo</span>
+    <span class="en">Analysis only · copy to moomoo</span>
+  </p>
+  <script>window.USM_CANDIDATES = [{"ticker": "ENA", "close": 0.20822, "tags": ["B_rs_leader", "F_volume_price_lift"], "pct1": 1.93, "primary_lens": "F_volume_price_lift", "friendly_zh": "F抬升", "friendly_en": "F Lift"}, {"ticker": "STRK", "close": 0.04611, "tags": ["B_rs_leader", "C_rvol_event"], "pct1": 3.54, "primary_lens": "B_rs_leader", "friendly_zh": "B龙头", "friendly_en": "B Leader"}, {"ticker": "XTZ", "close": 0.3366, "tags": ["B_rs_leader", "C_rvol_event", "F_prove_it_watch"], "pct1": -8.8, "primary_lens": "B_rs_leader", "friendly_zh": "B龙头", "friendly_en": "B Leader"}, {"ticker": "AR", "close": 4.3184, "tags": ["B_rs_leader"], "pct1": -2.19, "primary_lens": "B_rs_leader", "friendly_zh": "B龙头", "friendly_en": "B Leader"}, {"ticker": "NEAR", "close": 3.6905, "tags": ["B_rs_leader"], "pct1": 2.88, "primary_lens": "B_rs_leader", "friendly_zh": "B龙头", "friendly_en": "B Leader"}, {"ticker": "INJ", "close": 7.719, "tags": ["B_rs_leader", "F_prove_it_watch"], "pct1": -2.49, "primary_lens": "B_rs_leader", "friendly_zh": "B龙头", "friendly_en": "B Leader"}, {"ticker": "AIOZ", "close": 0.08672, "tags": ["B_rs_leader", "F_prove_it_watch"], "pct1": -2.52, "primary_lens": "B_rs_leader", "friendly_zh": "B龙头", "friendly_en": "B Leader"}, {"ticker": "AVAX", "close": 10.307, "tags": ["B_rs_leader", "F_prove_it_watch"], "pct1": 2.19, "primary_lens": "B_rs_leader", "friendly_zh": "B龙头", "friendly_en": "B Leader"}, {"ticker": "KAS", "close": 0.038456, "tags": ["B_rs_leader", "F_prove_it_watch"], "pct1": -1.76, "primary_lens": "B_rs_leader", "friendly_zh": "B龙头", "friendly_en": "B Leader"}, {"ticker": "OP", "close": 0.12348, "tags": ["B_rs_leader", "F_prove_it_watch"], "pct1": 1.6, "primary_lens": "B_rs_leader", "friendly_zh": "B龙头", "friendly_en": "B Leader"}, {"ticker": "GT", "close": 10.1644, "tags": ["B_rs_leader", "F_prove_it_watch"], "pct1": -2.03, "primary_lens": "B_rs_leader", "friendly_zh": "B龙头", "friendly_en": "B Leader"}, {"ticker": "ALGO", "close": 0.10501, "tags": ["B_rs_leader", "F_prove_it_watch"], "pct1": 0.06, "primary_lens": "B_rs_leader", "friendly_zh": "B龙头", "friendly_en": "B Leader"}];</script>
+
+  <div class="pm-capital-bar">
+    <span class="pm-cap-label"><span class="zh">账户本金</span><span class="en">Account capital</span></span>
+    <div class="pm-cap-ctrl">
+      <span class="pm-cap-prefix">$</span>
+      <input type="number" id="pm-capital" min="100" step="1000" value="100000"/>
+    </div>
+    <span class="muted pm-cap-hint"><span class="zh">记在本机</span><span class="en">Saved locally</span></span>
+  </div>
+
+  <div class="card pm-ticket-card" id="pm-root">
+    <div id="pm-msg" class="pm-msg" hidden></div>
+    <div id="pm-warn" class="pm-warn" hidden></div>
+    <div id="pm-toast" class="pm-toast" hidden></div>
+
+    <div class="pm-row">
+      <div class="pm-lab"><span class="zh">代码</span><span class="en">Symbol</span></div>
+      <div class="pm-ctl pm-ctl-ticker">
+        <div class="pm-combo" id="pm-combo">
+          <input type="text" id="pm-ticker-input" class="pm-ticker-select" autocomplete="off" spellcheck="false"
+            placeholder="输入或下拉选择" inputmode="latin"/>
+          <button type="button" class="pm-combo-caret" id="pm-ticker-caret" aria-label="open list">▾</button>
+          <ul class="pm-combo-menu" id="pm-ticker-menu" hidden></ul>
+          <input type="hidden" id="pm-ticker" value=""/>
+        </div>
+      </div>
+    </div>
+
+    <div class="pm-row">
+      <div class="pm-lab"><span class="zh">时段</span><span class="en">Session</span></div>
+      <div class="pm-ctl"><div class="pm-fixed">盘中</div></div>
+    </div>
+
+    <div class="pm-row">
+      <div class="pm-lab"><span class="zh">类型</span><span class="en">Type</span></div>
+      <div class="pm-ctl"><div class="pm-fixed">限价单</div></div>
+    </div>
+
+    <div class="pm-row">
+      <div class="pm-lab"><span class="zh">价格</span><span class="en">Price</span></div>
+      <div class="pm-ctl">
+        <div class="pm-stepper">
+          <button type="button" class="pm-step-btn" id="pm-price-minus" aria-label="-">−</button>
+          <input type="number" id="pm-entry" min="0.01" step="0.01" value="100"/>
+          <button type="button" class="pm-step-btn" id="pm-price-plus" aria-label="+">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pm-row pm-row-toggle">
+      <div class="pm-lab"></div>
+      <div class="pm-ctl">
+        <div class="pm-pill" id="pm-mode-pill" role="tablist">
+          <button type="button" class="pm-pill-btn active" data-mode="qty" id="pm-mode-qty"><span class="zh">数量</span><span class="en">Qty</span></button>
+          <button type="button" class="pm-pill-btn" data-mode="amt" id="pm-mode-amt"><span class="zh">金额</span><span class="en">Amount</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pm-row" id="pm-qty-row">
+      <div class="pm-lab" id="pm-qty-lab"><span class="zh">数量</span><span class="en">Qty</span></div>
+      <div class="pm-ctl">
+        <div class="pm-stepper">
+          <button type="button" class="pm-step-btn" id="pm-qty-minus" aria-label="-">−</button>
+          <div class="pm-step-mid">
+            <input type="number" id="pm-qty" min="0" step="1" value="0"/>
+            <input type="number" id="pm-amount-edit" class="pm-hidden" min="0" step="10" value="0" inputmode="decimal"/>
+          </div>
+          <button type="button" class="pm-step-btn" id="pm-qty-plus" aria-label="+">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pm-frac-block">
+      <div class="pm-frac-head">
+        <span></span>
+        <span>全仓</span><span>1/2</span><span>1/3</span><span>1/4</span>
+      </div>
+      <div class="pm-frac-row suggest">
+        <div class="pm-frac-lab">
+          <span class="zh">建议仓位</span><span class="en">Suggested</span>
+          <div class="pm-frac-sub"><span class="zh">按止损风险</span><span class="en">Risk-sized</span></div>
+        </div>
+        <button type="button" class="pm-frac-btn suggest active" data-src="suggest" data-frac="1" id="pm-sug-1">0</button>
+        <button type="button" class="pm-frac-btn suggest" data-src="suggest" data-frac="2" id="pm-sug-2">0</button>
+        <button type="button" class="pm-frac-btn suggest" data-src="suggest" data-frac="3" id="pm-sug-3">0</button>
+        <button type="button" class="pm-frac-btn suggest" data-src="suggest" data-frac="4" id="pm-sug-4">0</button>
+      </div>
+      <details class="pm-more-frac">
+        <summary><span class="zh">更多：现金可买 / 持仓可卖</span><span class="en">More: cash buy / position sell</span></summary>
+        <div class="pm-frac-row cash">
+          <div class="pm-frac-lab"><span class="zh">现金可买</span><span class="en">Cash buy</span></div>
+          <button type="button" class="pm-frac-btn cash" data-src="cash" data-frac="1" id="pm-cash-1">0</button>
+          <button type="button" class="pm-frac-btn cash" data-src="cash" data-frac="2" id="pm-cash-2">0</button>
+          <button type="button" class="pm-frac-btn cash" data-src="cash" data-frac="3" id="pm-cash-3">0</button>
+          <button type="button" class="pm-frac-btn cash" data-src="cash" data-frac="4" id="pm-cash-4">0</button>
+        </div>
+        <div class="pm-frac-row sell">
+          <div class="pm-frac-lab">
+            <span class="zh">持仓可卖</span><span class="en">Position sell</span>
+            <div class="pm-frac-sub muted"><span class="zh">分析页无真实持仓</span><span class="en">No live positions here</span></div>
+          </div>
+          <button type="button" class="pm-frac-btn sell" disabled>0</button>
+          <button type="button" class="pm-frac-btn sell" disabled>0</button>
+          <button type="button" class="pm-frac-btn sell" disabled>0</button>
+          <button type="button" class="pm-frac-btn sell" disabled>0</button>
+        </div>
+      </details>
+    </div>
+
+    <div class="pm-row pm-row-amount">
+      <div class="pm-lab"><span class="zh">金额</span><span class="en">Amount</span></div>
+      <div class="pm-ctl">
+        <div class="pm-amount-edit-wrap">
+          <input type="number" class="pm-amount-big-input" id="pm-notional-input" min="0" step="10" value="0" inputmode="decimal"/>
+          <span class="pm-amount-ccy">USD</span>
+        </div>
+        <div class="pm-amount-hint muted" id="pm-amount-hint">
+          <span class="zh">改金额会反算股数</span>
+          <span class="en">Edits back-calc shares</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pm-row pm-row-meta">
+      <div class="pm-lab"><span class="zh">条件/期限</span><span class="en">Cond / TIF</span></div>
+      <div class="pm-ctl"><div class="pm-fixed pm-fixed-compact"><span class="zh">无 · 当日有效</span><span class="en">None · Day</span></div></div>
+    </div>
+
+    <div class="pm-row pm-row-tpsl">
+      <div class="pm-lab"><span class="zh">止盈/止损</span><span class="en">TP / SL</span></div>
+      <div class="pm-ctl">
+        <div class="pm-tpsl" id="pm-tpsl-summary">—</div>
+      </div>
+    </div>
+
+    <details class="pm-ladder-details" id="pm-ladder-details">
+      <summary><span class="zh">展开卖出阶梯（护本止损 / 第一档 / 第二档 / 跟踪）</span><span class="en">Expand sell ladder (protect / TP1 / TP2 / trail)</span></summary>
+      <div class="table-wrap" style="margin:8px 0 0">
+        <table id="pm-schedule">
+          <thead><tr>
+            <th><span class="zh">步骤</span><span class="en">Step</span></th>
+            <th><span class="zh">价格</span><span class="en">Price</span></th>
+            <th><span class="zh">操作</span><span class="en">Action</span></th>
+            <th><span class="zh">股数</span><span class="en">Shares</span></th>
+            <th><span class="zh">约占仓位</span><span class="en">% of pos</span></th>
+            <th><span class="zh">大约金额</span><span class="en">Est. $</span></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </details>
+
+    <button type="button" class="pm-buy-btn" id="pm-buy-btn"><span class="zh">买入</span><span class="en">Buy</span></button>
+
+    <input type="hidden" id="pm-lens" value="A_momentum_burst"/>
+    <input type="hidden" id="pm-stop" value="96"/>
+    <input type="hidden" id="pm-risk" value="0.5"/>
+    <input type="hidden" id="pm-partial" value="0.5"/>
+    <p class="muted" id="pm-type-line" style="margin:10px 0 0;font-size:.8rem"></p>
+  </div>
+
+
+
 
   <h2><span class="zh">综合候选</span><span class="en">Composite candidates</span></h2><div class="table-wrap"><table><thead><tr>
 <th><span class="zh">代码</span><span class="en">Ticker</span></th>
@@ -434,5 +889,710 @@
 
 </script>
 <!-- scan-brief-widget:end -->
+
+<script>
+(function () {
+  var RISK = {
+    A_momentum_burst: 0.5,
+    A_near_breakout: 0.5,
+    B_rs_leader: 0.4,
+    F_volume_price_lift: 0.35,
+    F_prove_it_watch: 0.25,
+    C_rvol_event: 0.25,
+    D_oversold_bounce_watch: 0
+  };
+  var PARTIAL = {
+    A_momentum_burst: 0.5,
+    A_near_breakout: 0.5,
+    B_rs_leader: 1/3,
+    F_volume_price_lift: 1/3,
+    F_prove_it_watch: 1/3,
+    C_rvol_event: 1/3,
+    D_oversold_bounce_watch: 0
+  };
+  var STOP_MULT = {
+    A_momentum_burst: 0.96,
+    A_near_breakout: 0.96,
+    F_volume_price_lift: 0.96,
+    F_prove_it_watch: 0.96,
+    B_rs_leader: 0.95,
+    C_rvol_event: 0.97,
+    D_oversold_bounce_watch: 0.96
+  };
+  var PRIORITY = [
+    "A_momentum_burst","A_near_breakout","F_volume_price_lift",
+    "B_rs_leader","C_rvol_event","F_prove_it_watch","D_oversold_bounce_watch"
+  ];
+  var FRIENDLY = {
+    A_momentum_burst: {zh:"A爆发", en:"A Burst"},
+    A_near_breakout: {zh:"A近突破", en:"A Near-breakout"},
+    B_rs_leader: {zh:"B龙头", en:"B Leader"},
+    C_rvol_event: {zh:"C事件", en:"C Event"},
+    F_volume_price_lift: {zh:"F抬升", en:"F Lift"},
+    F_prove_it_watch: {zh:"F观察窗口", en:"F Prove-it watch"},
+    D_oversold_bounce_watch: {zh:"D超卖观察", en:"D Oversold watch"}
+  };
+  var TRAIL = {
+    A_momentum_burst: {
+      zh: "跌破5/10日线或前一日低点再考虑",
+      en: "Consider exit under 5/10-day MA or prior-day low"
+    },
+    A_near_breakout: {
+      zh: "失败跌回突破位下则快速离场；强则短均线跟踪",
+      en: "Fail under breakout → exit fast; else trail short MAs"
+    },
+    B_rs_leader: {
+      zh: "跌破10日线减仓；跌破20日线/关键平台清仓",
+      en: "Trim under 10DMA; clear under 20DMA / key shelf"
+    },
+    C_rvol_event: {
+      zh: "逻辑失效或跳空不利立即收缩",
+      en: "Shrink fast if thesis fails or gap goes against you"
+    },
+    F_volume_price_lift: {
+      zh: "放量衰竭或跌回启动平台则出",
+      en: "Exit if volume fades or price loses launch shelf"
+    },
+    F_prove_it_watch: {
+      zh: "观察窗口仓位更小；跌破5/10日线再考虑",
+      en: "Smaller prove-it size; exit under 5/10DMA"
+    },
+    D_oversold_bounce_watch: {
+      zh: "仅观察，不是单独买点",
+      en: "Watch only — not a standalone entry"
+    }
+  };
+  var TIME_ZH = "⏱ 2–5 个交易日是「证明自己」的窗口，不是强制到期日：提前走强可继续持有；三四天不动则清理。";
+  var TIME_EN = "⏱ 2–5 sessions is a prove-it window, not a hard expiry: keep if already strong; clear if still dead after 3–4 days.";
+
+  var elCap = document.getElementById("pm-capital");
+  var elLens = document.getElementById("pm-lens");
+  var elEntry = document.getElementById("pm-entry");
+  var elStop = document.getElementById("pm-stop");
+  var elRisk = document.getElementById("pm-risk");
+  var elPartial = document.getElementById("pm-partial");
+  var elTicker = document.getElementById("pm-ticker");
+  var elQty = document.getElementById("pm-qty");
+  var elAmtEdit = document.getElementById("pm-amount-edit");
+  if (!elCap || !elQty) return;
+
+  var CANDS = window.USM_CANDIDATES || [];
+  var elTickerInput = document.getElementById("pm-ticker-input");
+  var elTickerMenu = document.getElementById("pm-ticker-menu");
+  var elTickerCaret = document.getElementById("pm-ticker-caret");
+  var manualTicker = "";
+
+  function candLabel(c) {
+    var tags = c.friendly_zh || "";
+    return c.ticker + " · $" + Number(c.close || 0).toFixed(2) + (tags ? (" · " + tags) : "");
+  }
+  function findCandIdxByTicker(sym) {
+    sym = String(sym || "").trim().toUpperCase();
+    if (!sym) return -1;
+    for (var i = 0; i < CANDS.length; i++) {
+      if (String(CANDS[i].ticker || "").toUpperCase() === sym) return i;
+    }
+    return -1;
+  }
+  function setTickerDisplay(txt) {
+    if (elTickerInput) elTickerInput.value = txt || "";
+  }
+  function closeTickerMenu() {
+    if (elTickerMenu) elTickerMenu.hidden = true;
+  }
+  function openTickerMenu(filter) {
+    if (!elTickerMenu) return;
+    var q = String(filter || "").trim().toUpperCase();
+    var html = "";
+    var n = 0;
+    for (var i = 0; i < CANDS.length; i++) {
+      var c = CANDS[i];
+      var lab = candLabel(c);
+      if (q && lab.toUpperCase().indexOf(q) < 0 && String(c.ticker).toUpperCase().indexOf(q) < 0) continue;
+      html += '<li data-idx="' + i + '">' + lab + "</li>";
+      n++;
+      if (n >= 40) break;
+    }
+    if (!n) html = '<li class="muted">' + (lang() === "zh" ? "无匹配 · 可直接输入代码" : "No match · type a ticker") + "</li>";
+    elTickerMenu.innerHTML = html;
+    elTickerMenu.hidden = false;
+  }
+  function applyManualTicker(sym) {
+    sym = String(sym || "").trim().toUpperCase().replace(/[^A-Z0-9.\-]/g, "");
+    if (!sym) return;
+    var idx = findCandIdxByTicker(sym);
+    if (idx >= 0) { selectCand(idx); return; }
+    manualTicker = sym;
+    elTicker.value = "";
+    setTickerDisplay(sym);
+    closeTickerMenu();
+    var line = document.getElementById("pm-type-line");
+    if (line) {
+      line.innerHTML = lang() === "zh"
+        ? ("手动代码：<b>" + sym + "</b>（不在榜单 · 请自填价格/止损）")
+        : ("Manual: <b>" + sym + "</b> (not in list · set price/stop yourself)");
+    }
+    recalc(false);
+  }
+  var mode = "qty"; // qty | amt
+  var qtyTouched = false;
+  var riskTouched = false;
+  var partialTouched = false;
+  var stopTouched = false;
+  var activeFrac = { src: "suggest", frac: 1 };
+  var lastPlan = null;
+  var suppress = false;
+
+  try {
+    var saved = localStorage.getItem("usm_capital");
+    if (saved && !isNaN(parseFloat(saved))) elCap.value = saved;
+  } catch (e) {}
+
+  function lang() {
+    return document.documentElement.getAttribute("data-lang") || "zh";
+  }
+  function fmt(n, d) {
+    if (n == null || isNaN(n)) return "—";
+    return Number(n).toLocaleString(undefined, { maximumFractionDigits: d == null ? 2 : d });
+  }
+  function primaryLens(tags) {
+    tags = tags || [];
+    for (var i = 0; i < PRIORITY.length; i++) {
+      if (tags.indexOf(PRIORITY[i]) >= 0) return PRIORITY[i];
+    }
+    return tags[0] || "A_momentum_burst";
+  }
+  function suggestStop(entry, lens) {
+    var m = STOP_MULT[lens] != null ? STOP_MULT[lens] : 0.96;
+    return Math.round(entry * m * 100) / 100;
+  }
+  function friendly(tag) {
+    var f = FRIENDLY[tag];
+    if (!f) return tag;
+    return lang() === "zh" ? f.zh : f.en;
+  }
+  function round2(n) { return Math.round(n * 100) / 100; }
+
+  function computeRiskShares(capital, entry, stop, lens, riskPct) {
+    if (capital <= 0 || entry <= 0 || stop <= 0 || stop >= entry || riskPct <= 0) {
+      return { shares: 0, capped: false, r1: 0, riskDollars: 0, maxFrac: 0.2 };
+    }
+    var r1 = Math.abs(entry - stop);
+    var riskDollars = capital * (riskPct / 100);
+    var rawShares = Math.floor(riskDollars / r1);
+    var maxFrac = lens === "C_rvol_event" ? 0.10 : 0.20;
+    var maxShares = Math.floor((capital * maxFrac) / entry);
+    var capped = false;
+    var shares = rawShares;
+    if (shares > maxShares) { shares = maxShares; capped = true; }
+    return { shares: shares, capped: capped, r1: r1, riskDollars: riskDollars, maxFrac: maxFrac };
+  }
+
+  function applyLensDefaults(lens) {
+    elLens.value = lens;
+    if (!riskTouched) elRisk.value = RISK[lens] != null ? RISK[lens] : 0;
+    if (!partialTouched) elPartial.value = PARTIAL[lens] != null ? Math.round(PARTIAL[lens] * 1000) / 1000 : 0;
+    var line = document.getElementById("pm-type-line");
+    if (line) {
+      line.innerHTML = lang() === "zh"
+        ? ("当前类型：<b>" + friendly(lens) + "</b>（由标签自动选 · 仅供风险默认）")
+        : ("Type: <b>" + friendly(lens) + "</b> (auto from tags · risk defaults)");
+    }
+  }
+
+  function setMode(m, focusAmt) {
+    mode = m;
+    document.getElementById("pm-mode-qty").classList.toggle("active", m === "qty");
+    document.getElementById("pm-mode-amt").classList.toggle("active", m === "amt");
+    var lab = document.getElementById("pm-qty-lab");
+    var elNotional = document.getElementById("pm-notional-input");
+    if (m === "qty") {
+      lab.innerHTML = '<span class="zh">数量</span><span class="en">Qty</span>';
+      elQty.classList.remove("pm-hidden");
+      elAmtEdit.classList.add("pm-hidden");
+    } else {
+      lab.innerHTML = '<span class="zh">金额</span><span class="en">Amount</span>';
+      elQty.classList.add("pm-hidden");
+      elAmtEdit.classList.remove("pm-hidden");
+      var price = parseFloat(elEntry.value) || 0;
+      var sh = parseInt(elQty.value, 10) || 0;
+      var dollars = round2(sh * price);
+      suppress = true;
+      elAmtEdit.value = dollars;
+      if (elNotional) elNotional.value = dollars;
+      suppress = false;
+      if (focusAmt) {
+        setTimeout(function () {
+          if (elNotional) { elNotional.focus(); elNotional.select(); }
+          else { elAmtEdit.focus(); elAmtEdit.select(); }
+        }, 0);
+      }
+    }
+  }
+
+  function setQty(n, markTouched) {
+    n = Math.max(0, Math.floor(n || 0));
+    suppress = true;
+    elQty.value = n;
+    var price = parseFloat(elEntry.value) || 0;
+    elAmtEdit.value = round2(n * price);
+    suppress = false;
+    if (markTouched) qtyTouched = true;
+  }
+
+  function highlightFrac(src, frac) {
+    activeFrac = { src: src, frac: frac };
+    document.querySelectorAll(".pm-frac-btn.cash, .pm-frac-btn.suggest").forEach(function (b) {
+      var match = b.getAttribute("data-src") === src && String(b.getAttribute("data-frac")) === String(frac);
+      b.classList.toggle("active", match);
+    });
+  }
+
+  function selectCand(idx) {
+    if (idx === "" || idx == null || !CANDS[idx]) return;
+    var c = CANDS[idx];
+    var lens = c.primary_lens || primaryLens(c.tags);
+    suppress = true;
+    elEntry.value = c.close;
+    stopTouched = false;
+    riskTouched = false;
+    partialTouched = false;
+    qtyTouched = false;
+    applyLensDefaults(lens);
+    elStop.value = suggestStop(c.close, lens);
+    elTicker.value = String(idx);
+    manualTicker = "";
+    setTickerDisplay(candLabel(c));
+    suppress = false;
+    closeTickerMenu();
+    highlightFrac("suggest", 1);
+    recalc(true);
+  }
+
+  function recalc(forceSuggest) {
+    var capital = parseFloat(elCap.value) || 0;
+    var entry = parseFloat(elEntry.value) || 0;
+    var stop = parseFloat(elStop.value) || 0;
+    var lens = elLens.value;
+    var riskPct = parseFloat(elRisk.value) || 0;
+    var partial = parseFloat(elPartial.value);
+    if (isNaN(partial)) partial = 0;
+    partial = Math.max(0, Math.min(1, partial));
+
+    try { localStorage.setItem("usm_capital", String(capital)); } catch (e) {}
+
+    var msg = document.getElementById("pm-msg");
+    var warn = document.getElementById("pm-warn");
+    var tbody = document.querySelector("#pm-schedule tbody");
+    var L = lang();
+
+    function setMsg(show, zh, en) {
+      if (!show) { msg.hidden = true; msg.textContent = ""; return; }
+      msg.hidden = false;
+      msg.textContent = L === "zh" ? zh : en;
+    }
+    function setWarn(show, zh, en) {
+      if (!show) { warn.hidden = true; warn.textContent = ""; return; }
+      warn.hidden = false;
+      warn.textContent = L === "zh" ? zh : en;
+    }
+
+    document.getElementById("pm-timestop").textContent = L === "zh" ? TIME_ZH : TIME_EN;
+    document.getElementById("pm-r-footnote").textContent = L === "zh"
+      ? "专业对应：约 1.5R / 2R（第一档 / 第二档止盈）· 护本止损 ≈ −1R · 股数按止损距离反推风险，不是现金全仓。"
+      : "Pro footnotes: ~1.5R / 2R (TP1 / TP2) · protect stop ≈ −1R · shares from stop-risk, not cash full.";
+
+    var tkr = "—";
+    var idx = elTicker.value;
+    if (idx !== "" && CANDS[idx]) tkr = CANDS[idx].ticker;
+    else if (manualTicker) tkr = manualTicker;
+    else if (elTickerInput && elTickerInput.value) {
+      var typed = String(elTickerInput.value).trim().toUpperCase().split(/[·\s]/)[0];
+      if (typed) tkr = typed;
+    }
+
+    // Cash grid
+    var cashFull = entry > 0 ? Math.floor(capital / entry) : 0;
+    var cashVals = [
+      cashFull,
+      Math.floor(cashFull / 2),
+      Math.floor(cashFull / 3),
+      Math.floor(cashFull / 4)
+    ];
+    ["pm-cash-1","pm-cash-2","pm-cash-3","pm-cash-4"].forEach(function (id, i) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = String(cashVals[i]);
+    });
+
+    if (lens === "D_oversold_bounce_watch") {
+      setMsg(true, "D 超卖观察：仅观察，不做仓位计划。", "D oversold watch: watch only — no size plan.");
+      setWarn(false);
+      ["pm-sug-1","pm-sug-2","pm-sug-3","pm-sug-4"].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = "0";
+      });
+      document.getElementById("pm-notional").textContent = "0.00 USD";
+      document.getElementById("pm-tpsl-summary").textContent = "—";
+      tbody.innerHTML = "";
+      document.getElementById("pm-slots-note").textContent = "";
+      lastPlan = null;
+      return;
+    }
+
+    if (capital <= 0 || entry <= 0) {
+      setMsg(true, "请输入有效的本金与价格。", "Enter valid capital and price.");
+      return;
+    }
+    if (!stopTouched) {
+      stop = suggestStop(entry, lens);
+      elStop.value = stop;
+    }
+    stop = parseFloat(elStop.value) || 0;
+    if (stop <= 0 || stop >= entry) {
+      setMsg(true, "做多：止损价必须低于买入价。", "For longs, stop must be below entry.");
+      return;
+    }
+    if (riskPct <= 0) {
+      setMsg(true, "风险%无效。", "Risk % invalid.");
+      return;
+    }
+    setMsg(false);
+
+    var rs = computeRiskShares(capital, entry, stop, lens, riskPct);
+    setWarn(
+      rs.capped,
+      "按风险算出的股数超过本金 " + (rs.maxFrac * 100) + "% 上限，已缩至上限股数。",
+      "Risk-based shares exceeded " + (rs.maxFrac * 100) + "% notional cap; reduced to cap."
+    );
+
+    var sugFull = rs.shares;
+    var sugVals = [
+      sugFull,
+      Math.floor(sugFull / 2),
+      Math.floor(sugFull / 3),
+      Math.floor(sugFull / 4)
+    ];
+    ["pm-sug-1","pm-sug-2","pm-sug-3","pm-sug-4"].forEach(function (id, i) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = String(sugVals[i]);
+    });
+
+    // Default / refresh qty from suggested full unless user edited
+    if (forceSuggest || !qtyTouched) {
+      setQty(sugFull, false);
+      highlightFrac("suggest", 1);
+    }
+
+    var shares = parseInt(elQty.value, 10) || 0;
+    if (mode === "amt" && !suppress) {
+      var amt = parseFloat(elAmtEdit.value) || 0;
+      shares = entry > 0 ? Math.floor(amt / entry) : 0;
+      suppress = true;
+      elQty.value = shares;
+      suppress = false;
+    }
+
+    var notional = shares * entry;
+    var elNotional = document.getElementById("pm-notional-input");
+    suppress = true;
+    if (mode === "qty") {
+      elAmtEdit.value = round2(notional);
+      if (elNotional) elNotional.value = round2(notional);
+    } else {
+      // keep user-typed amount in amt mode; still refresh qty-derived display if empty
+      var typed = parseFloat(elAmtEdit.value);
+      if (!isNaN(typed) && elNotional && document.activeElement !== elNotional) {
+        /* leave notional if focused */
+      }
+      if (elNotional && document.activeElement !== elNotional && document.activeElement !== elAmtEdit) {
+        elNotional.value = round2(parseFloat(elAmtEdit.value) || notional);
+      }
+    }
+    suppress = false;
+
+    var r1 = rs.r1;
+    var p15 = round2(entry + 1.5 * r1);
+    var p2 = round2(entry + 2 * r1);
+    var sell15 = Math.floor(shares * partial);
+    if (sell15 > shares) sell15 = shares;
+    var rem = shares - sell15;
+    var sell2 = Math.floor(rem / 2);
+    var trailSh = rem - sell2;
+    var slots = riskPct > 0 ? Math.min(4, Math.floor(2.0 / riskPct)) : 0;
+    var trail = TRAIL[lens] || { zh: "跌破5/10日线再考虑", en: "Consider exit under 5/10-day MA" };
+
+    document.getElementById("pm-tpsl-summary").innerHTML =
+      '<span class="pm-tpsl-item"><b>止损价</b> $' + fmt(stop, 2) + '</span>' +
+      '<span class="pm-tpsl-sep">/</span>' +
+      '<span class="pm-tpsl-item"><b>止盈①</b> $' + fmt(p15, 2) + '</span>' +
+      '<span class="pm-tpsl-sep">/</span>' +
+      '<span class="pm-tpsl-item"><b>止盈②</b> $' + fmt(p2, 2) + '</span>';
+
+    var act1 = partial >= 0.45
+      ? (L==="zh"?"卖掉一半左右":"Sell about half")
+      : (L==="zh"?"卖掉约三分之一":"Sell about one-third");
+    var rows = [
+      {
+        step: L==="zh"?"① 护本止损":"① Capital-protect stop",
+        price: "$" + fmt(stop, 2),
+        action: L==="zh"?"全部卖掉":"Sell all",
+        sh: shares, amount: "$" + fmt(shares * stop, 0)
+      },
+      {
+        step: L==="zh"?"② 第一档止盈":"② First take-profit",
+        price: "$" + fmt(p15, 2),
+        action: act1,
+        sh: sell15, amount: "$" + fmt(sell15 * p15, 0)
+      },
+      {
+        step: L==="zh"?"③ 第二档止盈":"③ Second take-profit",
+        price: "$" + fmt(p2, 2),
+        action: L==="zh"?"再卖掉剩下的一半":"Sell half of what remains",
+        sh: sell2, amount: "$" + fmt(sell2 * p2, 0)
+      },
+      {
+        step: L==="zh"?"④ 留着跟踪":"④ Trail the rest",
+        price: "—",
+        action: (L==="zh"?"先不急着卖完":"No rush to sell all") + " · " + (L==="zh"?trail.zh:trail.en),
+        sh: trailSh, amount: "—"
+      }
+    ];
+    tbody.innerHTML = rows.map(function (r) {
+      var pct = shares ? (r.sh / shares * 100) : 0;
+      return "<tr>" +
+        "<td>" + r.step + "</td>" +
+        "<td>" + r.price + "</td>" +
+        "<td>" + r.action + "</td>" +
+        "<td>" + fmt(r.sh, 0) + "</td>" +
+        "<td>" + fmt(pct, 1) + "%</td>" +
+        "<td>" + r.amount + "</td>" +
+        "</tr>";
+    }).join("");
+
+    document.getElementById("pm-slots-note").textContent = slots
+      ? (L === "zh"
+          ? ("同时大概最多做 " + slots + " 笔同类风险（家庭总风险预算约 2%）。建议仓位全仓=" + sugFull + " 股（风险 " + riskPct.toFixed(2) + "% ≈ $" + fmt(rs.riskDollars, 0) + "）。")
+          : ("Roughly up to " + slots + " concurrent similar-risk trades (~2% budget). Suggested full=" + sugFull + " sh (risk " + riskPct.toFixed(2) + "% ≈ $" + fmt(rs.riskDollars, 0) + ")."))
+      : "";
+
+    lastPlan = {
+      ticker: tkr, entry: entry, stop: stop, shares: shares, notional: notional,
+      p15: p15, p2: p2, sugFull: sugFull, cashFull: cashFull, riskPct: riskPct
+    };
+  }
+
+  if (elTickerMenu) {
+    elTickerMenu.addEventListener("mousedown", function (e) {
+      var li = e.target.closest("li[data-idx]");
+      if (!li) return;
+      e.preventDefault();
+      selectCand(li.getAttribute("data-idx"));
+    });
+  }
+  if (elTickerCaret) {
+    elTickerCaret.addEventListener("click", function () {
+      if (!elTickerMenu) return;
+      if (elTickerMenu.hidden) openTickerMenu(elTickerInput ? elTickerInput.value : "");
+      else closeTickerMenu();
+    });
+  }
+  if (elTickerInput) {
+    elTickerInput.addEventListener("focus", function () {
+      openTickerMenu(elTickerInput.value);
+    });
+    elTickerInput.addEventListener("input", function () {
+      openTickerMenu(elTickerInput.value);
+    });
+    elTickerInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        applyManualTicker(elTickerInput.value.split(/[·\s]/)[0]);
+      } else if (e.key === "Escape") {
+        closeTickerMenu();
+      }
+    });
+    elTickerInput.addEventListener("blur", function () {
+      setTimeout(function () {
+        closeTickerMenu();
+        var raw = String(elTickerInput.value || "").trim();
+        if (!raw) return;
+        var sym = raw.toUpperCase().split(/[·\s]/)[0];
+        var idx = findCandIdxByTicker(sym);
+        if (idx >= 0) {
+          if (String(elTicker.value) !== String(idx)) selectCand(idx);
+        } else if (sym && sym !== manualTicker) {
+          applyManualTicker(sym);
+        }
+      }, 150);
+    });
+  }
+  document.addEventListener("click", function (e) {
+    var combo = document.getElementById("pm-combo");
+    if (combo && !combo.contains(e.target)) closeTickerMenu();
+  });
+
+  document.getElementById("pm-mode-qty").addEventListener("click", function () { setMode("qty"); recalc(false); });
+  document.getElementById("pm-mode-amt").addEventListener("click", function () { setMode("amt", true); recalc(false); });
+
+  document.getElementById("pm-price-minus").addEventListener("click", function () {
+    var v = round2((parseFloat(elEntry.value) || 0) - 0.01);
+    if (v < 0.01) v = 0.01;
+    elEntry.value = v.toFixed(2);
+    if (!stopTouched) elStop.value = suggestStop(v, elLens.value);
+    if (mode === "amt") {
+      var amt = parseFloat(elAmtEdit.value) || 0;
+      setQty(v > 0 ? Math.floor(amt / v) : 0, true);
+    }
+    recalc(false);
+  });
+  document.getElementById("pm-price-plus").addEventListener("click", function () {
+    var v = round2((parseFloat(elEntry.value) || 0) + 0.01);
+    elEntry.value = v.toFixed(2);
+    if (!stopTouched) elStop.value = suggestStop(v, elLens.value);
+    if (mode === "amt") {
+      var amt = parseFloat(elAmtEdit.value) || 0;
+      setQty(v > 0 ? Math.floor(amt / v) : 0, true);
+    }
+    recalc(false);
+  });
+
+  document.getElementById("pm-qty-minus").addEventListener("click", function () {
+    if (mode === "qty") {
+      setQty((parseInt(elQty.value, 10) || 0) - 1, true);
+    } else {
+      var a = round2((parseFloat(elAmtEdit.value) || 0) - 1);
+      if (a < 0) a = 0;
+      elAmtEdit.value = a;
+      qtyTouched = true;
+      var price = parseFloat(elEntry.value) || 0;
+      setQty(price > 0 ? Math.floor(a / price) : 0, true);
+    }
+    highlightFrac("", 0);
+    recalc(false);
+  });
+  document.getElementById("pm-qty-plus").addEventListener("click", function () {
+    if (mode === "qty") {
+      setQty((parseInt(elQty.value, 10) || 0) + 1, true);
+    } else {
+      var a = round2((parseFloat(elAmtEdit.value) || 0) + 1);
+      elAmtEdit.value = a;
+      qtyTouched = true;
+      var price = parseFloat(elEntry.value) || 0;
+      setQty(price > 0 ? Math.floor(a / price) : 0, true);
+    }
+    highlightFrac("", 0);
+    recalc(false);
+  });
+
+  elQty.addEventListener("input", function () {
+    if (suppress) return;
+    qtyTouched = true;
+    highlightFrac("", 0);
+    recalc(false);
+  });
+  elAmtEdit.addEventListener("input", function () {
+    if (suppress) return;
+    qtyTouched = true;
+    highlightFrac("", 0);
+    var price = parseFloat(elEntry.value) || 0;
+    var amt = parseFloat(elAmtEdit.value) || 0;
+    setQty(price > 0 ? Math.floor(amt / price) : 0, true);
+    recalc(false);
+  });
+
+  elEntry.addEventListener("input", function () {
+    if (suppress) return;
+    if (!stopTouched) {
+      elStop.value = suggestStop(parseFloat(elEntry.value) || 0, elLens.value);
+    }
+    recalc(!qtyTouched);
+  });
+
+  document.querySelectorAll(".pm-frac-btn.cash, .pm-frac-btn.suggest").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var src = b.getAttribute("data-src");
+      var frac = parseInt(b.getAttribute("data-frac"), 10) || 1;
+      var n = parseInt(b.textContent, 10) || 0;
+      setQty(n, true);
+      highlightFrac(src, frac);
+      if (mode === "amt") setMode("amt");
+      recalc(false);
+    });
+  });
+
+  function applyAmountDollars(amt) {
+    amt = Math.max(0, parseFloat(amt) || 0);
+    var price = parseFloat(elEntry.value) || 0;
+    qtyTouched = true;
+    highlightFrac("", 0);
+    setMode("amt", false);
+    suppress = true;
+    elAmtEdit.value = round2(amt);
+    var elNotional = document.getElementById("pm-notional-input");
+    if (elNotional && document.activeElement !== elNotional) elNotional.value = round2(amt);
+    suppress = false;
+    setQty(price > 0 ? Math.floor(amt / price) : 0, true);
+    recalc(false);
+  }
+
+  var elNotionalInput = document.getElementById("pm-notional-input");
+  if (elNotionalInput) {
+    elNotionalInput.addEventListener("input", function () {
+      if (suppress) return;
+      applyAmountDollars(elNotionalInput.value);
+    });
+    elNotionalInput.addEventListener("focus", function () {
+      setMode("amt", false);
+    });
+  }
+
+  // When editing stepper amount field, sync bottom 金额
+  elAmtEdit.addEventListener("input", function () {
+    if (suppress) return;
+    var elN = document.getElementById("pm-notional-input");
+    if (elN) { suppress = true; elN.value = elAmtEdit.value; suppress = false; }
+  });
+
+  document.getElementById("pm-buy-btn").addEventListener("click", function () {
+    var toast = document.getElementById("pm-toast");
+    var L = lang();
+    toast.hidden = false;
+    toast.textContent = L === "zh"
+      ? "仅分析参考，请到 moomoo 手动下单"
+      : "Analysis only — place the order manually on moomoo";
+    var box = document.getElementById("pm-checklist-box");
+    box.classList.add("pm-check-flash");
+    box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    setTimeout(function () { box.classList.remove("pm-check-flash"); }, 2200);
+    setTimeout(function () { toast.hidden = true; }, 3200);
+  });
+
+  ["pm-capital"].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener("input", function () { recalc(!qtyTouched); });
+  });
+
+  var btnZh = document.getElementById("btn-zh");
+  var btnEn = document.getElementById("btn-en");
+  if (btnZh) btnZh.addEventListener("click", function () { setTimeout(function(){ recalc(false); }, 0); });
+  if (btnEn) btnEn.addEventListener("click", function () { setTimeout(function(){ recalc(false); }, 0); });
+
+  window.USM_selectByTicker = function (sym) {
+    sym = String(sym || "").trim().toUpperCase();
+    var idx = findCandIdxByTicker(sym);
+    if (idx >= 0) selectCand(idx);
+    else applyManualTicker(sym);
+  };
+  setMode("qty");
+  if (CANDS.length) {
+    selectCand(0);
+  } else {
+    applyLensDefaults("A_momentum_burst");
+    recalc(true);
+  }
+})();
+
+</script>
+
 </body>
 </html>
