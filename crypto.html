@@ -42,8 +42,10 @@
   .metric { background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:14px; }
   .metric .k { color:#64748b; font-size:.8rem; }
   .metric .v { font-size:1.4rem; font-weight:700; margin-top:4px; }
-  .pill { display:inline-block; padding:4px 10px; border-radius:999px; font-weight:700; font-size:.85rem;
-           background:#dcfce7; color:#166534; }
+  .pill { display:inline-block; padding:4px 10px; border-radius:999px; font-weight:700; font-size:.85rem; }
+  .pill-on { background:#dcfce7; color:#166534; }
+  .pill-mixed { background:#fef9c3; color:#854d0e; }
+  .pill-off { background:#fee2e2; color:#991b1b; }
   .muted { color:#64748b; font-size:.9rem; }
   .tag { display:inline-block; margin:2px 4px 2px 0; padding:2px 8px; border-radius:6px;
           font-size:.72rem; font-weight:600; background:#e0f2fe; color:#075985; }
@@ -453,7 +455,7 @@
     <div class="metric"><div class="k">BTC SMA50</div><div class="v">72477.4</div></div>
     <div class="metric"><div class="k"><span class="zh">扫描/命中</span><span class="en">Scanned / tagged</span></div><div class="v">82 / 62</div></div>
   </div>
-  <p><span class="pill"><span class="zh">绿灯 · 可做动量</span><span class="en">Green · momentum OK</span></span>
+  <p><span class="pill pill-on"><span class="zh">绿灯 · 可做动量</span><span class="en">Green · momentum OK</span></span>
      <span class="muted"><span class="zh">短线动量 / 突破偏友好</span><span class="en">short-term crypto momentum / breakouts favored</span></span></p>
   <p class="muted"><span class="zh">仅供参考分析，非投资建议，不会替你下单。数据来自 Yahoo Finance（可能延迟）。加密资产波动极大。过滤规则是启发式，不是已验证实盘优势。风险自负。</span><span class="en">Reference analysis only. Not investment advice. No orders placed. Data via Yahoo Finance (may be delayed). Crypto is highly volatile. Filters are rule-based heuristics, not a proven live edge. You execute at your own risk.</span></p>
   <div class="entry-gate allow" id="entry-gate" data-allow="1"><h3><span class="zh">新开仓总闸：允许新开仓（绿灯可做动量）</span><span class="en">New-entry gate: New entries allowed (green — momentum OK)</span></h3><p class="muted" style="margin:0"><span class="zh">加密前置过滤：三条全过才允许新开仓；已有持仓不受限（概念上止盈止损照常）。阈值比美股更宽：回撤≤15%、ATR%≤7%（加密波动更大）。</span><span class="en">Crypto gate: all 3 must pass for NEW entries; open positions keep stops/TPs. Wider than US: DD≤15%, ATR%≤7% (crypto is more volatile).</span></p><div class="conds"><div class="cond ok"><div class="lab"><span class="zh">① BTC > 50日均线</span><span class="en">① BTC > SMA50</span> · ✓</div><div class="val">BTC 81127.18 / SMA50 72477.22</div></div><div class="cond ok"><div class="lab"><span class="zh">② BTC近20日回撤 ≤15%</span><span class="en">② BTC 20d DD ≤15%</span> · ✓</div><div class="val">6.96% / max 15.0%</div></div><div class="cond ok"><div class="lab"><span class="zh">③ BTC ATR%（14）不太极端 ≤7%</span><span class="en">③ BTC ATR%(14) ≤7%</span> · ✓</div><div class="val">2.52% / max 7.0%</div></div></div></div><p class="entry-gate-tip"><span class="zh">仅限制新开仓；加密波动比美股大，回撤/ATR 阈值更宽。三条规则（无 VIX 等价物，用 ATR% 代替）。</span><span class="en">Only new entries are blocked. Wider DD/ATR thresholds than US equities; ATR% replaces VIX.</span></p>

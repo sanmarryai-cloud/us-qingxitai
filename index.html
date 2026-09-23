@@ -42,8 +42,10 @@
   .metric { background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:14px; }
   .metric .k { color:#64748b; font-size:.8rem; }
   .metric .v { font-size:1.4rem; font-weight:700; margin-top:4px; }
-  .pill { display:inline-block; padding:4px 10px; border-radius:999px; font-weight:700; font-size:.85rem;
-           background:#dcfce7; color:#166534; }
+  .pill { display:inline-block; padding:4px 10px; border-radius:999px; font-weight:700; font-size:.85rem; }
+  .pill-on { background:#dcfce7; color:#166534; }
+  .pill-mixed { background:#fef9c3; color:#854d0e; }
+  .pill-off { background:#fee2e2; color:#991b1b; }
   .muted { color:#64748b; font-size:.9rem; }
   .tag { display:inline-block; margin:2px 4px 2px 0; padding:2px 8px; border-radius:6px;
           font-size:.72rem; font-weight:600; background:#e0f2fe; color:#075985; }
@@ -547,7 +549,7 @@
     <div class="metric"><div class="k">QQQ SMA200</div><div class="v">661.77</div></div>
     <div class="metric"><div class="k"><span class="zh">扫描/命中</span><span class="en">Scanned / tagged</span></div><div class="v">5577 / 23</div></div>
   </div>
-  <p><span class="pill"><span class="zh">红灯 · 少做突破</span><span class="en">Red · skip breakouts</span></span>
+  <p><span class="pill pill-off"><span class="zh">红灯 · 少做突破</span><span class="en">Red · skip breakouts</span></span>
      <span class="muted"><span class="zh">stand down on breakouts; mean-reversion only as watchlist</span><span class="en">stand down on breakouts; mean-reversion only as watchlist</span></span></p>
   <p class="muted"><span class="zh">仅供参考分析，非投资建议，不会替你下单。数据来自 Yahoo Finance（可能延迟）。过滤规则是启发式，不是已验证实盘优势。风险自负。</span><span class="en">Reference analysis only. Not investment advice. No orders placed. Data via Yahoo Finance (may be delayed). Filters are rule-based heuristics, not a proven live edge. You execute at your own risk.</span></p>
   <div class="entry-gate allow" id="entry-gate" data-allow="1"><h3><span class="zh">新开仓总闸：允许新开仓（绿灯可做动量）</span><span class="en">New-entry gate: New entries allowed (green — momentum OK)</span></h3><p class="muted" style="margin:0"><span class="zh">大盘前置过滤：三条全过才允许新开个股；已有持仓不受限，止盈止损照常。</span><span class="en">Market gate: all 3 must pass for NEW entries; open positions keep stops/TPs.</span></p><div class="conds"><div class="cond ok"><div class="lab"><span class="zh">① SPX > 50日均线</span><span class="en">① SPX > SMA50</span> · ✓</div><div class="val">SPX 7644.63 / SMA50 7617.12</div></div><div class="cond ok"><div class="lab"><span class="zh">② VIX < 25</span><span class="en">② VIX < 25</span> · ✓</div><div class="val">VIX 14.93 (max 25.0)</div></div><div class="cond ok"><div class="lab"><span class="zh">③ SPX近20日回撤 ≤8%</span><span class="en">③ SPX 20d DD ≤8%</span> · ✓</div><div class="val">2.53% / max 8.0%</div></div></div></div><p class="entry-gate-tip"><span class="zh">仅限制新开仓，已有持仓止盈止损正常运行。</span><span class="en">Only new entries are blocked; open-position stops/TPs still apply.</span></p><script>window.USM_ENTRY_GATE = {"allow": true, "fail_zh": [], "fail_en": [], "block_zh": "当前大盘条件不满足，禁止新建仓位，已有持仓不受影响。", "block_en": "Market gate failed — no new positions. Open holdings are unaffected."};</script>
