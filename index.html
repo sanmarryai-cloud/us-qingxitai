@@ -511,6 +511,866 @@
   @media (max-width:700px) {
     .entry-gate .conds { grid-template-columns: 1fr; }
   }
+
+  .pm-capital-bar {
+    display:flex; flex-wrap:wrap; align-items:center; gap:6px 10px;
+    background:#fff; border:1px solid #e2e8f0; border-radius:10px;
+    padding:6px 10px; margin:0 0 6px;
+  }
+  .pm-cap-label { font-weight:700; color:#0f172a; min-width:4rem; font-size:.88rem; }
+  .pm-cap-ctrl { display:flex; align-items:center; gap:4px; }
+  .pm-cap-prefix { font-weight:700; color:#64748b; }
+  .pm-cap-ctrl input {
+    width:110px; border:1px solid #cbd5e1; border-radius:8px;
+    padding:5px 8px; font-size:.92rem; font-weight:700; color:#0f172a;
+  }
+  .pm-cap-hint { font-size:.72rem; }
+  .pm-finviz-left > h2 { margin:0 0 2px; font-size:1.05rem; }
+  .pm-finviz-left > p.muted { margin:0 0 6px; font-size:.75rem; line-height:1.35; }
+  .pm-finviz-split {
+    display:flex;
+    flex-wrap:nowrap;
+    gap:16px;
+    align-items:flex-start;
+    margin: 8px 0 18px;
+    width:100%;
+  }
+  .pm-finviz-left {
+    flex:0 0 340px;
+    width:340px;
+    max-width:36%;
+    display:flex;
+    flex-direction:column;
+  }
+  .pm-finviz-left .pm-ticket-card {
+    max-width:100%;
+  }
+  .pm-finviz-right {
+    flex:1 1 0;
+    min-width:0;
+    padding:10px 12px 12px;
+    display:flex;
+    flex-direction:column;
+    box-sizing:border-box;
+    background:#fff;
+    border:1px solid #e2e8f0;
+    border-radius:12px;
+    color:#0f172a;
+    overflow:hidden;
+    box-shadow:0 1px 2px rgba(15,23,42,.04);
+  }
+  .pm-finviz-right .muted { color:#64748b; }
+  .pm-finviz-right h2 { color:#0f172a; }
+  .pm-finviz-right .pm-finviz-link { color:#2563eb; }
+  .pm-finviz-head {
+    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+  }
+  .pm-finviz-link {
+    font-size:.85rem; font-weight:700; color:#2563eb; text-decoration:none;
+  }
+  .pm-finviz-link:hover { text-decoration:underline; }
+  .pm-finviz-frame-wrap {
+    flex:1 1 auto; min-height:0; border:1px solid #1e293b; border-radius:10px; overflow:hidden;
+    background:#0b1220;
+  }
+  .pm-finviz-links { display:flex; gap:12px; align-items:center; }
+  .pm-tv-wrap, .pm-tv-frame .tradingview-widget-container {
+    width:100%; height:100%; min-height:0; flex:1;
+  }
+  .pm-tv-wrap .tradingview-widget-copyright { display:none !important; }
+  .pm-tv-frame { background:#0b1220; }
+  .pm-finviz-img-link { display:none; } /* replaced by TradingView live embed */
+
+  .pm-finviz-img {
+    width:100%; height:auto; max-height:min(62vh, 560px); object-fit:contain; display:block; background:#0b1220;
+  }
+  .pm-finviz-frame {
+    display:none; /* Finviz often blocks iframe; local snapshot is the reliable fill */
+    width:100%; height:min(62vh, 560px); min-height:380px; border:0; background:#fff;
+  }
+  @media (max-width:900px) {
+    .pm-finviz-split { flex-wrap:wrap; }
+    .pm-finviz-left { flex:1 1 100%; width:100%; max-width:100%; }
+    .pm-finviz-right { width:100% !important; max-width:100%; height:auto !important; max-height:none !important; flex:1 1 100% !important; }
+    .pm-tv-wrap { height:360px !important; }
+  }
+    .pm-ticket-card {
+    background:#fff; border:1px solid #e5e7eb; border-radius:10px;
+    padding:2px 8px 8px; box-shadow:0 1px 2px rgba(15,23,42,.04);
+    max-width:420px; width:100%;
+  }
+  @media (max-width:480px) {
+    .pm-ticket-card { max-width:100%; padding:6px 8px 10px; border-radius:10px; }
+    .pm-row { grid-template-columns:56px 1fr; }
+    .pm-frac-btn { min-height:36px; }
+    .pm-step-btn { min-width:36px; min-height:36px; }
+    .pm-pill-btn { padding:8px 0; }
+  }
+  @media (min-width:481px) {
+    .pm-ticket-card { max-width:400px; }
+    .pm-finviz-left .pm-ticket-card { max-width:100%; }
+    .pm-row { padding:2px 0; }
+    .pm-stepper input { padding:5px 2px; font-size:0.92rem; }
+    .pm-frac-btn { padding:5px 2px; font-size:0.82rem; }
+  }
+  .pm-row {
+    display:grid; grid-template-columns:56px 1fr; gap:4px; align-items:center;
+    padding:2px 0; border-bottom:1px solid #f1f5f9;
+  }
+  .pm-row:last-of-type { border-bottom:none; }
+  .pm-row-toggle { border-bottom:none; padding-bottom:0; padding-top:1px; }
+  .pm-lab { font-size:.82rem; color:#334155; font-weight:600; }
+  .pm-ctl { min-width:0; }
+  .pm-fixed, .pm-ctl select, .pm-stepper, .pm-amount-big, .pm-amount-edit-wrap, .pm-tpsl {
+    width:100%; box-sizing:border-box;
+  }
+  .pm-fixed {
+    border:1px solid #e2e8f0; border-radius:8px; background:#f8fafc;
+    padding:5px 8px; font-weight:600; color:#0f172a; font-size:.84rem;
+  }
+  .pm-combo {
+    position:relative; display:grid; grid-template-columns:1fr 34px; align-items:stretch;
+    width:100%;
+  }
+  .pm-ticker-select {
+    width:100%; border:1px solid #3b82f6; border-right:none; border-radius:8px 0 0 8px;
+    padding:6px 8px; font-size:.92rem; font-weight:800; color:#0f172a;
+    background:#fff; letter-spacing:.01em; outline:none;
+  }
+  .pm-ticker-select:focus { box-shadow:0 0 0 2px rgba(59,130,246,.25); }
+  .pm-combo-caret {
+    border:1px solid #3b82f6; border-radius:0 8px 8px 0; background:#eff6ff;
+    color:#1d4ed8; font-size:.85rem; font-weight:800; cursor:pointer;
+  }
+  .pm-combo-caret:hover { background:#dbeafe; }
+  .pm-combo-menu {
+    position:absolute; left:0; right:0; top:calc(100% + 4px); z-index:40;
+    max-height:220px; overflow:auto; margin:0; padding:4px;
+    list-style:none; background:#fff; border:1px solid #cbd5e1; border-radius:10px;
+    box-shadow:0 8px 24px rgba(15,23,42,.12);
+  }
+  .pm-combo-menu li {
+    padding:8px 10px; border-radius:8px; cursor:pointer;
+    font-size:.86rem; font-weight:700; color:#0f172a;
+  }
+  .pm-combo-menu li:hover, .pm-combo-menu li.active { background:#eff6ff; color:#1d4ed8; }
+  .pm-combo-menu li.muted { color:#94a3b8; font-weight:600; cursor:default; }
+
+  .pm-stepper {
+    display:grid; grid-template-columns:32px 1fr 32px; align-items:stretch;
+    border:1px solid #cbd5e1; border-radius:8px; overflow:hidden; background:#fff;
+  }
+  .pm-step-mid { min-width:0; }
+  .pm-step-mid input { width:100%; }
+  .pm-stepper input {
+    border:none; text-align:center; font-size:.95rem; font-weight:700;
+    color:#0f172a; padding:5px 2px; min-width:0; background:#fff;
+  }
+  .pm-step-btn {
+    border:none; background:#f8fafc; color:#334155; font-size:1.05rem;
+    font-weight:700; cursor:pointer; border-right:1px solid #e2e8f0;
+  }
+  .pm-step-btn:last-child { border-right:none; border-left:1px solid #e2e8f0; }
+  .pm-step-btn:hover { background:#e2e8f0; }
+  .pm-pill {
+    display:inline-flex; background:#eef2f7; border-radius:999px; padding:2px;
+    gap:2px; width:100%; max-width:200px;
+  }
+  .pm-pill-btn {
+    flex:1; border:none; background:transparent; border-radius:999px;
+    padding:5px 0; font-weight:700; color:#64748b; cursor:pointer; font-size:.82rem;
+  }
+  .pm-pill-btn.active { background:#fff; color:#0f172a; box-shadow:0 1px 2px rgba(0,0,0,.08); }
+  .pm-more-frac {
+    margin-top:2px; font-size:.72rem; color:#64748b;
+  }
+  .pm-more-frac > summary {
+    cursor:pointer; list-style:none; padding:2px 0; font-weight:600;
+  }
+  .pm-more-frac > summary::-webkit-details-marker { display:none; }
+  .pm-more-frac[open] > summary { margin-bottom:4px; color:#334155; }
+  .pm-frac-block { margin:4px 0 2px; }
+  .pm-frac-head, .pm-frac-row {
+    display:grid; grid-template-columns:72px repeat(4, 1fr); gap:4px; align-items:center;
+    margin-bottom:3px;
+  }
+  .pm-frac-head { font-size:.68rem; color:#94a3b8; text-align:center; font-weight:600; }
+  .pm-frac-head span:first-child { text-align:left; }
+  .pm-frac-lab { font-size:.72rem; font-weight:700; line-height:1.15; }
+  .pm-frac-sub { font-size:.62rem; font-weight:500; margin-top:1px; }
+  .pm-frac-row.cash .pm-frac-lab { color:#15803d; }
+  .pm-frac-row.suggest .pm-frac-lab { color:#0f766e; }
+  .pm-frac-row.sell .pm-frac-lab { color:#be123c; }
+  .pm-frac-btn {
+    border:none; border-radius:6px; padding:5px 2px; font-weight:700;
+    font-size:.85rem; cursor:pointer; text-align:center;
+  }
+  .pm-frac-btn.cash { background:#dcfce7; color:#166534; }
+  .pm-frac-btn.cash:hover, .pm-frac-btn.cash.active { outline:2px solid #16a34a; background:#bbf7d0; }
+  .pm-frac-btn.suggest { background:#ccfbf1; color:#0f766e; }
+  .pm-frac-btn.suggest:hover, .pm-frac-btn.suggest.active { outline:2px solid #0d9488; background:#99f6e4; }
+  .pm-frac-btn.sell { background:#ffe4e6; color:#9f1239; cursor:default; opacity:.85; }
+  .pm-hidden { display:none !important; }
+  .pm-amount-edit-wrap {
+    display:grid; grid-template-columns:1fr auto; align-items:center; gap:6px;
+    border:1px solid #cbd5e1; border-radius:8px; background:#fff; padding:2px 8px;
+  }
+  .pm-amount-big-input {
+    width:100%; border:none; outline:none; background:transparent;
+    font-size:1.05rem; font-weight:800; color:#0f172a; padding:5px 0; letter-spacing:.01em;
+  }
+  .pm-amount-ccy { font-weight:700; color:#64748b; font-size:.85rem; }
+  .pm-amount-hint { font-size:.68rem; margin-top:2px; }
+  .pm-amount-big {
+    font-size:1.05rem; font-weight:800; color:#334155; padding:2px 0; letter-spacing:.01em;
+  }
+  .pm-tpsl {
+    border:1px solid #e2e8f0; border-radius:8px; background:#fff;
+    padding:5px 8px; font-size:.78rem; color:#0f172a; line-height:1.3;
+    display:flex; flex-wrap:wrap; gap:2px 4px; align-items:center;
+  }
+  .pm-tpsl-item b { color:#475569; font-weight:600; margin-right:2px; }
+  .pm-tpsl-sep { color:#cbd5e1; }
+  .pm-ladder-details {
+    margin:4px 0 6px; background:#f8fafc; border:1px solid #e2e8f0;
+    border-radius:8px; padding:4px 8px;
+  }
+  .pm-ladder-details summary { cursor:pointer; font-weight:600; color:#475569; font-size:.78rem; }
+  .pm-buy-btn {
+    display:block; width:100%; margin-top:2px; border:none; border-radius:10px;
+    background:#16a34a; color:#fff; font-size:1.02rem; font-weight:800;
+    padding:10px 12px; cursor:pointer; letter-spacing:.05em;
+  }
+  .pm-buy-btn:hover { background:#15803d; }
+  .pm-toast {
+    background:#0f172a; color:#fff; border-radius:10px; padding:10px 12px;
+    margin:0 0 10px; font-weight:700; font-size:.92rem;
+  }
+  .pm-msg { background:#fef3c7; color:#92400e; border-radius:10px; padding:10px 12px; margin:8px 0; font-weight:600; }
+  .pm-warn { background:#fee2e2; color:#991b1b; border-radius:10px; padding:10px 12px; margin:8px 0; }
+  .pm-below {
+    margin-top:12px; width:100%; max-width:none; box-sizing:border-box;
+    background:#fff; border:1px solid #e2e8f0;
+    border-radius:12px; padding:12px 14px 10px;
+  }
+  .pm-check-title { font-weight:800; margin-bottom:10px; color:#0f172a; font-size:1rem; }
+  .pm-checklist {
+    list-style:none; margin:0; padding:0;
+    display:grid;
+    grid-template-columns:repeat(7, minmax(0, 1fr));
+    gap:8px;
+    color:#334155;
+  }
+  .pm-checklist > li {
+    display:flex; flex-direction:column; gap:4px;
+    background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px;
+    padding:10px 10px 12px; min-height:0; box-sizing:border-box;
+  }
+  .pm-check-num {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:22px; height:22px; border-radius:999px;
+    background:#16a34a; color:#fff; font-size:.75rem; font-weight:800;
+  }
+  .pm-check-txt { font-size:.82rem; line-height:1.35; font-weight:600; color:#0f172a; }
+  .pm-check-notes {
+    margin-top:10px; display:grid; grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:4px 16px;
+  }
+  .pm-check-notes > p { margin:0; font-size:.75rem; line-height:1.4; }
+  .pm-check-flash {
+    outline:3px solid #f59e0b; box-shadow:0 0 0 6px rgba(245,158,11,.25);
+    transition: outline .2s, box-shadow .2s;
+  }
+  .pm-footnote { font-size:.75rem !important; }
+  @media (max-width:1100px) {
+    .pm-checklist { grid-template-columns:repeat(4, minmax(0, 1fr)); }
+  }
+  @media (max-width:700px) {
+    .pm-checklist { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+    .pm-check-notes { grid-template-columns:1fr; }
+  }
+  @media (max-width:520px) {
+    .pm-frac-head, .pm-frac-row { grid-template-columns:72px repeat(4, 1fr); gap:4px; }
+    .pm-row { grid-template-columns:64px 1fr; }
+    .pm-ticket-card { max-width:100%; }
+  }
+
+
+  .usm-open-btn {
+    background:#16a34a; color:#fff; border:none; border-radius:8px;
+    padding:4px 10px; font-weight:700; font-size:.78rem; cursor:pointer;
+    white-space:nowrap;
+  }
+  .usm-open-btn:hover { background:#15803d; }
+  .usm-open-btn.is-disabled, .usm-open-btn:disabled {
+    background:#94a3b8 !important; color:#f8fafc !important; cursor:not-allowed; opacity:.75;
+  }
+  .pm-buy-btn.is-disabled, .pm-buy-btn:disabled {
+    background:#94a3b8 !important; cursor:not-allowed; opacity:.75;
+  }
+  .pm-buy-btn.is-disabled:hover { background:#94a3b8 !important; }
+  .entry-gate-fails {
+    margin-top:10px; padding:8px 10px; border-radius:10px;
+    background:#fff1f2; border:1px solid #fecdd3; font-size:.86rem;
+  }
+  .entry-gate-fails ul { margin:6px 0 0; padding-left:1.2em; }
+  .entry-gate-fails li { margin:2px 0; font-weight:600; color:#9f1239; }
+  .entry-gate-tip {
+    margin:6px 0 14px; font-size:.88rem; color:#475569; font-weight:600;
+  }
+  .entry-gate {
+    margin: 12px 0 16px; padding: 12px 14px; border-radius: 12px;
+    border: 1px solid #cbd5e1; background: #fff;
+  }
+  .entry-gate.allow { border-color: #86efac; background: #f0fdf4; }
+  .entry-gate.pause { border-color: #fca5a5; background: #fef2f2; }
+  .entry-gate h3 { margin: 0 0 6px; font-size: 1rem; }
+  .entry-gate .conds {
+    display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; margin-top: 10px;
+  }
+  .entry-gate .cond {
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 8px 10px; font-size: .82rem;
+  }
+  .entry-gate .cond.ok { border-color: #86efac; }
+  .entry-gate .cond.bad { border-color: #fca5a5; }
+  .entry-gate .cond .lab { color: #64748b; font-weight: 600; }
+  .entry-gate .cond .val { font-weight: 800; margin-top: 2px; }
+
+  .buy-point-banner {
+    margin: 16px 0 20px; padding: 16px 18px 14px; border-radius: 16px;
+    border: 3px solid #cbd5e1; background: #f8fafc;
+  }
+  .buy-point-banner.urgent {
+    border-color: #d97706;
+    background: linear-gradient(180deg, #fffbeb 0%, #fde68a 55%, #fbbf24 160%);
+    box-shadow: 0 0 0 5px rgba(245,158,11,.28), 0 12px 28px rgba(180,83,9,.18);
+  }
+  .buy-point-banner.quiet {
+    border-color: #cbd5e1; background: #f8fafc;
+    box-shadow: none;
+  }
+  .buy-point-banner h2 {
+    margin: 0; font-size: 1.45rem; letter-spacing: .03em; color: #7c2d12;
+  }
+  .buy-point-banner.quiet h2 { color: #334155; font-size: 1.2rem; }
+  .buy-point-banner.compact h2 { font-size: 1.15rem; }
+  .buy-point-head {
+    display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:8px 16px;
+  }
+  .buy-point-asof { font-weight:800; color:#92400e; font-size:.92rem; }
+  .buy-point-banner.quiet .buy-point-asof { color:#64748b; font-weight:700; }
+  .buy-point-state {
+    margin: 8px 0 12px; font-size: 1.08rem; font-weight: 800; color:#b45309;
+  }
+  .buy-point-banner.quiet .buy-point-state { color:#64748b; font-size:1rem; }
+  .buy-point-grid {
+    display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px;
+  }
+  .buy-point-card {
+    background:#fffbeb; border:1px solid #f59e0b; border-radius:12px; padding:10px 12px;
+  }
+  .buy-point-quote {
+    display:flex; flex-wrap:wrap; align-items:baseline; gap:8px;
+    font-size:1.08rem; font-weight:800; color:#7c2d12;
+  }
+  .buy-point-pct { color:#b45309; }
+  .buy-point-why { margin:6px 0 0; font-size:.86rem; font-weight:600; color:#92400e; }
+  .buy-point-watch-head {
+    margin:14px 0 6px; font-weight:800; color:#475569; font-size:.92rem;
+  }
+  .buy-point-watch-grid {
+    display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px;
+  }
+  .buy-point-watch-card {
+    background:#fff; border:1px dashed #94a3b8; border-radius:10px;
+    padding:8px 10px; font-size:.86rem; color:#334155;
+  }
+  .buy-point-watch-card .buy-point-why { color:#475569; font-weight:600; }
+  .buy-point-foot {
+    margin:12px 0 0; font-weight:800; font-size:.92rem; color:#9a3412;
+  }
+  .buy-point-banner.quiet .buy-point-foot { color:#64748b; font-weight:700; }
+
+  /* 预观察 / 早警告 — muted; NOT the urgent amber buy-point banner */
+  .prewatch-strip {
+    margin: 14px 0 18px; padding: 12px 14px; border-radius: 12px;
+    background: #f8fafc; border: 1px solid #cbd5e1; color: #334155;
+  }
+  .prewatch-head {
+    display:flex; justify-content:space-between; align-items:baseline; gap:10px; flex-wrap:wrap;
+  }
+  .prewatch-strip h2 { margin:0; font-size:1.05rem; color:#475569; font-weight:800; }
+  .prewatch-asof { font-size:.85rem; color:#64748b; font-weight:600; }
+  .prewatch-banner-note {
+    margin:8px 0 10px; font-size:.88rem; font-weight:700; color:#64748b;
+  }
+  .prewatch-subhead {
+    margin: 4px 0 8px; font-size:.9rem; font-weight:700; color:#64748b;
+  }
+  .prewatch-grid, .prewatch-alert-grid {
+    display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:8px;
+  }
+  .prewatch-chip, .prewatch-alert-chip {
+    background:#fff; border:1px solid #e2e8f0; border-radius:10px;
+    padding:8px 10px; font-size:.82rem; color:#475569;
+    display:flex; flex-direction:column; gap:2px;
+  }
+  .prewatch-alert-chip {
+    border-color:#cbd5e1; background:#f1f5f9;
+  }
+  .prewatch-pct { color:#0f766e; font-weight:700; }
+  .prewatch-near { color:#64748b; font-size:.78rem; }
+  .prewatch-why { color:#64748b; font-size:.78rem; line-height:1.35; }
+  .prewatch-alert-head {
+    margin:12px 0 6px; font-size:.9rem; font-weight:800; color:#475569;
+  }
+  .prewatch-empty { margin:6px 0; color:#94a3b8; font-size:.88rem; }
+  .prewatch-foot {
+    margin:10px 0 0; font-size:.82rem; font-weight:700; color:#64748b;
+  }
+  @media (max-width:700px) {
+    .prewatch-grid, .prewatch-alert-grid { grid-template-columns:1fr; }
+  }
+
+  @media (max-width:700px) {
+    .buy-point-grid, .buy-point-watch-grid { grid-template-columns:1fr; }
+    .buy-point-banner h2 { font-size:1.2rem; }
+  }
+
+  @media (max-width:700px) {
+    .entry-gate .conds { grid-template-columns: 1fr; }
+  }
+
+  .pm-capital-bar {
+    display:flex; flex-wrap:wrap; align-items:center; gap:6px 10px;
+    background:#fff; border:1px solid #e2e8f0; border-radius:10px;
+    padding:6px 10px; margin:0 0 6px;
+  }
+  .pm-cap-label { font-weight:700; color:#0f172a; min-width:4rem; font-size:.88rem; }
+  .pm-cap-ctrl { display:flex; align-items:center; gap:4px; }
+  .pm-cap-prefix { font-weight:700; color:#64748b; }
+  .pm-cap-ctrl input {
+    width:110px; border:1px solid #cbd5e1; border-radius:8px;
+    padding:5px 8px; font-size:.92rem; font-weight:700; color:#0f172a;
+  }
+  .pm-cap-hint { font-size:.72rem; }
+  .pm-finviz-left > h2 { margin:0 0 2px; font-size:1.05rem; }
+  .pm-finviz-left > p.muted { margin:0 0 6px; font-size:.75rem; line-height:1.35; }
+  .pm-finviz-split {
+    display:flex;
+    flex-wrap:nowrap;
+    gap:16px;
+    align-items:flex-start;
+    margin: 8px 0 18px;
+    width:100%;
+  }
+  .pm-finviz-left {
+    flex:0 0 340px;
+    width:340px;
+    max-width:36%;
+    display:flex;
+    flex-direction:column;
+  }
+  .pm-finviz-left .pm-ticket-card {
+    max-width:100%;
+  }
+  .pm-finviz-right {
+    flex:1 1 0;
+    min-width:0;
+    padding:10px 12px 12px;
+    display:flex;
+    flex-direction:column;
+    box-sizing:border-box;
+    background:#fff;
+    border:1px solid #e2e8f0;
+    border-radius:12px;
+    color:#0f172a;
+    overflow:hidden;
+    box-shadow:0 1px 2px rgba(15,23,42,.04);
+  }
+  .pm-finviz-right .muted { color:#64748b; }
+  .pm-finviz-right h2 { color:#0f172a; }
+  .pm-finviz-right .pm-finviz-link { color:#2563eb; }
+  .pm-finviz-head {
+    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+  }
+  .pm-finviz-link {
+    font-size:.85rem; font-weight:700; color:#2563eb; text-decoration:none;
+  }
+  .pm-finviz-link:hover { text-decoration:underline; }
+  .pm-finviz-frame-wrap {
+    flex:1 1 auto; min-height:0; border:1px solid #1e293b; border-radius:10px; overflow:hidden;
+    background:#0b1220;
+  }
+  .pm-finviz-links { display:flex; gap:12px; align-items:center; }
+  .pm-tv-wrap, .pm-tv-frame .tradingview-widget-container {
+    width:100%; height:100%; min-height:0; flex:1;
+  }
+  .pm-tv-wrap .tradingview-widget-copyright { display:none !important; }
+  .pm-tv-frame { background:#0b1220; }
+  .pm-finviz-img-link { display:none; } /* replaced by TradingView live embed */
+
+  .pm-finviz-img {
+    width:100%; height:auto; max-height:min(62vh, 560px); object-fit:contain; display:block; background:#0b1220;
+  }
+  .pm-finviz-frame {
+    display:none; /* Finviz often blocks iframe; local snapshot is the reliable fill */
+    width:100%; height:min(62vh, 560px); min-height:380px; border:0; background:#fff;
+  }
+  @media (max-width:900px) {
+    .pm-finviz-split { flex-wrap:wrap; }
+    .pm-finviz-left { flex:1 1 100%; width:100%; max-width:100%; }
+    .pm-finviz-right { width:100% !important; max-width:100%; height:auto !important; max-height:none !important; flex:1 1 100% !important; }
+    .pm-tv-wrap { height:360px !important; }
+  }
+    .pm-ticket-card {
+    background:#fff; border:1px solid #e5e7eb; border-radius:10px;
+    padding:2px 8px 8px; box-shadow:0 1px 2px rgba(15,23,42,.04);
+    max-width:420px; width:100%;
+  }
+  @media (max-width:480px) {
+    .pm-ticket-card { max-width:100%; padding:6px 8px 10px; border-radius:10px; }
+    .pm-row { grid-template-columns:56px 1fr; }
+    .pm-frac-btn { min-height:36px; }
+    .pm-step-btn { min-width:36px; min-height:36px; }
+    .pm-pill-btn { padding:8px 0; }
+  }
+  @media (min-width:481px) {
+    .pm-ticket-card { max-width:400px; }
+    .pm-finviz-left .pm-ticket-card { max-width:100%; }
+    .pm-row { padding:2px 0; }
+    .pm-stepper input { padding:5px 2px; font-size:0.92rem; }
+    .pm-frac-btn { padding:5px 2px; font-size:0.82rem; }
+  }
+  .pm-row {
+    display:grid; grid-template-columns:56px 1fr; gap:4px; align-items:center;
+    padding:2px 0; border-bottom:1px solid #f1f5f9;
+  }
+  .pm-row:last-of-type { border-bottom:none; }
+  .pm-row-toggle { border-bottom:none; padding-bottom:0; padding-top:1px; }
+  .pm-lab { font-size:.82rem; color:#334155; font-weight:600; }
+  .pm-ctl { min-width:0; }
+  .pm-fixed, .pm-ctl select, .pm-stepper, .pm-amount-big, .pm-amount-edit-wrap, .pm-tpsl {
+    width:100%; box-sizing:border-box;
+  }
+  .pm-fixed {
+    border:1px solid #e2e8f0; border-radius:8px; background:#f8fafc;
+    padding:5px 8px; font-weight:600; color:#0f172a; font-size:.84rem;
+  }
+  .pm-combo {
+    position:relative; display:grid; grid-template-columns:1fr 34px; align-items:stretch;
+    width:100%;
+  }
+  .pm-ticker-select {
+    width:100%; border:1px solid #3b82f6; border-right:none; border-radius:8px 0 0 8px;
+    padding:6px 8px; font-size:.92rem; font-weight:800; color:#0f172a;
+    background:#fff; letter-spacing:.01em; outline:none;
+  }
+  .pm-ticker-select:focus { box-shadow:0 0 0 2px rgba(59,130,246,.25); }
+  .pm-combo-caret {
+    border:1px solid #3b82f6; border-radius:0 8px 8px 0; background:#eff6ff;
+    color:#1d4ed8; font-size:.85rem; font-weight:800; cursor:pointer;
+  }
+  .pm-combo-caret:hover { background:#dbeafe; }
+  .pm-combo-menu {
+    position:absolute; left:0; right:0; top:calc(100% + 4px); z-index:40;
+    max-height:220px; overflow:auto; margin:0; padding:4px;
+    list-style:none; background:#fff; border:1px solid #cbd5e1; border-radius:10px;
+    box-shadow:0 8px 24px rgba(15,23,42,.12);
+  }
+  .pm-combo-menu li {
+    padding:8px 10px; border-radius:8px; cursor:pointer;
+    font-size:.86rem; font-weight:700; color:#0f172a;
+  }
+  .pm-combo-menu li:hover, .pm-combo-menu li.active { background:#eff6ff; color:#1d4ed8; }
+  .pm-combo-menu li.muted { color:#94a3b8; font-weight:600; cursor:default; }
+
+  .pm-stepper {
+    display:grid; grid-template-columns:32px 1fr 32px; align-items:stretch;
+    border:1px solid #cbd5e1; border-radius:8px; overflow:hidden; background:#fff;
+  }
+  .pm-step-mid { min-width:0; }
+  .pm-step-mid input { width:100%; }
+  .pm-stepper input {
+    border:none; text-align:center; font-size:.95rem; font-weight:700;
+    color:#0f172a; padding:5px 2px; min-width:0; background:#fff;
+  }
+  .pm-step-btn {
+    border:none; background:#f8fafc; color:#334155; font-size:1.05rem;
+    font-weight:700; cursor:pointer; border-right:1px solid #e2e8f0;
+  }
+  .pm-step-btn:last-child { border-right:none; border-left:1px solid #e2e8f0; }
+  .pm-step-btn:hover { background:#e2e8f0; }
+  .pm-pill {
+    display:inline-flex; background:#eef2f7; border-radius:999px; padding:2px;
+    gap:2px; width:100%; max-width:200px;
+  }
+  .pm-pill-btn {
+    flex:1; border:none; background:transparent; border-radius:999px;
+    padding:5px 0; font-weight:700; color:#64748b; cursor:pointer; font-size:.82rem;
+  }
+  .pm-pill-btn.active { background:#fff; color:#0f172a; box-shadow:0 1px 2px rgba(0,0,0,.08); }
+  .pm-more-frac {
+    margin-top:2px; font-size:.72rem; color:#64748b;
+  }
+  .pm-more-frac > summary {
+    cursor:pointer; list-style:none; padding:2px 0; font-weight:600;
+  }
+  .pm-more-frac > summary::-webkit-details-marker { display:none; }
+  .pm-more-frac[open] > summary { margin-bottom:4px; color:#334155; }
+  .pm-frac-block { margin:4px 0 2px; }
+  .pm-frac-head, .pm-frac-row {
+    display:grid; grid-template-columns:72px repeat(4, 1fr); gap:4px; align-items:center;
+    margin-bottom:3px;
+  }
+  .pm-frac-head { font-size:.68rem; color:#94a3b8; text-align:center; font-weight:600; }
+  .pm-frac-head span:first-child { text-align:left; }
+  .pm-frac-lab { font-size:.72rem; font-weight:700; line-height:1.15; }
+  .pm-frac-sub { font-size:.62rem; font-weight:500; margin-top:1px; }
+  .pm-frac-row.cash .pm-frac-lab { color:#15803d; }
+  .pm-frac-row.suggest .pm-frac-lab { color:#0f766e; }
+  .pm-frac-row.sell .pm-frac-lab { color:#be123c; }
+  .pm-frac-btn {
+    border:none; border-radius:6px; padding:5px 2px; font-weight:700;
+    font-size:.85rem; cursor:pointer; text-align:center;
+  }
+  .pm-frac-btn.cash { background:#dcfce7; color:#166534; }
+  .pm-frac-btn.cash:hover, .pm-frac-btn.cash.active { outline:2px solid #16a34a; background:#bbf7d0; }
+  .pm-frac-btn.suggest { background:#ccfbf1; color:#0f766e; }
+  .pm-frac-btn.suggest:hover, .pm-frac-btn.suggest.active { outline:2px solid #0d9488; background:#99f6e4; }
+  .pm-frac-btn.sell { background:#ffe4e6; color:#9f1239; cursor:default; opacity:.85; }
+  .pm-hidden { display:none !important; }
+  .pm-amount-edit-wrap {
+    display:grid; grid-template-columns:1fr auto; align-items:center; gap:6px;
+    border:1px solid #cbd5e1; border-radius:8px; background:#fff; padding:2px 8px;
+  }
+  .pm-amount-big-input {
+    width:100%; border:none; outline:none; background:transparent;
+    font-size:1.05rem; font-weight:800; color:#0f172a; padding:5px 0; letter-spacing:.01em;
+  }
+  .pm-amount-ccy { font-weight:700; color:#64748b; font-size:.85rem; }
+  .pm-amount-hint { font-size:.68rem; margin-top:2px; }
+  .pm-amount-big {
+    font-size:1.05rem; font-weight:800; color:#334155; padding:2px 0; letter-spacing:.01em;
+  }
+  .pm-tpsl {
+    border:1px solid #e2e8f0; border-radius:8px; background:#fff;
+    padding:5px 8px; font-size:.78rem; color:#0f172a; line-height:1.3;
+    display:flex; flex-wrap:wrap; gap:2px 4px; align-items:center;
+  }
+  .pm-tpsl-item b { color:#475569; font-weight:600; margin-right:2px; }
+  .pm-tpsl-sep { color:#cbd5e1; }
+  .pm-ladder-details {
+    margin:4px 0 6px; background:#f8fafc; border:1px solid #e2e8f0;
+    border-radius:8px; padding:4px 8px;
+  }
+  .pm-ladder-details summary { cursor:pointer; font-weight:600; color:#475569; font-size:.78rem; }
+  .pm-buy-btn {
+    display:block; width:100%; margin-top:2px; border:none; border-radius:10px;
+    background:#16a34a; color:#fff; font-size:1.02rem; font-weight:800;
+    padding:10px 12px; cursor:pointer; letter-spacing:.05em;
+  }
+  .pm-buy-btn:hover { background:#15803d; }
+  .pm-toast {
+    background:#0f172a; color:#fff; border-radius:10px; padding:10px 12px;
+    margin:0 0 10px; font-weight:700; font-size:.92rem;
+  }
+  .pm-msg { background:#fef3c7; color:#92400e; border-radius:10px; padding:10px 12px; margin:8px 0; font-weight:600; }
+  .pm-warn { background:#fee2e2; color:#991b1b; border-radius:10px; padding:10px 12px; margin:8px 0; }
+  .pm-below {
+    margin-top:12px; width:100%; max-width:none; box-sizing:border-box;
+    background:#fff; border:1px solid #e2e8f0;
+    border-radius:12px; padding:12px 14px 10px;
+  }
+  .pm-check-title { font-weight:800; margin-bottom:10px; color:#0f172a; font-size:1rem; }
+  .pm-checklist {
+    list-style:none; margin:0; padding:0;
+    display:grid;
+    grid-template-columns:repeat(7, minmax(0, 1fr));
+    gap:8px;
+    color:#334155;
+  }
+  .pm-checklist > li {
+    display:flex; flex-direction:column; gap:4px;
+    background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px;
+    padding:10px 10px 12px; min-height:0; box-sizing:border-box;
+  }
+  .pm-check-num {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:22px; height:22px; border-radius:999px;
+    background:#16a34a; color:#fff; font-size:.75rem; font-weight:800;
+  }
+  .pm-check-txt { font-size:.82rem; line-height:1.35; font-weight:600; color:#0f172a; }
+  .pm-check-notes {
+    margin-top:10px; display:grid; grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:4px 16px;
+  }
+  .pm-check-notes > p { margin:0; font-size:.75rem; line-height:1.4; }
+  .pm-check-flash {
+    outline:3px solid #f59e0b; box-shadow:0 0 0 6px rgba(245,158,11,.25);
+    transition: outline .2s, box-shadow .2s;
+  }
+  .pm-footnote { font-size:.75rem !important; }
+  @media (max-width:1100px) {
+    .pm-checklist { grid-template-columns:repeat(4, minmax(0, 1fr)); }
+  }
+  @media (max-width:700px) {
+    .pm-checklist { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+    .pm-check-notes { grid-template-columns:1fr; }
+  }
+  @media (max-width:520px) {
+    .pm-frac-head, .pm-frac-row { grid-template-columns:72px repeat(4, 1fr); gap:4px; }
+    .pm-row { grid-template-columns:64px 1fr; }
+    .pm-ticket-card { max-width:100%; }
+  }
+
+
+  .usm-open-btn {
+    background:#16a34a; color:#fff; border:none; border-radius:8px;
+    padding:4px 10px; font-weight:700; font-size:.78rem; cursor:pointer;
+    white-space:nowrap;
+  }
+  .usm-open-btn:hover { background:#15803d; }
+  .usm-open-btn.is-disabled, .usm-open-btn:disabled {
+    background:#94a3b8 !important; color:#f8fafc !important; cursor:not-allowed; opacity:.75;
+  }
+  .pm-buy-btn.is-disabled, .pm-buy-btn:disabled {
+    background:#94a3b8 !important; cursor:not-allowed; opacity:.75;
+  }
+  .pm-buy-btn.is-disabled:hover { background:#94a3b8 !important; }
+  .entry-gate-fails {
+    margin-top:10px; padding:8px 10px; border-radius:10px;
+    background:#fff1f2; border:1px solid #fecdd3; font-size:.86rem;
+  }
+  .entry-gate-fails ul { margin:6px 0 0; padding-left:1.2em; }
+  .entry-gate-fails li { margin:2px 0; font-weight:600; color:#9f1239; }
+  .entry-gate-tip {
+    margin:6px 0 14px; font-size:.88rem; color:#475569; font-weight:600;
+  }
+  .entry-gate {
+    margin: 12px 0 16px; padding: 12px 14px; border-radius: 12px;
+    border: 1px solid #cbd5e1; background: #fff;
+  }
+  .entry-gate.allow { border-color: #86efac; background: #f0fdf4; }
+  .entry-gate.pause { border-color: #fca5a5; background: #fef2f2; }
+  .entry-gate h3 { margin: 0 0 6px; font-size: 1rem; }
+  .entry-gate .conds {
+    display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; margin-top: 10px;
+  }
+  .entry-gate .cond {
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 8px 10px; font-size: .82rem;
+  }
+  .entry-gate .cond.ok { border-color: #86efac; }
+  .entry-gate .cond.bad { border-color: #fca5a5; }
+  .entry-gate .cond .lab { color: #64748b; font-weight: 600; }
+  .entry-gate .cond .val { font-weight: 800; margin-top: 2px; }
+
+  .buy-point-banner {
+    margin: 16px 0 20px; padding: 16px 18px 14px; border-radius: 16px;
+    border: 3px solid #cbd5e1; background: #f8fafc;
+  }
+  .buy-point-banner.urgent {
+    border-color: #d97706;
+    background: linear-gradient(180deg, #fffbeb 0%, #fde68a 55%, #fbbf24 160%);
+    box-shadow: 0 0 0 5px rgba(245,158,11,.28), 0 12px 28px rgba(180,83,9,.18);
+  }
+  .buy-point-banner.quiet {
+    border-color: #cbd5e1; background: #f8fafc;
+    box-shadow: none;
+  }
+  .buy-point-banner h2 {
+    margin: 0; font-size: 1.45rem; letter-spacing: .03em; color: #7c2d12;
+  }
+  .buy-point-banner.quiet h2 { color: #334155; font-size: 1.2rem; }
+  .buy-point-banner.compact h2 { font-size: 1.15rem; }
+  .buy-point-head {
+    display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:8px 16px;
+  }
+  .buy-point-asof { font-weight:800; color:#92400e; font-size:.92rem; }
+  .buy-point-banner.quiet .buy-point-asof { color:#64748b; font-weight:700; }
+  .buy-point-state {
+    margin: 8px 0 12px; font-size: 1.08rem; font-weight: 800; color:#b45309;
+  }
+  .buy-point-banner.quiet .buy-point-state { color:#64748b; font-size:1rem; }
+  .buy-point-grid {
+    display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px;
+  }
+  .buy-point-card {
+    background:#fffbeb; border:1px solid #f59e0b; border-radius:12px; padding:10px 12px;
+  }
+  .buy-point-quote {
+    display:flex; flex-wrap:wrap; align-items:baseline; gap:8px;
+    font-size:1.08rem; font-weight:800; color:#7c2d12;
+  }
+  .buy-point-pct { color:#b45309; }
+  .buy-point-why { margin:6px 0 0; font-size:.86rem; font-weight:600; color:#92400e; }
+  .buy-point-watch-head {
+    margin:14px 0 6px; font-weight:800; color:#475569; font-size:.92rem;
+  }
+  .buy-point-watch-grid {
+    display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px;
+  }
+  .buy-point-watch-card {
+    background:#fff; border:1px dashed #94a3b8; border-radius:10px;
+    padding:8px 10px; font-size:.86rem; color:#334155;
+  }
+  .buy-point-watch-card .buy-point-why { color:#475569; font-weight:600; }
+  .buy-point-foot {
+    margin:12px 0 0; font-weight:800; font-size:.92rem; color:#9a3412;
+  }
+  .buy-point-banner.quiet .buy-point-foot { color:#64748b; font-weight:700; }
+
+  /* 预观察 / 早警告 — muted; NOT the urgent amber buy-point banner */
+  .prewatch-strip {
+    margin: 14px 0 18px; padding: 12px 14px; border-radius: 12px;
+    background: #f8fafc; border: 1px solid #cbd5e1; color: #334155;
+  }
+  .prewatch-head {
+    display:flex; justify-content:space-between; align-items:baseline; gap:10px; flex-wrap:wrap;
+  }
+  .prewatch-strip h2 { margin:0; font-size:1.05rem; color:#475569; font-weight:800; }
+  .prewatch-asof { font-size:.85rem; color:#64748b; font-weight:600; }
+  .prewatch-banner-note {
+    margin:8px 0 10px; font-size:.88rem; font-weight:700; color:#64748b;
+  }
+  .prewatch-subhead {
+    margin: 4px 0 8px; font-size:.9rem; font-weight:700; color:#64748b;
+  }
+  .prewatch-grid, .prewatch-alert-grid {
+    display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:8px;
+  }
+  .prewatch-chip, .prewatch-alert-chip {
+    background:#fff; border:1px solid #e2e8f0; border-radius:10px;
+    padding:8px 10px; font-size:.82rem; color:#475569;
+    display:flex; flex-direction:column; gap:2px;
+  }
+  .prewatch-alert-chip {
+    border-color:#cbd5e1; background:#f1f5f9;
+  }
+  .prewatch-pct { color:#0f766e; font-weight:700; }
+  .prewatch-near { color:#64748b; font-size:.78rem; }
+  .prewatch-why { color:#64748b; font-size:.78rem; line-height:1.35; }
+  .prewatch-alert-head {
+    margin:12px 0 6px; font-size:.9rem; font-weight:800; color:#475569;
+  }
+  .prewatch-empty { margin:6px 0; color:#94a3b8; font-size:.88rem; }
+  .prewatch-foot {
+    margin:10px 0 0; font-size:.82rem; font-weight:700; color:#64748b;
+  }
+  @media (max-width:700px) {
+    .prewatch-grid, .prewatch-alert-grid { grid-template-columns:1fr; }
+  }
+
+  @media (max-width:700px) {
+    .buy-point-grid, .buy-point-watch-grid { grid-template-columns:1fr; }
+    .buy-point-banner h2 { font-size:1.2rem; }
+  }
+
+  @media (max-width:700px) {
+    .entry-gate .conds { grid-template-columns: 1fr; }
+  }
+
+
 </style>
 </head>
 <body>
@@ -544,23 +1404,23 @@
     </div>
   </div>
   <div class="metrics">
-    <div class="metric"><div class="k"><span class="zh">市场体制</span><span class="en">Regime</span></div><div class="v">RISK_OFF</div></div>
-    <div class="metric"><div class="k">QQQ</div><div class="v">719.88</div></div>
-    <div class="metric"><div class="k">QQQ SMA200</div><div class="v">661.77</div></div>
-    <div class="metric"><div class="k"><span class="zh">扫描/命中</span><span class="en">Scanned / tagged</span></div><div class="v">5577 / 23</div></div>
+    <div class="metric"><div class="k"><span class="zh">市场体制</span><span class="en">Regime</span></div><div class="v">RISK_ON</div></div>
+    <div class="metric"><div class="k">QQQ</div><div class="v">741.25</div></div>
+    <div class="metric"><div class="k">QQQ SMA200</div><div class="v">662.3</div></div>
+    <div class="metric"><div class="k"><span class="zh">扫描/命中</span><span class="en">Scanned / tagged</span></div><div class="v">5577 / 45</div></div>
   </div>
-  <p><span class="pill pill-off"><span class="zh">红灯 · 少做突破</span><span class="en">Red · skip breakouts</span></span>
-     <span class="muted"><span class="zh">stand down on breakouts; mean-reversion only as watchlist</span><span class="en">stand down on breakouts; mean-reversion only as watchlist</span></span></p>
+  <p><span class="pill pill-on"><span class="zh">绿灯 · 可做动量</span><span class="en">Green · momentum OK</span></span>
+     <span class="muted"><span class="zh">短线动量 / 突破偏友好</span><span class="en">short-term momentum / breakouts favored</span></span></p>
   <p class="muted"><span class="zh">仅供参考分析，非投资建议，不会替你下单。数据来自 Yahoo Finance（可能延迟）。过滤规则是启发式，不是已验证实盘优势。风险自负。</span><span class="en">Reference analysis only. Not investment advice. No orders placed. Data via Yahoo Finance (may be delayed). Filters are rule-based heuristics, not a proven live edge. You execute at your own risk.</span></p>
-  <div class="entry-gate allow" id="entry-gate" data-allow="1"><h3><span class="zh">新开仓总闸：允许新开仓（绿灯可做动量）</span><span class="en">New-entry gate: New entries allowed (green — momentum OK)</span></h3><p class="muted" style="margin:0"><span class="zh">大盘前置过滤：三条全过才允许新开个股；已有持仓不受限，止盈止损照常。</span><span class="en">Market gate: all 3 must pass for NEW entries; open positions keep stops/TPs.</span></p><div class="conds"><div class="cond ok"><div class="lab"><span class="zh">① SPX > 50日均线</span><span class="en">① SPX > SMA50</span> · ✓</div><div class="val">SPX 7644.63 / SMA50 7617.12</div></div><div class="cond ok"><div class="lab"><span class="zh">② VIX < 25</span><span class="en">② VIX < 25</span> · ✓</div><div class="val">VIX 14.93 (max 25.0)</div></div><div class="cond ok"><div class="lab"><span class="zh">③ SPX近20日回撤 ≤8%</span><span class="en">③ SPX 20d DD ≤8%</span> · ✓</div><div class="val">2.53% / max 8.0%</div></div></div></div><p class="entry-gate-tip"><span class="zh">仅限制新开仓，已有持仓止盈止损正常运行。</span><span class="en">Only new entries are blocked; open-position stops/TPs still apply.</span></p><script>window.USM_ENTRY_GATE = {"allow": true, "fail_zh": [], "fail_en": [], "block_zh": "当前大盘条件不满足，禁止新建仓位，已有持仓不受影响。", "block_en": "Market gate failed — no new positions. Open holdings are unaffected."};</script>
+  <div class="entry-gate allow" id="entry-gate" data-allow="1"><h3><span class="zh">新开仓总闸：允许新开仓（绿灯可做动量）</span><span class="en">New-entry gate: New entries allowed (green — momentum OK)</span></h3><p class="muted" style="margin:0"><span class="zh">大盘前置过滤：三条全过才允许新开个股；已有持仓不受限，止盈止损照常。</span><span class="en">Market gate: all 3 must pass for NEW entries; open positions keep stops/TPs.</span></p><div class="conds"><div class="cond ok"><div class="lab"><span class="zh">① SPX > 50日均线</span><span class="en">① SPX > SMA50</span> · ✓</div><div class="val">SPX 7686.33 / SMA50 7627.69</div></div><div class="cond ok"><div class="lab"><span class="zh">② VIX < 25</span><span class="en">② VIX < 25</span> · ✓</div><div class="val">VIX 15.67 (max 25.0)</div></div><div class="cond ok"><div class="lab"><span class="zh">③ SPX近20日回撤 ≤8%</span><span class="en">③ SPX 20d DD ≤8%</span> · ✓</div><div class="val">2.53% / max 8.0%</div></div></div></div><p class="entry-gate-tip"><span class="zh">仅限制新开仓，已有持仓止盈止损正常运行。</span><span class="en">Only new entries are blocked; open-position stops/TPs still apply.</span></p><script>window.USM_ENTRY_GATE = {"allow": true, "fail_zh": [], "fail_en": [], "block_zh": "当前大盘条件不满足，禁止新建仓位，已有持仓不受影响。", "block_en": "Market gate failed — no new positions. Open holdings are unaffected."};</script>
   <p class="muted">
-    <span class="zh">数据更新（UTC）：2026-09-18 19:54 UTC · 北京时间 2026-09-19 03:54 · 页面生成：2026-09-18 19:54 UTC · 北京时间 2026-09-19 03:54</span>
-    <span class="en">Data as of (UTC): 2026-09-18 19:54 UTC · Beijing 2026-09-19 03:54 · Page built: 2026-09-18 19:54 UTC · Beijing 2026-09-19 03:54</span>
+    <span class="zh">数据更新：2026-09-23 12:22 LAX · 北京时间 2026-09-24 03:22 · 页面生成：2026-09-24 07:32 LAX · 北京时间 2026-09-24 22:32</span>
+    <span class="en">Data as of: 2026-09-23 12:22 LAX · Beijing 2026-09-24 03:22 · Page built: 2026-09-24 07:32 LAX · Beijing 2026-09-24 22:32</span>
   </p>
 
-  <section class="buy-point-banner quiet compact" id="buy-point-confirm"><div class="buy-point-head"><h2><span class="zh">买点确认</span><span class="en">Buy-point confirm</span></h2><span class="buy-point-asof"><span class="zh">截至</span><span class="en">As of</span> <span class="zh">2026-09-21 16:34 LAX · 北京时间 2026-09-22 07:34</span><span class="en">2026-09-21 16:34 LAX · Beijing 2026-09-22 07:34</span></span></div><div class="buy-point-state"><span class="zh">本轮无新买点确认</span><span class="en">No fresh buy-point confirmation this round</span></div><div class="buy-point-watch-head"><span class="zh">观察 · 不是确认</span><span class="en">Watch · not confirmed</span></div><div class="buy-point-watch-grid"><article class="buy-point-watch-card"><div><b>MSTR</b> · $168.50 · +9.47%</div><div class="buy-point-tags"><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于0 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 0 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>ARM</b> · $322.90 · +17.16%</div><div class="buy-point-tags"><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于2 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 2 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>ALAB</b> · $340.74 · +12.36%</div><div class="buy-point-tags"><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于0 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 0 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>COIN</b> · $201.05 · +3.50%</div><div class="buy-point-tags"><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于0 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 0 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>INTC</b> · $121.78 · +12.14%</div><div class="buy-point-tags"><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于0 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 0 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>AMD</b> · $615.52 · +9.95%</div><div class="buy-point-tags"><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于0 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 0 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>MRNA</b> · $172.94 · +12.27%</div><div class="buy-point-tags"><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于2 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 2 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>HOOD</b> · $123.30 · +2.90%</div><div class="buy-point-tags"><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于0 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 0 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article></div><p class="buy-point-foot"><span class="zh">网页无铃声，以本条为准；仅分析不下单。</span><span class="en">No web alert sound; use this banner as the source of truth. Analysis only; no orders.</span></p></section>
+  <section class="buy-point-banner urgent" id="buy-point-confirm"><div class="buy-point-head"><h2><span class="zh">买点确认</span><span class="en">Buy-point confirm</span></h2><span class="buy-point-asof"><span class="zh">截至</span><span class="en">As of</span> <span class="zh">2026-09-23 12:22 LAX · 北京时间 2026-09-24 03:22</span><span class="en">2026-09-23 12:22 LAX · Beijing 2026-09-24 03:22</span></span></div><div class="buy-point-state"><span class="zh">本轮新确认</span><span class="en">Fresh confirmations this round</span></div><div class="buy-point-grid"><article class="buy-point-card"><div class="buy-point-quote"><b>SHOP</b><span>$143.38</span><span class="buy-point-pct">+3.96%</span></div><div class="buy-point-tags"><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></div><p class="buy-point-why"><span class="zh">温和放量抬升本轮新触发。确认，不是追高指令。</span><span class="en">Fresh volume+price lift. Confirmation, not a FOMO instruction.</span></p></article></div><div class="buy-point-watch-head"><span class="zh">观察 · 不是确认</span><span class="en">Watch · not confirmed</span></div><div class="buy-point-watch-grid"><article class="buy-point-watch-card"><div><b>ARM</b> · $333.76 · +3.36%</div><div class="buy-point-tags"><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于3 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 3 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>ALAB</b> · $361.10 · +5.98%</div><div class="buy-point-tags"><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于1 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 1 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>MRNA</b> · $182.81 · +5.71%</div><div class="buy-point-tags"><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于3 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 3 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>STX</b> · $920.14 · +4.88%</div><div class="buy-point-tags"><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于2 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 2 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>COIN</b> · $198.32 · -1.36%</div><div class="buy-point-tags"><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于1 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 1 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>AMAT</b> · $474.05 · +2.11%</div><div class="buy-point-tags"><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于1 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 1 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>HOOD</b> · $124.26 · +0.78%</div><div class="buy-point-tags"><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于1 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 1 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article><article class="buy-point-watch-card"><div><b>AMD</b> · $614.27 · -0.20%</div><div class="buy-point-tags"><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></div><p class="buy-point-why"><span class="zh">F 于1 个交易日前触发，处于证明窗口；仅观察，不算新确认。</span><span class="en">F triggered 1 session(s) ago; prove-it watch only, not a fresh confirmation.</span></p></article></div><p class="buy-point-foot"><span class="zh">网页无铃声，以本条为准；仅分析不下单。</span><span class="en">No web alert sound; use this banner as the source of truth. Analysis only; no orders.</span></p></section>
 
-  <section class="prewatch-strip" id="prewatch-early-alert"><div class="prewatch-head"><h2><span class="zh">预观察池 · 早警告</span><span class="en">Pre-watch · Early alert</span></h2><span class="prewatch-asof"><span class="zh">截至</span><span class="en">As of</span> <span class="zh">2026-09-18 12:54 PT · 北京时间 2026-09-19 03:54</span><span class="en">2026-09-18 12:54 PT · Beijing 2026-09-19 03:54</span></span></div><p class="prewatch-banner-note"><span class="zh">仅观察/提醒，不下单 · 不是买点确认 · 不是执行工单</span><span class="en">Watch/alert only — not a buy confirm — not an execution ticket</span></p><div class="prewatch-subhead"><span class="zh">预观察（约 8–12 只流动龙头）</span><span class="en">Pre-watch (~8–12 liquid leaders)</span></div><div class="prewatch-grid"><article class="prewatch-chip"><b>MRNA</b><span>$154.81</span><span class="prewatch-pct">-2.06%</span><span class="prewatch-near"><span class="zh">距10日高</span><span class="en">vs 10d hi</span> -4.41%</span><span class="prewatch-why"><span class="zh">F证明窗口</span><span class="en">F证明窗口</span></span></article><article class="prewatch-chip"><b>ASX</b><span>$41.26</span><span class="prewatch-pct">+3.16%</span><span class="prewatch-near"><span class="zh">距10日高</span><span class="en">vs 10d hi</span> -0.28%</span><span class="prewatch-why"><span class="zh">F证明窗口；距10日高约0.3%</span><span class="en">F证明窗口；距10日高约0.3%</span></span></article><article class="prewatch-chip"><b>AMD</b><span>$547.38</span><span class="prewatch-pct">+0.42%</span><span class="prewatch-near"><span class="zh">距10日高</span><span class="en">vs 10d hi</span> -0.73%</span><span class="prewatch-why"><span class="zh">F证明窗口；距10日高约0.7%</span><span class="en">F证明窗口；距10日高约0.7%</span></span></article><article class="prewatch-chip"><b>MRVL</b><span>$238.94</span><span class="prewatch-pct">-0.76%</span><span class="prewatch-near"><span class="zh">距10日高</span><span class="en">vs 10d hi</span> -3.61%</span><span class="prewatch-why"><span class="zh">F证明窗口</span><span class="en">F证明窗口</span></span></article><article class="prewatch-chip"><b>COHR</b><span>$314.37</span><span class="prewatch-pct">+6.21%</span><span class="prewatch-near"><span class="zh">距10日高</span><span class="en">vs 10d hi</span> -0.42%</span><span class="prewatch-why"><span class="zh">F证明窗口；距10日高约0.4%</span><span class="en">F证明窗口；距10日高约0.4%</span></span></article><article class="prewatch-chip"><b>UMC</b><span>$24.53</span><span class="prewatch-pct">+0.25%</span><span class="prewatch-near"><span class="zh">距10日高</span><span class="en">vs 10d hi</span> -0.08%</span><span class="prewatch-why"><span class="zh">F证明窗口；距10日高约0.1%</span><span class="en">F证明窗口；距10日高约0.1%</span></span></article><article class="prewatch-chip"><b>ARM</b><span>$269.55</span><span class="prewatch-pct">+1.75%</span><span class="prewatch-near"><span class="zh">距10日高</span><span class="en">vs 10d hi</span> -1.91%</span><span class="prewatch-why"><span class="zh">F证明窗口</span><span class="en">F证明窗口</span></span></article><article class="prewatch-chip"><b>INTC</b><span>$108.52</span><span class="prewatch-pct">-0.26%</span><span class="prewatch-near"><span class="zh">距10日高</span><span class="en">vs 10d hi</span> -2.56%</span><span class="prewatch-why"><span class="zh">F证明窗口</span><span class="en">F证明窗口</span></span></article><article class="prewatch-chip"><b>NOK</b><span>$10.66</span><span class="prewatch-pct">+0.61%</span><span class="prewatch-near"><span class="zh">距10日高</span><span class="en">vs 10d hi</span> -4.52%</span><span class="prewatch-why"><span class="zh">F证明窗口</span><span class="en">F证明窗口</span></span></article><article class="prewatch-chip"><b>ALAB</b><span>$297.68</span><span class="prewatch-pct">+1.40%</span><span class="prewatch-near"><span class="zh">距10日高</span><span class="en">vs 10d hi</span> -7.45%</span><span class="prewatch-why"><span class="zh">F证明窗口</span><span class="en">F证明窗口</span></span></article></div><p class="prewatch-empty"><span class="zh">本轮无早警告</span><span class="en">No early alerts this round</span></p><p class="prewatch-foot"><span class="zh">预观察/早警告禁止自动下单；同日≥10% 仍不追执行。</span><span class="en">Pre-watch/early-alert must never auto-order; same-day ≥10% still no-chase for execution.</span></p></section>
+  <section class="prewatch-strip" id="prewatch-early-alert"><div class="prewatch-head"><h2><span class="zh">预观察池 · 早警告</span><span class="en">Pre-watch · Early alert</span></h2><span class="prewatch-asof"><span class="zh">截至</span><span class="en">As of</span> <span class="zh">2026-09-23 12:22 LAX · 北京时间 2026-09-24 03:22</span><span class="en">2026-09-23 12:22 LAX · Beijing 2026-09-24 03:22</span></span></div><p class="prewatch-banner-note"><span class="zh">仅观察/提醒，不下单 · 不是买点确认 · 不是执行工单</span><span class="en">Watch/alert only — not a buy confirm — not an execution ticket</span></p><div class="prewatch-subhead"><span class="zh">预观察（约 8–12 只流动龙头）</span><span class="en">Pre-watch (~8–12 liquid leaders)</span></div><div class="prewatch-grid"><article class="prewatch-chip"><b>HOOD</b><span>$124.26</span><span class="prewatch-pct">+0.78%</span><span class="prewatch-near"><span class="zh">距10日高</span><span class="en">vs 10d hi</span> -1.70%</span><span class="prewatch-why"><span class="zh">F证明窗口</span><span class="en">F证明窗口</span></span></article><article class="prewatch-chip"><b>AMD</b><span>$614.27</span><span class="prewatch-pct">-0.20%</span><span class="prewatch-near"><span class="zh">距10日高</span><span class="en">vs 10d hi</span> -0.39%</span><span class="prewatch-why"><span class="zh">F证明窗口；距10日高约0.4%</span><span class="en">F证明窗口；距10日高约0.4%</span></span></article><article class="prewatch-chip"><b>STX</b><span>$920.14</span><span class="prewatch-pct">+4.88%</span><span class="prewatch-near"><span class="zh">距10日高</span><span class="en">vs 10d hi</span> -0.57%</span><span class="prewatch-why"><span class="zh">F证明窗口；距10日高约0.6%</span><span class="en">F证明窗口；距10日高约0.6%</span></span></article><article class="prewatch-chip"><b>ARM</b><span>$333.76</span><span class="prewatch-pct">+3.36%</span><span class="prewatch-near"><span class="zh">距10日高</span><span class="en">vs 10d hi</span> +2.96%</span><span class="prewatch-why"><span class="zh">RS龙头在建；F证明窗口；相对10日高+3.0%</span><span class="en">RS龙头在建；F证明窗口；相对10日高+3.0%</span></span></article><article class="prewatch-chip"><b>COIN</b><span>$198.32</span><span class="prewatch-pct">-1.36%</span><span class="prewatch-near"><span class="zh">距10日高</span><span class="en">vs 10d hi</span> -4.81%</span><span class="prewatch-why"><span class="zh">F证明窗口</span><span class="en">F证明窗口</span></span></article><article class="prewatch-chip"><b>INTC</b><span>$121.39</span><span class="prewatch-pct">-0.32%</span><span class="prewatch-near"><span class="zh">距10日高</span><span class="en">vs 10d hi</span> -2.68%</span><span class="prewatch-why"><span class="zh">F证明窗口</span><span class="en">F证明窗口</span></span></article><article class="prewatch-chip"><b>AMAT</b><span>$474.05</span><span class="prewatch-pct">+2.11%</span><span class="prewatch-near"><span class="zh">距10日高</span><span class="en">vs 10d hi</span> +0.00%</span><span class="prewatch-why"><span class="zh">F证明窗口；相对10日高+0.0%</span><span class="en">F证明窗口；相对10日高+0.0%</span></span></article><article class="prewatch-chip"><b>ALAB</b><span>$361.10</span><span class="prewatch-pct">+5.98%</span><span class="prewatch-near"><span class="zh">距10日高</span><span class="en">vs 10d hi</span> +5.28%</span><span class="prewatch-why"><span class="zh">F证明窗口；相对10日高+5.3%</span><span class="en">F证明窗口；相对10日高+5.3%</span></span></article><article class="prewatch-chip"><b>MRNA</b><span>$182.81</span><span class="prewatch-pct">+5.71%</span><span class="prewatch-near"><span class="zh">距10日高</span><span class="en">vs 10d hi</span> +3.36%</span><span class="prewatch-why"><span class="zh">F证明窗口；相对10日高+3.4%</span><span class="en">F证明窗口；相对10日高+3.4%</span></span></article><article class="prewatch-chip"><b>SHOP</b><span>$143.38</span><span class="prewatch-pct">+3.96%</span><span class="prewatch-near"><span class="zh">距10日高</span><span class="en">vs 10d hi</span> +1.11%</span><span class="prewatch-why"><span class="zh">F抬升（对照确认条）；相对10日高+1.1%</span><span class="en">F抬升（对照确认条）；相对10日高+1.1%</span></span></article></div><div class="prewatch-alert-head"><span class="zh">早警告（刚破/近突破+量 · 日内仍&lt;10%）</span><span class="en">Early alerts (fresh break / A-near + volume · day gain still &lt;10%)</span></div><div class="prewatch-alert-grid"><article class="prewatch-alert-chip"><b>SHOP</b><span>$143.38</span><span class="prewatch-pct">+3.96%</span><span class="prewatch-why"><span class="zh">刚破10日高；日内+4.0%仍&lt;10%（早警告带）；预观察池内</span><span class="en">刚破10日高；日内+4.0%仍&lt;10%（早警告带）；预观察池内</span></span></article></div><p class="prewatch-foot"><span class="zh">预观察/早警告禁止自动下单；同日≥10% 仍不追执行。</span><span class="en">Pre-watch/early-alert must never auto-order; same-day ≥10% still no-chase for execution.</span></p></section>
 
   
   <div class="pm-finviz-split" id="pm-finviz-split">
@@ -849,6 +1709,8 @@
 <th><span class="zh">开仓</span><span class="en">Open</span></th>
 </tr></thead><tbody><tr><td>MSTR</td><td>153.48</td><td>16.05</td><td>1.47</td><td>35.3</td><td>65.9</td><td>10.76</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="MSTR"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>UMC</td><td>24.53</td><td>0.25</td><td>0.75</td><td>35.02</td><td>69.3</td><td>10.03</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="UMC"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>COIN</td><td>194.48</td><td>11.79</td><td>1.63</td><td>11.58</td><td>58.3</td><td>9.95</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="COIN"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>INTC</td><td>108.52</td><td>-0.26</td><td>0.89</td><td>16.53</td><td>61.6</td><td>9.76</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="INTC"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>ASX</td><td>41.26</td><td>3.16</td><td>0.79</td><td>11.74</td><td>60.3</td><td>9.67</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="ASX"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>MRVL</td><td>238.94</td><td>-0.76</td><td>0.48</td><td>-6.07</td><td>55.9</td><td>9.17</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="MRVL"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr></tbody></table></div></details>
 
+
+
   <h2><span class="zh">综合候选</span><span class="en">Composite candidates</span></h2><div class="table-wrap"><table><thead><tr>
 <th><span class="zh">代码</span><span class="en">Ticker</span></th>
 <th><span class="zh">现价</span><span class="en">Price</span></th>
@@ -859,13 +1721,43 @@
 <th><span class="zh">分数</span><span class="en">Score</span></th>
 <th><span class="zh">标签</span><span class="en">Tags</span></th>
 <th><span class="zh">开仓</span><span class="en">Open</span></th>
-</tr></thead><tbody><tr><td>MSTR</td><td>153.48</td><td>16.05</td><td>1.47</td><td>35.3</td><td>65.9</td><td>10.76</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="MSTR"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>ALAB</td><td>297.68</td><td>1.4</td><td>0.76</td><td>1.21</td><td>51.4</td><td>10.68</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="ALAB"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>COHR</td><td>314.37</td><td>6.21</td><td>0.99</td><td>7.13</td><td>55.5</td><td>10.39</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="COHR"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>UMC</td><td>24.53</td><td>0.25</td><td>0.75</td><td>35.02</td><td>69.3</td><td>10.03</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="UMC"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>COIN</td><td>194.48</td><td>11.79</td><td>1.63</td><td>11.58</td><td>58.3</td><td>9.95</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="COIN"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>INTC</td><td>108.52</td><td>-0.26</td><td>0.89</td><td>16.53</td><td>61.6</td><td>9.76</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="INTC"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>ARM</td><td>269.55</td><td>1.75</td><td>0.9</td><td>6.25</td><td>55.7</td><td>9.72</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="ARM"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>ASX</td><td>41.26</td><td>3.16</td><td>0.79</td><td>11.74</td><td>60.3</td><td>9.67</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="ASX"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>AMD</td><td>547.38</td><td>0.42</td><td>0.87</td><td>15.34</td><td>63.2</td><td>9.28</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="AMD"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>NOK</td><td>10.66</td><td>0.61</td><td>1.79</td><td>3.82</td><td>54.0</td><td>9.26</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="NOK"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>MRVL</td><td>238.94</td><td>-0.76</td><td>0.48</td><td>-6.07</td><td>55.9</td><td>9.17</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="MRVL"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>MRNA</td><td>154.81</td><td>-2.06</td><td>0.37</td><td>14.86</td><td>63.8</td><td>9.15</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="MRNA"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr></tbody></table></div>
+</tr></thead><tbody><tr><td>ARM</td><td>333.76</td><td>3.36</td><td>1.17</td><td>34.72</td><td>71.5</td><td>44.26</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="ARM"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>SHOP</td><td>143.38</td><td>3.96</td><td>1.89</td><td>-9.34</td><td>56.2</td><td>22.18</td><td><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="SHOP"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>RCL</td><td>228.27</td><td>-8.78</td><td>2.66</td><td>-26.68</td><td>20.4</td><td>14.66</td><td><span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="RCL"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>MCD</td><td>237.26</td><td>-4.28</td><td>2.5</td><td>-17.38</td><td>23.1</td><td>14.5</td><td><span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="MCD"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>ALAB</td><td>361.1</td><td>5.98</td><td>0.63</td><td>25.06</td><td>64.1</td><td>11.45</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="ALAB"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>MRNA</td><td>182.81</td><td>5.71</td><td>0.85</td><td>26.57</td><td>72.2</td><td>10.35</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="MRNA"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>STX</td><td>920.14</td><td>4.88</td><td>0.71</td><td>10.74</td><td>59.7</td><td>10.19</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="STX"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>COIN</td><td>198.32</td><td>-1.36</td><td>0.52</td><td>5.44</td><td>59.1</td><td>10.1</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="COIN"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>AMAT</td><td>474.05</td><td>2.11</td><td>0.44</td><td>-7.15</td><td>52.4</td><td>10.04</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="AMAT"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>HOOD</td><td>124.26</td><td>0.78</td><td>0.61</td><td>14.86</td><td>62.9</td><td>9.97</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="HOOD"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>AMD</td><td>614.27</td><td>-0.2</td><td>0.6</td><td>29.43</td><td>72.6</td><td>9.9</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="AMD"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>INTC</td><td>121.39</td><td>-0.32</td><td>0.62</td><td>34.05</td><td>70.4</td><td>9.74</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="INTC"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr></tbody></table></div>
   <h2><span class="zh">A 严格动量爆发</span><span class="en">A Strict momentum burst</span></h2><p class="muted"><span class="zh">（无）</span><span class="en">(none)</span></p>
   <h2><span class="zh">A 近突破观察</span><span class="en">A Near-breakout watch</span></h2><p class="muted"><span class="zh">（无）</span><span class="en">(none)</span></p>
-  <h2><span class="zh">B 相对强弱龙头</span><span class="en">B Relative-strength leaders</span></h2><p class="muted"><span class="zh">（无）</span><span class="en">(none)</span></p>
-  <h2><span class="zh">C 放量事件</span><span class="en">C Relative-volume events</span></h2><p class="muted"><span class="zh">（无）</span><span class="en">(none)</span></p>
+  <h2><span class="zh">B 相对强弱龙头</span><span class="en">B Relative-strength leaders</span></h2><div class="table-wrap"><table><thead><tr>
+<th><span class="zh">代码</span><span class="en">Ticker</span></th>
+<th><span class="zh">现价</span><span class="en">Price</span></th>
+<th><span class="zh">今日%</span><span class="en">Day %</span></th>
+<th><span class="zh">量比</span><span class="en">RVOL</span></th>
+<th>RS20</th>
+<th>RSI</th>
+<th><span class="zh">分数</span><span class="en">Score</span></th>
+<th><span class="zh">标签</span><span class="en">Tags</span></th>
+<th><span class="zh">开仓</span><span class="en">Open</span></th>
+</tr></thead><tbody><tr><td>ARM</td><td>333.76</td><td>3.36</td><td>1.17</td><td>34.72</td><td>71.5</td><td>44.26</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="ARM"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr></tbody></table></div>
+  <h2><span class="zh">C 放量事件</span><span class="en">C Relative-volume events</span></h2><div class="table-wrap"><table><thead><tr>
+<th><span class="zh">代码</span><span class="en">Ticker</span></th>
+<th><span class="zh">现价</span><span class="en">Price</span></th>
+<th><span class="zh">今日%</span><span class="en">Day %</span></th>
+<th><span class="zh">量比</span><span class="en">RVOL</span></th>
+<th>RS20</th>
+<th>RSI</th>
+<th><span class="zh">分数</span><span class="en">Score</span></th>
+<th><span class="zh">标签</span><span class="en">Tags</span></th>
+<th><span class="zh">开仓</span><span class="en">Open</span></th>
+</tr></thead><tbody><tr><td>RCL</td><td>228.27</td><td>-8.78</td><td>2.66</td><td>-26.68</td><td>20.4</td><td>14.66</td><td><span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="RCL"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>MCD</td><td>237.26</td><td>-4.28</td><td>2.5</td><td>-17.38</td><td>23.1</td><td>14.5</td><td><span class="tag"><span class="zh">C·放量事件</span><span class="en">C·Volume event</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="MCD"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr></tbody></table></div>
   <h2><span class="zh">D 超卖反弹观察</span><span class="en">D Oversold bounce watch</span></h2><p class="muted"><span class="zh">（无）</span><span class="en">(none)</span></p>
-  <h2><span class="zh">F 温和放量抬升</span><span class="en">F Mild volume+price lift</span></h2><p class="muted"><span class="zh">（无）</span><span class="en">(none)</span></p>
+  <h2><span class="zh">F 温和放量抬升</span><span class="en">F Mild volume+price lift</span></h2><div class="table-wrap"><table><thead><tr>
+<th><span class="zh">代码</span><span class="en">Ticker</span></th>
+<th><span class="zh">现价</span><span class="en">Price</span></th>
+<th><span class="zh">今日%</span><span class="en">Day %</span></th>
+<th><span class="zh">量比</span><span class="en">RVOL</span></th>
+<th>RS20</th>
+<th>RSI</th>
+<th><span class="zh">分数</span><span class="en">Score</span></th>
+<th><span class="zh">标签</span><span class="en">Tags</span></th>
+<th><span class="zh">开仓</span><span class="en">Open</span></th>
+</tr></thead><tbody><tr><td>SHOP</td><td>143.38</td><td>3.96</td><td>1.89</td><td>-9.34</td><td>56.2</td><td>22.18</td><td><span class="tag"><span class="zh">F·温和放量抬升</span><span class="en">F·Volume+price lift</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="SHOP"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr></tbody></table></div>
   <h2><span class="zh">F 证明窗口观察（近几日已触发）</span><span class="en">F Prove-it watch (recent F trigger)</span></h2><div class="table-wrap"><table><thead><tr>
 <th><span class="zh">代码</span><span class="en">Ticker</span></th>
 <th><span class="zh">现价</span><span class="en">Price</span></th>
@@ -876,7 +1768,7 @@
 <th><span class="zh">分数</span><span class="en">Score</span></th>
 <th><span class="zh">标签</span><span class="en">Tags</span></th>
 <th><span class="zh">开仓</span><span class="en">Open</span></th>
-</tr></thead><tbody><tr><td>MSTR</td><td>153.48</td><td>16.05</td><td>1.47</td><td>35.3</td><td>65.9</td><td>10.76</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="MSTR"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>ALAB</td><td>297.68</td><td>1.4</td><td>0.76</td><td>1.21</td><td>51.4</td><td>10.68</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="ALAB"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>COHR</td><td>314.37</td><td>6.21</td><td>0.99</td><td>7.13</td><td>55.5</td><td>10.39</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="COHR"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>UMC</td><td>24.53</td><td>0.25</td><td>0.75</td><td>35.02</td><td>69.3</td><td>10.03</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="UMC"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>COIN</td><td>194.48</td><td>11.79</td><td>1.63</td><td>11.58</td><td>58.3</td><td>9.95</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="COIN"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>INTC</td><td>108.52</td><td>-0.26</td><td>0.89</td><td>16.53</td><td>61.6</td><td>9.76</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="INTC"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>ARM</td><td>269.55</td><td>1.75</td><td>0.9</td><td>6.25</td><td>55.7</td><td>9.72</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="ARM"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>ASX</td><td>41.26</td><td>3.16</td><td>0.79</td><td>11.74</td><td>60.3</td><td>9.67</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="ASX"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr></tbody></table></div>
+</tr></thead><tbody><tr><td>ARM</td><td>333.76</td><td>3.36</td><td>1.17</td><td>34.72</td><td>71.5</td><td>44.26</td><td><span class="tag"><span class="zh">B·相对强弱龙头</span><span class="en">B·RS leader</span></span> <span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="ARM"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>ALAB</td><td>361.1</td><td>5.98</td><td>0.63</td><td>25.06</td><td>64.1</td><td>11.45</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="ALAB"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>MRNA</td><td>182.81</td><td>5.71</td><td>0.85</td><td>26.57</td><td>72.2</td><td>10.35</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="MRNA"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>STX</td><td>920.14</td><td>4.88</td><td>0.71</td><td>10.74</td><td>59.7</td><td>10.19</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="STX"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>COIN</td><td>198.32</td><td>-1.36</td><td>0.52</td><td>5.44</td><td>59.1</td><td>10.1</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="COIN"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>AMAT</td><td>474.05</td><td>2.11</td><td>0.44</td><td>-7.15</td><td>52.4</td><td>10.04</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="AMAT"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>HOOD</td><td>124.26</td><td>0.78</td><td>0.61</td><td>14.86</td><td>62.9</td><td>9.97</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="HOOD"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr><tr><td>AMD</td><td>614.27</td><td>-0.2</td><td>0.6</td><td>29.43</td><td>72.6</td><td>9.9</td><td><span class="tag"><span class="zh">F·证明窗口观察</span><span class="en">F·Prove-it watch</span></span></td><td><button type="button" class="usm-open-btn" data-ticker="AMD"><span class="zh">开仓</span><span class="en">Open</span></button></td></tr></tbody></table></div>
 
   <h2><span class="zh">专业玩家公开账户（12）</span>
       <span class="en">Public pro accounts (12)</span></h2>
